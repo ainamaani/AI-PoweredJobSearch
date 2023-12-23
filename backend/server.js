@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
+const JobRoutes = require('./routes/JobRoutes')
 
 // set up an express application
 const app = express()
@@ -12,10 +13,10 @@ app.use(express.json());
 app.use((req,res,next)=>{
     console.log(req.body, req.path, req.method)
     next()
-})
+});
 
 //routes
-
+app.use('/api/jobs', JobRoutes);
 
 // connect to the database
 mongoose.connect(process.env.dbURI)
