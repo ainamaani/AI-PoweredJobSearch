@@ -1,4 +1,5 @@
 import SvgColor from 'src/components/svg-color';
+import { AccessTimeOutlined } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -13,8 +14,8 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'user',
-    path: '/user',
+    title: 'Jobs',
+    path: '/jobs',
     icon: icon('ic_user'),
   },
   {
@@ -25,7 +26,7 @@ const navConfig = [
   {
     title: 'Add job posting',
     path: '/newjob',
-    icon: icon('ic_lock')
+    icon: <AccessTimeOutlined />
   },
   {
     title: 'blog',
