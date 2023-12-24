@@ -7,6 +7,7 @@ export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
+export const CreateProfilePage = lazy(() => import('src/pages/create-profile'));
 export const AddJobPostingPage = lazy(() => import('src/pages/add-job-posting'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
@@ -28,7 +29,8 @@ export default function Router() {
         { path: 'jobs', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: 'newjob', element: < AddJobPostingPage /> }
+        { path: 'newjob', element: < AddJobPostingPage /> },
+        { path: 'newprofile', element: <CreateProfilePage /> }
       ],
     },
     {

@@ -2,11 +2,11 @@ const mongoose = require('mongoose')
 const User = require('./User')
 
 const ProfileSchema = new mongoose.Schema({
-    user:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:User,
-        required:[true, "The user for the profile is required"]
-    },
+    // user:{
+    //     type:mongoose.Schema.Types.ObjectId,
+    //     ref:User,
+    //     required:[true, "The user for the profile is required"]
+    // },
     firstname:{
         type:String,
         required: [true, "The first name is required"]
@@ -14,6 +14,18 @@ const ProfileSchema = new mongoose.Schema({
     lastname:{
         type:String,
         required: [true, "The last name is required"]
+    },
+    gender:{
+        type:String,
+        required: [true, "Gender is required"],
+        enum: {
+            values: ["male","female"],
+            message: "The gender can only be male or female"
+        }
+    },
+    nationality:{
+        type:String,
+        required: [true, "Nationality is required"]
     },
     dateOfBirth:{
         type:Date,

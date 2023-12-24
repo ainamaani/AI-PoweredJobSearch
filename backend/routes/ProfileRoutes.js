@@ -5,6 +5,6 @@ const { createNewProfile, getProfiles } = require('../controllers/ProfileControl
 
 router.post('/newprofile', upload.fields([{name: 'profilePic', maxCount: 1},{name: 'resume', maxCount:1}]) ,createNewProfile)
 
-router.get('/profiles', getProfiles);
+router.get('/', getProfiles);
 
 module.exports = router

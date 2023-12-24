@@ -94,8 +94,7 @@ const AddJobPosting = () => {
                         required fullWidth
                         sx={{ width: 800 }}
                         value={title}
-                        onChange={(e)=> {setTitle(e.target.value)}}
-                        
+                        onChange={(e)=> {setTitle(e.target.value)}}   
                     />
                     <StyledTextField
                         label="Hiring company"

@@ -1,9 +1,10 @@
 const express = require('express');
-const mongoose = require('mongoose')
-const cors = require('cors')
-const path =  require('path')
-require('dotenv').config()
-const JobRoutes = require('./routes/JobRoutes')
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path =  require('path');
+require('dotenv').config();
+const JobRoutes = require('./routes/JobRoutes');
+const ProfileRoutes = require('./routes/ProfileRoutes');
 
 // set up an express application
 const app = express()
@@ -19,6 +20,7 @@ app.use((req,res,next)=>{
 
 //routes
 app.use('/api/jobs', JobRoutes);
+app.use('/api/profiles', ProfileRoutes);
 
 // connect to the database
 mongoose.connect(process.env.dbURI)

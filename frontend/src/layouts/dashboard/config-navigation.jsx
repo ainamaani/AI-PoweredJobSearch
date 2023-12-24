@@ -26,7 +26,14 @@ const navConfig = [
   {
     title: 'Add job posting',
     path: '/newjob',
-    icon: <AccessTimeOutlined />
+    icon: icon('ic_user')
+    
+  },
+  {
+    title: 'Create profile',
+    path: '/newprofile',
+    icon: icon('ic_user')
+    
   },
   {
     title: 'blog',
