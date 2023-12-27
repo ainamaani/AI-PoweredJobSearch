@@ -1,5 +1,5 @@
 import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel } from "@mui/material";
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { styled } from "@mui/system";
 import axios from "axios";
 
@@ -45,6 +45,11 @@ const AddJobPosting = () => {
     const [additionalBenefits, setAdditionalBenefits] = useState('');
     const [applicationDeadline, setApplicationDeadline] = useState(null);
     const [applicationInstructions, setApplicationInstructions] = useState('');
+    const [errors, setErrors] = useState({}); 
+
+    useEffect(()=>{
+        console.log(errors)
+    },[errors]);
 
     const handleAddJobPosting = async (e) => {
         e.preventDefault();
@@ -58,6 +63,7 @@ const AddJobPosting = () => {
                 }
             }
            ) 
+           setErrors({})
            if(response.status === 200){
                 console.log(response.data);
                 setTitle('');
@@ -77,7 +83,9 @@ const AddJobPosting = () => {
                 setApplicationInstructions('');
            }
         } catch (error) {
-            console.log(error)
+            if(error.response && error.response.data && error.response.data.errors ){
+                setErrors(error.response.data.errors)
+            }
         }
     }
 
@@ -93,86 +101,129 @@ const AddJobPosting = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        error={errors.title}
                         value={title}
                         onChange={(e)=> {setTitle(e.target.value)}}   
                     />
+                    { errors.title && (
+                        <span style={{color:'red'}}>{errors.title}</span>
+                    )}
                     <StyledTextField
                         label="Hiring company"
                         variant="outlined"
                         required fullWidth
                         value={company}
                         sx={{ width: 800 }}
+                        error={errors.company}
                         onChange={(e)=> {setCompany(e.target.value)}}
                     />
+                    { errors.company && (
+                        <span style={{color:'red'}}>{errors.company}</span>
+                    )}
                     <StyledTextField
                         label="Job description"
                         variant="outlined"
                         required fullWidth
                         value={description}
                         sx={{ width: 800 }}
+                        error={errors.description}
                         onChange={(e)=> {setDescription(e.target.value)}}
                     />
+                    { errors.description && (
+                        <span style={{color:'red'}}>{errors.description}</span>
+                    )}
                     <StyledTextField
                         label="Job location"
                         variant="outlined"
                         required fullWidth
                         value={location}
                         sx={{ width: 800 }}
+                        error={errors.location}
                         onChange={(e)=> {setLocation(e.target.value)}}
                     />
+                    { errors.location && (
+                        <span style={{color:'red'}}>{errors.location}</span>
+                    )}
                     <StyledTextField
                         label="Job category"
                         variant="outlined"
                         required fullWidth
                         value={category}
                         sx={{ width: 800 }}
+                        error={errors.category}
                         onChange={(e)=> {setCategory(e.target.value)}}
                     />
+                    { errors.category && (
+                        <span style={{color:'red'}}>{errors.category}</span>
+                    )}
                     <StyledRadioGroup value={jobType} onChange={(e)=> {setJobType(e.target.value)}} >
                         <FormControlLabel value="full-time" control={<Radio />} label="Full time" />
                         <FormControlLabel value="part-time" control={<Radio />} label="Part time" />
                         <FormControlLabel value="contract" control={<Radio />} label="Contract" />
                     </StyledRadioGroup>
+                    { errors.jobType && (
+                        <span style={{color:'red'}}>{errors.jobType}</span>
+                    )}
                     <StyledTextField
                         label="Skills required"
                         variant="outlined"
                         required fullWidth
                         value={skills}
                         sx={{ width: 800 }}
+                        error={errors.skills}
                         onChange={(e)=> {setSkills(e.target.value)}}
                     />
+                    { errors.skills && (
+                        <span style={{color:'red'}}>{errors.skills}</span>
+                    )}
                     <StyledTextField
                         label="Qualifications"
                         variant="outlined"
                         required fullWidth
                         value={qualifications}
                         sx={{ width: 800 }}
+                        error={errors.qualifications}
                         onChange={(e)=> {setQualifications(e.target.value)}}
                     />
+                    { errors.qualifications && (
+                        <span style={{color:'red'}}>{errors.qualifications}</span>
+                    )}
                     <StyledTextField
                         label="Experience required"
                         variant="outlined"
                         required fullWidth
                         value={experience}
                         sx={{ width: 800 }}
+                        error={errors.experience}
                         onChange={(e)=> {setExperience(e.target.value)}}
                     />
+                    { errors.experience && (
+                        <span style={{color:'red'}}>{errors.experience}</span>
+                    )}
                     <StyledTextField
                         label="Salary range"
                         variant="outlined"
                         required fullWidth
                         value={salaryRange}
                         sx={{ width: 800 }}
+                        error={errors.salaryRange}
                         onChange={(e)=> {setSalaryRange(e.target.value)}}
                     />
+                    { errors.salaryRange && (
+                        <span style={{color:'red'}}>{errors.salaryRange}</span>
+                    )}
                     <StyledTextField
                         label="Additional job benefits"
                         variant="outlined"
                         required fullWidth
                         value={additionalBenefits}
                         sx={{ width: 800 }}
+                        error={errors.additionalBenefits}
                         onChange={(e)=> {setAdditionalBenefits(e.target.value)}}
                     />
+                    { errors.additionalBenefits && (
+                        <span style={{color:'red'}}>{errors.additionalBenefits}</span>
+                    )}
                     <StyledTextField
                         label="Application deadline"
                         variant="outlined"
@@ -183,32 +234,48 @@ const AddJobPosting = () => {
                         required fullWidth
                         value={applicationDeadline}
                         sx={{ width: 800 }}
+                        error={errors.applicationDeadline}
                         onChange={(e)=> {setApplicationDeadline(e.target.value)}}
                     />
+                    { errors.applicationDeadline && (
+                        <span style={{color:'red'}}>{errors.applicationDeadline}</span>
+                    )}
                     <StyledTextField
                         label="Application instructions"
                         variant="outlined"
                         required fullWidth
                         value={applicationInstructions}
                         sx={{ width: 800 }}
+                        error={errors.applicationInstructions}
                         onChange={(e)=> {setApplicationInstructions(e.target.value)}}
                     />
+                    { errors.applicationInstructions && (
+                        <span style={{color:'red'}}>{errors.applicationInstructions}</span>
+                    )}
                     <StyledTextField
                         label="Hiring company email"
                         variant="outlined"
                         required fullWidth
                         value={companyEmail}
                         sx={{ width: 800 }}
+                        error={errors.companyEmail}
                         onChange={(e)=> {setCompanyEmail(e.target.value)}}
                     />
+                    { errors.companyEmail && (
+                        <span style={{color:'red'}}>{errors.companyEmail}</span>
+                    )}
                     <StyledTextField
                         label="Hiring company contact"
                         variant="outlined"
                         required fullWidth
                         value={companyContact}
                         sx={{ width: 800 }}
+                        error={errors.companyContact}
                         onChange={(e)=> {setCompanyContact(e.target.value)}}
                     />
+                    { errors.companyContact && (
+                        <span style={{color:'red'}}>{errors.companyContact}</span>
+                    )}
                     <StyledButton variant="contained" type="submit">Add job</StyledButton>
                     
                 </form>

@@ -45,6 +45,7 @@ const CreateProfile = () => {
     const [facebook, setFacebook] = useState('');
     const [instagram, setInstagram] = useState('');
     const [resume, setResume] = useState(null);
+    const [errors, setErrors] = useState({});
     
     const handleCreateProfile = async(e) =>{
         e.preventDefault()
@@ -76,6 +77,7 @@ const CreateProfile = () => {
                                 }
                             }
             )
+            setErrors({});
             if(profile.status === 200){
                 console.log(profile.data);
                 setFirstname('');
@@ -97,7 +99,9 @@ const CreateProfile = () => {
                 setResume(null);
             }
         } catch (error) {
-            console.log(error)
+            if(error.response && error.response.data && error.response.data.errors){
+                setErrors(error.response.data.errors);
+            }
         }
     }
 
@@ -114,16 +118,24 @@ const CreateProfile = () => {
                         required fullWidth
                         sx={{ width: 800 }}
                         value={firstname}
+                        error={errors.firstname}
                         onChange={(e)=> {setFirstname(e.target.value)}}   
                     />
+                    { errors.firstname && (
+                        <span style={{color:'red'}}>{errors.firstname}</span>
+                    )}
                     <StyledTextField
                         label="Last name"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
                         value={lastname}
+                        error={errors.lastname}
                         onChange={(e)=> {setLastname(e.target.value)}}   
                     />
+                    { errors.lastname && (
+                        <span style={{color:'red'}}>{errors.lastname}</span>
+                    )}
                     <StyledTextField
                         label="Date of birth"
                         variant="outlined"
@@ -132,36 +144,55 @@ const CreateProfile = () => {
                         type="date"
                         sx={{ width: 800 }}
                         value={dateOfBirth}
+                        error={errors.dateOfBirth}
                         onChange={(e)=> {setDateOfBirth(e.target.value)}}   
                     />
+                    { errors.dateOfBirth && (
+                        <span style={{color:'red'}}>{errors.dateOfBirth}</span>
+                    )}
                     <StyledRadioGroup value={gender} onChange={(e)=> {setGender(e.target.value)}} >
                         <FormControlLabel value="male" control={<Radio />} label="Male" />
                         <FormControlLabel value="female" control={<Radio />} label="Female" />
                     </StyledRadioGroup>
+                    { errors.gender && (
+                        <span style={{color:'red'}}>{errors.gender}</span>
+                    )}
                     <StyledTextField
                         label="Nationality"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
                         value={nationality}
+                        error={errors.nationality}
                         onChange={(e)=> {setNationality(e.target.value)}}   
                     />
+                    { errors.nationality && (
+                        <span style={{color:'red'}}>{errors.nationality}</span>
+                    )}
                     <StyledTextField
                         label="Email"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        error={errors.email}
                         value={email}
                         onChange={(e)=> {setEmail(e.target.value)}}   
                     />
+                    { errors.email && (
+                        <span style={{color:'red'}}>{errors.email}</span>
+                    )}
                     <StyledTextField
                         label="Phone contact"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
                         value={phoneContact}
+                        error={errors.phoneContact}
                         onChange={(e)=> {setPhoneContact(e.target.value)}}   
                     />
+                    { errors.phoneContact && (
+                        <span style={{color:'red'}}>{errors.phoneContact}</span>
+                    )}
                     <StyledTextField
                         label="Profile picture"
                         variant="outlined"
@@ -172,38 +203,57 @@ const CreateProfile = () => {
                         sx={{ width: 800 }}
                         onChange={(e)=> { setProfilePic(e.target.files[0]) }}   
                     />
+                    { errors.profilePic && (
+                        <span style={{color:'red'}}>{errors.profilePic}</span>
+                    )}
                     <StyledTextField
                         label="Profession"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        error={errors.profession}
                         value={profession}
                         onChange={(e)=> {setProfession(e.target.value)}}   
                     />
+                    { errors.profession && (
+                        <span style={{color:'red'}}>{errors.profession}</span>
+                    )}
                     <StyledTextField
                         label="Personal description"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        error={errors.personalDescription}
                         value={personalDescription}
                         onChange={(e)=> {setPersonalDescription(e.target.value)}}   
                     />
+                    { errors.personalDescription && (
+                        <span style={{color:'red'}}>{errors.personalDescription}</span>
+                    )}
                     <StyledTextField
                         label="Personal website link(if any)"
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        error={errors.website}
                         value={website}
                         onChange={(e)=> {setWebsite(e.target.value)}}   
                     />
+                    { errors.website && (
+                        <span style={{color:'red'}}>{errors.website}</span>
+                    )}
                     <StyledTextField
                         label="GitHub link"
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
                         value={github}
+                        error={errors.github}
                         onChange={(e)=> {setGithub(e.target.value)}}   
                     />
+                    { errors.github && (
+                        <span style={{color:'red'}}>{errors.github}</span>
+                    )}
                     <StyledTextField
                         label="Resume/Curriculum Vitae"
                         variant="outlined"
@@ -219,33 +269,49 @@ const CreateProfile = () => {
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        error={errors.linkedIn}
                         value={linkedIn}
                         onChange={(e)=> {setLinkedIn(e.target.value)}}   
                     />
+                    { errors.linkedIn && (
+                        <span style={{color:'red'}}>{errors.linkedIn}</span>
+                    )}
                     <StyledTextField
                         label="Facebook Username"
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
                         value={facebook}
+                        error={errors.facebook}
                         onChange={(e)=> {setFacebook(e.target.value)}}   
                     />
+                    { errors.facebook && (
+                        <span style={{color:'red'}}>{errors.facebook}</span>
+                    )}
                     <StyledTextField
                         label="Twitter handle"
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        error={errors.twitter}
                         value={twitter}
                         onChange={(e)=> {setTwitter(e.target.value)}}   
                     />
+                    { errors.twitter && (
+                        <span style={{color:'red'}}>{errors.twitter}</span>
+                    )}
                     <StyledTextField
                         label="Instagram"
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        error={errors.instagram}
                         value={instagram}
                         onChange={(e)=> {setInstagram(e.target.value)}}   
                     />
+                    { errors.instagram && (
+                        <span style={{color:'red'}}>{errors.instagram}</span>
+                    )}
                     <StyledButton variant="contained" type="submit">Create profile</StyledButton>
                 </form>
             </StyledPageContent>
