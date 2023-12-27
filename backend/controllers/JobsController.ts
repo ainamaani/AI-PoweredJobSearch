@@ -1,6 +1,7 @@
-const Job = require('../models/Job');
+import Job from "../models/Job";
+import { Request, Response } from "express";
 
-const addNewJob = async(req,res) =>{
+const addNewJob = async(req: Request,res: Response) =>{
     const { title,company,companyEmail,companyContact,description,category,skills,experience,
             qualifications,location,salaryRange,jobType,additionalBenefits,
             applicationDeadline,applicationInstructions } = req.body;
@@ -15,10 +16,10 @@ const addNewJob = async(req,res) =>{
         }else{
             return res.status(400).json({ error: "Failed to add the new job" })
         }
-    } catch (error) {
+    } catch (error: any) {
         // Check if the error is a validation error
       if (error.name === 'ValidationError' || error.code === 11000) {
-          const errors = {};
+          const errors: {[key:string]: string}  = {};
   
           // Iterate through the validation errors and build the errors object
           for (const field in error.errors) {
@@ -31,7 +32,7 @@ const addNewJob = async(req,res) =>{
   }
 }
 
-const fetchJobs = async(req,res) =>{
+const fetchJobs = async(req: Request,res: Response) =>{
     try {
         const jobs = await Job.find({}).sort({ createdAt: -1 });
         if(jobs){
@@ -39,12 +40,10 @@ const fetchJobs = async(req,res) =>{
         }else{
             return res.status(400).json({ error: "Failed to fetch job postings" });
         }
-    } catch (error) {
+    } catch (error: any) {
         return res.status(400).json({ error: error.message });
     }
 }
 
-module.exports = {
-    addNewJob,
-    fetchJobs
-}
+export default {
+    addNewJob,fetchJobs}

@@ -1,10 +1,13 @@
-const Profile = require('../models/Profile');
+import Profile from "../models/Profile";
+import { Request, Response } from "express";
+import multer from "multer";
 
-const createNewProfile = async(req,res) =>{
+const createNewProfile = async(req: Request,res: Response) =>{
     try {
         // Get the uploaded file path from the request object
-        const profilePicPath = req.files['profilePic'][0].path;
-        const resumePath = req.files['resume'][0].path;
+        const profilePicPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['profilePic'][0].path;
+        const resumePath = (req.files as { [fieldname: string]: Express.Multer.File[] })['resume'][0].path;
+
 
         // Destructure other data properties from  the request object
         const { firstname,lastname,dateOfBirth,gender,nationality,email,phoneContact,profession,
@@ -21,10 +24,10 @@ const createNewProfile = async(req,res) =>{
             return res.status(400).json("Failed to create new job");
         }
 
-    } catch (error) {
+    } catch (error: any) {
         // Check if the error is a validation error
       if (error.name === 'ValidationError' || error.code === 11000) {
-          const errors = {};
+        const errors: {[key:string]: string}  = {};
   
           // Iterate through the validation errors and build the errors object
           for (const field in error.errors) {
@@ -37,7 +40,7 @@ const createNewProfile = async(req,res) =>{
   }
 }
 
-const getProfiles = async(req,res) =>{
+const getProfiles = async(req: Request,res: Response) =>{
     try {
         const profiles = await Profile.find({}).sort({ createdAt: -1 });
         if(profiles){
@@ -46,11 +49,11 @@ const getProfiles = async(req,res) =>{
             return res.status(400).json({ error: "Failed to fetch user profiles" });
         }
         
-    } catch (error) {
+    } catch (error:any) {
         return res.status(400).json({ error: error.message });
     }
 }
 
-module.exports = {
+export default {
     createNewProfile,getProfiles
 }

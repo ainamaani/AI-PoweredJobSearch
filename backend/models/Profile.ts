@@ -1,5 +1,4 @@
-const mongoose = require('mongoose')
-const User = require('./User')
+import mongoose from "mongoose";
 
 const ProfileSchema = new mongoose.Schema({
     // user:{
@@ -31,7 +30,7 @@ const ProfileSchema = new mongoose.Schema({
         type:Date,
         required: [true, "The date of birth is required"],
         validate: {
-            validator: function (value) {
+            validator: function (value:Date) {
                 // Define the minimum allowed year 
                 const minimumYear = 2007;
                 
@@ -48,7 +47,7 @@ const ProfileSchema = new mongoose.Schema({
         type:String,
         required: [true, "Email is required"],
         validate: {
-            validator: async function (value) {
+            validator: async function (value:string) {
                 // Check if the email format is valid
                 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
                 if (!emailRegex.test(value)) {
@@ -56,7 +55,7 @@ const ProfileSchema = new mongoose.Schema({
                 }
 
                 // Check if the email is already in use
-                const existingMember = await this.constructor.findOne({ email: value });
+                const existingMember = await Profile.findOne({ email: value });
                 if (existingMember) {
                     throw new Error('Email already exists');
                 }  
@@ -67,13 +66,13 @@ const ProfileSchema = new mongoose.Schema({
         type:String,
         required: [true, "The phone number is required"],
         validate: {
-            validator: async function (value) {
+            validator: async function (value:string) {
                 // Check if the phone number has at least 10 digits
                 if(value.length < 10){
                     throw new Error('Phone number must be not less than 10 digits');
                 }
                 //check for uniqueness
-                const existingPhoneNumber = await this.constructor.findOne({ phoneNumber:value });
+                const existingPhoneNumber = await Profile.findOne({ phoneNumber:value });
                 if(existingPhoneNumber){
                     throw new Error('This Phone number already exists');
                 }
@@ -125,4 +124,6 @@ const ProfileSchema = new mongoose.Schema({
 },{timestamps:true})
 
 
-module.exports = mongoose.model('Profile',ProfileSchema);
+const Profile = mongoose.model('Profile',ProfileSchema);
+
+export default Profile;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const JobSchema = new mongoose.Schema({
     title:{
@@ -13,7 +13,7 @@ const JobSchema = new mongoose.Schema({
         type:String,
         required:[true, "The company email is required"],
         validate: {
-            validator: function (value){
+            validator: function (value:string){
                 // Check if the email format is valid
                 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
                 return emailRegex.test(value);
@@ -25,7 +25,7 @@ const JobSchema = new mongoose.Schema({
         type:String,
         required:[true, "The contact information is required"],
         validate:{
-            validator: function (value){
+            validator: function (value :string){
                 // Check if the phone number has at least 10 digits
                 return value.length >= 10;
             },
@@ -80,7 +80,7 @@ const JobSchema = new mongoose.Schema({
         type:Date,
         required:[true, "The application deadline date is required"],
         validate:{
-            validator: function(value){
+            validator: function(value:Date){
                 // check if the date supplied is valid(not in the past)
                 return value >= new Date()
             },
@@ -95,4 +95,6 @@ const JobSchema = new mongoose.Schema({
 },{timestamps:true});
 
 
-module.exports = mongoose.model('Jobs',JobSchema);
+const Job = mongoose.model('Jobs',JobSchema);
+
+export default Job;
