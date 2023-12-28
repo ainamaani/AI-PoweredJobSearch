@@ -27,12 +27,12 @@ const Allprofiles = () => {
         </Typography>
         {profiles ? (
             profiles.map((profile)=>(
-                <div key={"profile._id"}>
+                <div key={profile._id}>
                     <h4>{profile.firstname}</h4>
                     <p>{profile.lastname}</p>
                     <img
                             src={`http://localhost:5550/${profile.profilePic}`} // Assuming profilePic contains the relative path to the image
-                            alt={`Profile Picture of ${profile.firstname}`}
+                            alt={profile.firstname}
                             style={{ maxWidth: '100px', maxHeight: '100px' }} // Set your desired width and height
                         />
                     

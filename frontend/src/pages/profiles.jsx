@@ -25,7 +25,7 @@ const ProfileCategories = () => {
     return ( 
         <div className="categories">
             <Typography variant="h3">Profiles</Typography>
-            <Link to={'/allprofiles'}>All profiles</Link>
+            <Link to="/allprofiles">All profiles</Link>
             { categories ? (
                 categories.map((category)=>(
                     <div>

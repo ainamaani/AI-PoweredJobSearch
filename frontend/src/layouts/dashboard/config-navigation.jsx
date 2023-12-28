@@ -15,31 +15,40 @@ const navConfig = [
   },
   {
     title: 'Jobs',
-    path: '/jobs',
     icon: icon('ic_user'),
+    subLinks: [
+      { 
+        title: 'View job postings',
+        path: '/jobs',
+        icon: icon('ic_user')
+      },
+      {
+        title: 'Add job posting',
+        path: '/newjob',
+        icon: icon('ic_user')
+      }
+    ]
+  },
+  {
+    title: 'Profiles',
+    icon: icon('ic_user'),
+    subLinks: [
+      {
+        title: 'View profiles',
+        path: '/profiles',
+        icon: icon('ic_user')
+      },
+      {
+        title: 'Create profile',
+        path: '/newprofile',
+        icon: icon('ic_user')
+      }
+    ]  
   },
   {
     title: 'product',
     path: '/products',
     icon: icon('ic_cart'),
-  },
-  {
-    title: 'Add job posting',
-    path: '/newjob',
-    icon: icon('ic_user')
-    
-  },
-  {
-    title: 'Create profile',
-    path: '/newprofile',
-    icon: icon('ic_user')
-    
-  },
-  {
-    title: 'Profiles',
-    path: '/profiles',
-    icon: icon('ic_user')
-    
   },
   {
     title: 'blog',
