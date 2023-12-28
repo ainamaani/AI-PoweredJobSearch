@@ -36,6 +36,12 @@ const navConfig = [
     
   },
   {
+    title: 'Profiles',
+    path: '/profiles',
+    icon: icon('ic_user')
+    
+  },
+  {
     title: 'blog',
     path: '/blog',
     icon: icon('ic_blog'),

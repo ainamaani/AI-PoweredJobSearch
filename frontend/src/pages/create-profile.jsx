@@ -1,4 +1,5 @@
-import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel } from "@mui/material";
+import { Typography,TextField,Button,RadioGroup,Radio,
+    FormControlLabel,Select,MenuItem, FormControl, InputLabel } from "@mui/material";
 import React,{useState} from 'react';
 import { styled } from "@mui/system";
 import axios from "axios";
@@ -37,6 +38,7 @@ const CreateProfile = () => {
     const [phoneContact, setPhoneContact] = useState('');
     const [profilePic, setProfilePic] = useState(null);
     const [profession, setProfession] = useState('');
+    const [category, setCategory] = useState('');
     const [personalDescription, setPersonalDescription] = useState('');
     const [website, setWebsite] = useState('');
     const [github, setGithub] = useState('');
@@ -59,6 +61,7 @@ const CreateProfile = () => {
         formData.append('phoneContact', phoneContact);
         formData.append('profilePic', profilePic);
         formData.append('profession', profession);
+        formData.append('category', category);
         formData.append('personalDescription', personalDescription);
         formData.append('website', website);
         formData.append('github', github);
@@ -89,6 +92,7 @@ const CreateProfile = () => {
                 setPhoneContact('');
                 setProfilePic(null);
                 setProfession('');
+                setCategory('');
                 setPersonalDescription('');
                 setWebsite('');
                 setGithub('');
@@ -206,6 +210,42 @@ const CreateProfile = () => {
                     { errors.profilePic && (
                         <span style={{color:'red'}}>{errors.profilePic}</span>
                     )}
+
+                    <FormControl fullWidth >
+                        <InputLabel id="category" >Select your profession category</InputLabel>
+                        <Select
+                        value={category}
+                        fullWidth
+                        id="category"
+                        label="Select a category"
+                        sx={{ width: 800 }}
+                        onChange={(e) => setCategory(e.target.value)}
+                        >
+                            <MenuItem value="" disabled>Select a Category</MenuItem>
+                            <MenuItem value="Accounting">Accounting</MenuItem>
+                            <MenuItem value="Agriculture">Agriculture</MenuItem>
+                            <MenuItem value="Architecture">Architecture</MenuItem>
+                            <MenuItem value="Arts and Entertainment">Arts and Entertainment</MenuItem>
+                            <MenuItem value="Business and Management">Business and Management</MenuItem>
+                            <MenuItem value="Construction">Construction</MenuItem>
+                            <MenuItem value="Education">Education</MenuItem>
+                            <MenuItem value="Engineering">Engineering</MenuItem>
+                            <MenuItem value="Finance">Finance</MenuItem>
+                            <MenuItem value="Healthcare">Healthcare</MenuItem>
+                            <MenuItem value="Information Technology">Information Technology</MenuItem>
+                            <MenuItem value="Legal">Legal</MenuItem>
+                            <MenuItem value="Manufacturing">Manufacturing</MenuItem>
+                            <MenuItem value="Marketing and Sales">Marketing and Sales</MenuItem>
+                            <MenuItem value="Media and Communications">Media and Communications</MenuItem>
+                            <MenuItem value="Nonprofit">Nonprofit</MenuItem>
+                            <MenuItem value="Real Estate">Real Estate</MenuItem>
+                            <MenuItem value="Science">Science</MenuItem>
+                            <MenuItem value="Social Services">Social Services</MenuItem>
+                            <MenuItem value="Transportation">Transportation</MenuItem>
+                            {/* Add more professions as needed */}
+                        </Select>
+                    </FormControl>
+                    
                     <StyledTextField
                         label="Profession"
                         variant="outlined"

@@ -19,8 +19,8 @@ const createNewProfile = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const profilePicPath = req.files['profilePic'][0].path;
         const resumePath = req.files['resume'][0].path;
         // Destructure other data properties from  the request object
-        const { firstname, lastname, dateOfBirth, gender, nationality, email, phoneContact, profession, personalDescription, website, github, linkedIn, twitter, facebook, instagram } = req.body;
-        const profile = yield Profile_1.default.create({ firstname, lastname, dateOfBirth, email, gender, nationality, phoneContact,
+        const { firstname, lastname, dateOfBirth, gender, nationality, email, phoneContact, category, profession, personalDescription, website, github, linkedIn, twitter, facebook, instagram } = req.body;
+        const profile = yield Profile_1.default.create({ firstname, lastname, dateOfBirth, email, gender, nationality, phoneContact, category,
             profession, personalDescription, website, github, linkedIn, twitter, facebook, instagram,
             profilePic: profilePicPath, resume: resumePath
         });
@@ -59,6 +59,35 @@ const getProfiles = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         return res.status(400).json({ error: error.message });
     }
 });
+const getProfileCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const categories = yield Profile_1.default.distinct('category');
+        if (categories) {
+            return res.status(200).json(categories);
+        }
+        else {
+            return res.status(400).json({ error: "Failed to fetch the categories" });
+        }
+    }
+    catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+});
+const getCategoryProfiles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { category } = req.params;
+    try {
+        const categoryProfiles = yield Profile_1.default.find({ category: category });
+        if (categoryProfiles) {
+            return res.status(200).json(categoryProfiles);
+        }
+        else {
+            return res.status(400).json({ error: "Failed to fetch category profiles" });
+        }
+    }
+    catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+});
 exports.default = {
-    createNewProfile, getProfiles
+    createNewProfile, getProfiles, getProfileCategories, getCategoryProfiles
 };

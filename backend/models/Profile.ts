@@ -83,6 +83,10 @@ const ProfileSchema = new mongoose.Schema({
         type:String,
         default:null
     },
+    category:{
+        type:String,
+        required: [true, "The category is required"]
+    },
     profession:{
         type:String,
         required: [true, "Your profession is required"]

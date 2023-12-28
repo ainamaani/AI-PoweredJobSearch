@@ -10,10 +10,10 @@ const createNewProfile = async(req: Request,res: Response) =>{
 
 
         // Destructure other data properties from  the request object
-        const { firstname,lastname,dateOfBirth,gender,nationality,email,phoneContact,profession,
+        const { firstname,lastname,dateOfBirth,gender,nationality,email,phoneContact,category,profession,
                 personalDescription,website,github,linkedIn,twitter,facebook,instagram } = req.body;
         
-        const profile = await Profile.create({firstname,lastname,dateOfBirth,email,gender,nationality,phoneContact,
+        const profile = await Profile.create({firstname,lastname,dateOfBirth,email,gender,nationality,phoneContact,category,
                         profession,personalDescription,website,github,linkedIn,twitter,facebook,instagram,
                         profilePic:profilePicPath,resume:resumePath
                     });
@@ -54,6 +54,34 @@ const getProfiles = async(req: Request,res: Response) =>{
     }
 }
 
+const getProfileCategories = async( req: Request,res: Response ) =>{
+    try {
+        const categories = await Profile.distinct('category');
+        if(categories){
+            return res.status(200).json(categories)
+        }
+        else{
+            return res.status(400).json({ error: "Failed to fetch the categories" });
+        }
+    } catch (error:any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
+const getCategoryProfiles = async(req: Request,res: Response) =>{
+    const { category } = req.params;
+    try {
+        const categoryProfiles = await Profile.find({ category:category });
+        if(categoryProfiles){
+            return res.status(200).json(categoryProfiles);
+        }else{
+            return res.status(400).json({ error: "Failed to fetch category profiles" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
 export default {
-    createNewProfile,getProfiles
+    createNewProfile,getProfiles,getProfileCategories,getCategoryProfiles
 }
