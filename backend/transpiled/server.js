@@ -11,6 +11,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const JobRoutes_1 = __importDefault(require("./routes/JobRoutes"));
 const ProfileRoutes_1 = __importDefault(require("./routes/ProfileRoutes"));
+const ApplicationRoutes_1 = __importDefault(require("./routes/ApplicationRoutes"));
 // set up an express application
 const app = (0, express_1.default)();
 //middleware
@@ -30,6 +31,7 @@ if (!dbURI) {
 //routes
 app.use('/api/jobs', JobRoutes_1.default);
 app.use('/api/profiles', ProfileRoutes_1.default);
+app.use('/api/applications', ApplicationRoutes_1.default);
 // connect to the database
 mongoose_1.default.connect(dbURI)
     .then(() => {

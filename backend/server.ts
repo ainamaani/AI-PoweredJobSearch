@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import JobRoutes from "./routes/JobRoutes";
 import ProfileRoutes from "./routes/ProfileRoutes";
+import ApplicationRoutes from "./routes/ApplicationRoutes";
 
 // set up an express application
 const app = express()
@@ -30,6 +31,7 @@ if (!dbURI) {
 //routes
 app.use('/api/jobs', JobRoutes);
 app.use('/api/profiles', ProfileRoutes);
+app.use('/api/applications', ApplicationRoutes);
 
 // connect to the database
 mongoose.connect(dbURI)

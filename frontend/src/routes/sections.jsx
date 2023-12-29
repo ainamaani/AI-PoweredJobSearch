@@ -11,8 +11,10 @@ export const CreateProfilePage = lazy(() => import('src/pages/create-profile'));
 export const AddJobPostingPage = lazy(() => import('src/pages/add-job-posting'));
 export const ProfilesPage = lazy(() => import('src/pages/profiles'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
+export const ApplicationsPage = lazy(() => import('src/pages/applications'));
 export const AllProfilesPage = lazy(() => import('src/pages/all-profiles'));
 export const ProfilesCategoryPage = lazy(() => import('src/pages/profiles-category'));
+export const JobApplicationPage = lazy(() => import('src/pages/job-application'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 
@@ -32,12 +34,14 @@ export default function Router() {
         { element: <IndexPage />, index: true },
         { path: 'jobs', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
+        { path: 'applications', element: <ApplicationsPage /> },
         { path: 'profiles', element: <ProfilesPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'newjob', element: < AddJobPostingPage /> },
         { path: 'newprofile', element: <CreateProfilePage /> },
         { path: 'allprofiles', element: <AllProfilesPage /> },
-        { path: 'profiles/:category', element: <ProfilesCategoryPage /> }
+        { path: 'profiles/:category', element: <ProfilesCategoryPage /> },
+        { path: 'apply/:id', element: <JobApplicationPage /> }
       ],
     },
     {

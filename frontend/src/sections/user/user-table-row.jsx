@@ -10,9 +10,11 @@ import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+import { VisibilityRounded } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +27,7 @@ export default function UserTableRow({
   datePosted,
   status,
   handleClick,
+  handleOpenViewDialog
 }) {
   const [open, setOpen] = useState(null);
 
@@ -62,6 +65,16 @@ export default function UserTableRow({
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
         </TableCell>
 
+        <TableCell>
+          <Tooltip title="View" >
+            <IconButton color='primary' size='large'
+              onClick={handleOpenViewDialog}
+            >
+              <VisibilityRounded />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -97,6 +110,7 @@ UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
   company: PropTypes.any,
   handleClick: PropTypes.func,
+  handleOpenViewDialog: PropTypes.func,
   datePosted: PropTypes.any,
   title: PropTypes.any,
   location: PropTypes.any,

@@ -46,6 +46,11 @@ const navConfig = [
     ]  
   },
   {
+    title: 'Applications',
+    path: '/applications',
+    icon: icon('ic_cart'),
+  },
+  {
     title: 'product',
     path: '/products',
     icon: icon('ic_cart'),

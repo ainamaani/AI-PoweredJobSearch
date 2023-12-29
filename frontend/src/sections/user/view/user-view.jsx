@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useState,useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { Link } from 'react-router-dom';
 
 
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { VisibilityRounded } from '@mui/icons-material';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -29,6 +31,8 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 
 
 
+
+
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
@@ -45,6 +49,10 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [jobs, setJobs] = useState(null);
+
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+
+  const [jobToView, setJobToView] = useState(null)
 
 
   useEffect(()=>{
@@ -114,6 +122,21 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
+  // function to handle opening of the view dialog
+  const handleOpenViewDialog = (job) =>{
+    setJobToView(job);
+    setIsViewDialogOpen(true)
+  }
+
+  const handleCloseViewDialog = () =>{
+    setJobToView(null);
+    setIsViewDialogOpen(false)
+  }
+
+  const handleApplyForJob = () =>{
+
+  }
+
   const dataFiltered = jobs
   ? applyFilter({
       inputData: jobs,
@@ -159,6 +182,7 @@ export default function UserPage() {
                     { id: 'location', label: 'Location' },
                     { id: 'datePosted', label: 'Date posted', align: 'center' },
                     { id: 'status', label: 'Status' },
+                    { id: 'actions', label: 'Actions' },
                     { id: '' },
                   ]}
                 />
@@ -175,6 +199,7 @@ export default function UserPage() {
                         datePosted={formatDistanceToNow( new Date(job.createdAt),{addSuffix:true , includeSeconds:true} )}
                         selected={selected.indexOf(job.title) !== -1}
                         handleClick={(event) => handleClick(event, job.title)}
+                        handleOpenViewDialog={() => handleOpenViewDialog(job)}
                       />
                     ))
                 ) : (
@@ -195,6 +220,60 @@ export default function UserPage() {
                     <CircularProgress/>
                 </div>
           )}
+
+        <Dialog
+          open={isViewDialogOpen}
+          onClose={handleCloseViewDialog}
+          PaperProps={{
+            style:{
+              width: '800px'
+            }
+          }}
+        >
+          <DialogTitle>Job details</DialogTitle>
+          <DialogContent>
+            {
+              jobToView && (
+                <>
+                  <Typography variant="body1">
+                  <strong>Job title:</strong> {jobToView.title}
+                  </Typography>
+                  <Typography variant="body1">
+                  <strong>Job description:</strong> {jobToView.description}
+                  </Typography>
+                  <Typography variant="body1">
+                  <strong>Hiring company:</strong> {jobToView.company}
+                  </Typography>
+                  <Typography variant="body1">
+                  <strong>Location:</strong> {jobToView.location}
+                  </Typography>
+                  <Typography variant="body1">
+                  <strong>Skills:</strong> {jobToView.skills}
+                  </Typography>
+                  <Typography variant="body1">
+                  <strong>Qualifications:</strong> {jobToView.qualifications}
+                  </Typography>
+                  <Typography variant="body1">
+                  <strong>Experience:</strong> {jobToView.experience}
+                  </Typography>
+                  <Typography variant="body1">
+                  <strong>Salary range:</strong> {jobToView.salaryRange}
+                  </Typography>
+                </>
+              )
+            }
+          </DialogContent>
+          <DialogActions>
+              <Button onClick={handleCloseViewDialog} color='primary' variant='contained'>
+                Close
+              </Button>
+              <Button onClick={handleApplyForJob} color='secondary' variant='contained'>
+                Apply
+              </Button>
+              <Link to={`/apply/${jobToView?._id}`}>Apply</Link>
+          </DialogActions>
+
+        </Dialog>
           
         </Scrollbar>
 
@@ -210,4 +289,6 @@ export default function UserPage() {
       </Card>
     </Container>
   );
+ 
 }
+
