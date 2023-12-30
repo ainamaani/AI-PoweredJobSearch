@@ -4,15 +4,30 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf transpiled && npx tsc",
+    "prestart": "npm run build",
+    "start": "node transpiled/server.js",
+    "serve": "concurrently \"tsc -w\" \"nodemon transpiled/server.js\""
   },
   "author": "Computer Science Group 15",
   "license": "ISC",
   "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.5",
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mongoose": "^8.0.3",
-    "nodemon": "^3.0.2"
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.0.2",
+    "path": "^0.12.7",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/multer": "^1.4.11"
   }
 }

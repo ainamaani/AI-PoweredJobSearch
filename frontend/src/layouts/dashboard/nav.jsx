@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React,{ useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -26,7 +26,12 @@ import navConfig from './config-navigation';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
+  const [isJobsOpen, setIsJobsOpen] = useState(false);
+  const [isProfilesOpen, setIsProfilesOpen] = useState(false);
+
   const pathname = usePathname();
+
+  const name = "Ainamaani Isaac"
 
   const upLg = useResponsive('up', 'lg');
 
@@ -36,6 +41,16 @@ export default function Nav({ openNav, onCloseNav }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  const toggleJobsOpen = () =>{
+    setIsJobsOpen((prev) => !prev);
+    setIsProfilesOpen(false);
+  }
+
+  const toggleProfilesOpen = () =>{
+    setIsProfilesOpen((prev) => !prev);
+    setIsJobsOpen(false);
+  }
 
   const renderAccount = (
     <Box
@@ -53,7 +68,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar src={account.photoURL} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+        <Typography variant="subtitle2">{name}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {account.role}
@@ -65,7 +80,34 @@ export default function Nav({ openNav, onCloseNav }) {
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
       {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
+        <React.Fragment key={item.title}>
+          {item.subLinks ? (
+            <>
+              {item.title === 'Jobs' && (
+                <NavItem item={item} onClick={toggleJobsOpen} />
+              )}
+              {item.title === 'Profiles' && (
+                <NavItem item={item} onClick={toggleProfilesOpen} />
+              )}
+              {isJobsOpen && item.title === 'Jobs' && (
+                <Stack component="nav" spacing={0.5} sx={{ pl: 3 }}>
+                  {item.subLinks.map((subLink) => (
+                    <NavItem key={subLink.title} item={subLink} />
+                  ))}
+                </Stack>
+              )}
+              {isProfilesOpen && item.title === 'Profiles' && item.subLinks && (
+                <Stack component="nav" spacing={0.5} sx={{ pl: 3 }}>
+                  {item.subLinks.map((subLink) => (
+                    <NavItem key={subLink.title} item={subLink} />
+                  ))}
+                </Stack>
+              )}
+            </>
+          ) : (
+            <NavItem item={item} />
+          )}
+        </React.Fragment>
       ))}
     </Stack>
   );
@@ -164,15 +206,15 @@ Nav.propTypes = {
 
 // ----------------------------------------------------------------------
 
-function NavItem({ item }) {
+function NavItem({ item, onClick }) {
   const pathname = usePathname();
-
   const active = item.path === pathname;
 
   return (
     <ListItemButton
       component={RouterLink}
       href={item.path}
+      onClick={onClick}  // Only apply onClick when it's provided
       sx={{
         minHeight: 44,
         borderRadius: 0.75,
@@ -201,4 +243,5 @@ function NavItem({ item }) {
 
 NavItem.propTypes = {
   item: PropTypes.object,
+  onClick: PropTypes.func
 };

@@ -1,4 +1,5 @@
 import SvgColor from 'src/components/svg-color';
+import { AccessTimeOutlined } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -13,9 +14,41 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'user',
-    path: '/user',
+    title: 'Jobs',
     icon: icon('ic_user'),
+    subLinks: [
+      { 
+        title: 'View job postings',
+        path: '/jobs',
+        icon: icon('ic_user')
+      },
+      {
+        title: 'Add job posting',
+        path: '/newjob',
+        icon: icon('ic_user')
+      }
+    ]
+  },
+  {
+    title: 'Profiles',
+    icon: icon('ic_user'),
+    subLinks: [
+      {
+        title: 'View profiles',
+        path: '/profiles',
+        icon: icon('ic_user')
+      },
+      {
+        title: 'Create profile',
+        path: '/newprofile',
+        icon: icon('ic_user')
+      }
+    ]  
+  },
+  {
+    title: 'Applications',
+    path: '/applications',
+    icon: icon('ic_cart'),
   },
   {
     title: 'product',
@@ -32,6 +65,7 @@ const navConfig = [
     path: '/login',
     icon: icon('ic_lock'),
   },
+  
   {
     title: 'Not found',
     path: '/404',

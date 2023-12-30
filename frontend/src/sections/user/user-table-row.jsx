@@ -10,21 +10,24 @@ import MenuItem from '@mui/material/MenuItem';
 import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+import { VisibilityRounded } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
   selected,
-  name,
+  title,
   avatarUrl,
   company,
-  role,
-  isVerified,
+  location,
+  datePosted,
   status,
   handleClick,
+  handleOpenViewDialog
 }) {
   const [open, setOpen] = useState(null);
 
@@ -45,21 +48,31 @@ export default function UserTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            <Avatar alt={title} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {title}
             </Typography>
           </Stack>
         </TableCell>
 
         <TableCell>{company}</TableCell>
 
-        <TableCell>{role}</TableCell>
+        <TableCell>{location}</TableCell>
 
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
+        <TableCell align="center">{datePosted}</TableCell>
 
         <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+        </TableCell>
+
+        <TableCell>
+          <Tooltip title="View" >
+            <IconButton color='primary' size='large'
+              onClick={handleOpenViewDialog}
+            >
+              <VisibilityRounded />
+            </IconButton>
+          </Tooltip>
         </TableCell>
 
         <TableCell align="right">
@@ -97,9 +110,10 @@ UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
   company: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
-  name: PropTypes.any,
-  role: PropTypes.any,
+  handleOpenViewDialog: PropTypes.func,
+  datePosted: PropTypes.any,
+  title: PropTypes.any,
+  location: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
 };
