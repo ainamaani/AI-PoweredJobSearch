@@ -5,10 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf transpiled && npx tsc",
+    "build": "rimraf build && npx tsc",
     "prestart": "npm run build",
-    "start": "node transpiled/server.js",
-    "serve": "concurrently \"tsc -w\" \"nodemon transpiled/server.js\""
+    "start": "node build/server.js",
+    "serve": "concurrently \"tsc -w\" \"nodemon build/server.js\""
   },
   "author": "Computer Science Group 15",
   "license": "ISC",
