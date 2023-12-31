@@ -1,6 +1,5 @@
 import express,{ Router }  from "express";
 const router: Router = express.Router();
-
 import interviewsController from "../controllers/InterviewController";
 
 const { scheduleInterview, getInterviews } = interviewsController;
