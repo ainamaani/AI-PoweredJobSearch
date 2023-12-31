@@ -1,5 +1,6 @@
 import Application from "../models/Application";
 import { Request, Response } from "express";
+import path from "path";
 
 const newJobApplication = async(req: Request, res: Response) =>{
     try {
@@ -39,7 +40,7 @@ const newJobApplication = async(req: Request, res: Response) =>{
 
 const jobApplications = async(req: Request, res: Response) =>{
     try {
-        const jobapplications = await Application.find({}).sort({ createdAt: -1 });
+        const jobapplications = await Application.find({}).populate('job').sort({ createdAt: -1 });
         if(jobapplications){
             return res.status(200).json(jobapplications);
         }else{
@@ -50,7 +51,40 @@ const jobApplications = async(req: Request, res: Response) =>{
     }
 }
 
+const downloadResume = async(req: Request, res: Response) =>{
+    const resumeId = req.params;
+    try {
+        const application = await Application.findById(resumeId);
+        if( !application || !application.resume ){
+            return res.status(404).json({ error: "Job application not found" });
+        }
+
+        const resumePath = application.resume;
+        res.sendFile(path.resolve(resumePath));
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
+const downloadApplicationLetter = async(req: Request, res: Response) =>{
+    const applicationLetterId = req.params;
+    try {
+        const application = await Application.findById(applicationLetterId);
+
+        if( !application || !application.applicationLetter ){
+            return res.status(404).json({ error: "Job application not found" });
+        }
+
+        const applicationLetterPath = application.applicationLetter;
+        res.sendFile(path.resolve(applicationLetterPath));
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
 export default {
     newJobApplication,
-    jobApplications
+    jobApplications,
+    downloadResume,
+    downloadApplicationLetter
 };

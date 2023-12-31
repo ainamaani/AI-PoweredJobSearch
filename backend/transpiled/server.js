@@ -12,12 +12,13 @@ dotenv_1.default.config();
 const JobRoutes_1 = __importDefault(require("./routes/JobRoutes"));
 const ProfileRoutes_1 = __importDefault(require("./routes/ProfileRoutes"));
 const ApplicationRoutes_1 = __importDefault(require("./routes/ApplicationRoutes"));
+const InterviewRoutes_1 = __importDefault(require("./routes/InterviewRoutes"));
 // set up an express application
 const app = (0, express_1.default)();
 //middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, 'uploads')));
+app.use('/uploads', express_1.default.static(path_1.default.resolve(__dirname, '../uploads/')));
 app.use((req, res, next) => {
     console.log(req.body, req.path, req.method);
     next();
@@ -32,6 +33,7 @@ if (!dbURI) {
 app.use('/api/jobs', JobRoutes_1.default);
 app.use('/api/profiles', ProfileRoutes_1.default);
 app.use('/api/applications', ApplicationRoutes_1.default);
+app.use('/api/interviews', InterviewRoutes_1.default);
 // connect to the database
 mongoose_1.default.connect(dbURI)
     .then(() => {

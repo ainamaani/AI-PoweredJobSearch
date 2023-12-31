@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Application_1 = __importDefault(require("../models/Application"));
+const path_1 = __importDefault(require("path"));
 const newJobApplication = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // get uploaded files from the request object
@@ -48,7 +49,7 @@ const newJobApplication = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 const jobApplications = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const jobapplications = yield Application_1.default.find({}).sort({ createdAt: -1 });
+        const jobapplications = yield Application_1.default.find({}).populate('job').sort({ createdAt: -1 });
         if (jobapplications) {
             return res.status(200).json(jobapplications);
         }
@@ -60,7 +61,37 @@ const jobApplications = (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(400).json({ error: error.message });
     }
 });
+const downloadResume = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const resumeId = req.params;
+    try {
+        const application = yield Application_1.default.findById(resumeId);
+        if (!application || !application.resume) {
+            return res.status(404).json({ error: "Job application not found" });
+        }
+        const resumePath = application.resume;
+        res.sendFile(path_1.default.resolve(resumePath));
+    }
+    catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+});
+const downloadApplicationLetter = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const applicationLetterId = req.params;
+    try {
+        const application = yield Application_1.default.findById(applicationLetterId);
+        if (!application || !application.applicationLetter) {
+            return res.status(404).json({ error: "Job application not found" });
+        }
+        const applicationLetterPath = application.applicationLetter;
+        res.sendFile(path_1.default.resolve(applicationLetterPath));
+    }
+    catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+});
 exports.default = {
     newJobApplication,
-    jobApplications
+    jobApplications,
+    downloadResume,
+    downloadApplicationLetter
 };

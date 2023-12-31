@@ -7,6 +7,7 @@ dotenv.config();
 import JobRoutes from "./routes/JobRoutes";
 import ProfileRoutes from "./routes/ProfileRoutes";
 import ApplicationRoutes from "./routes/ApplicationRoutes";
+import InterviewRoutes from "./routes/InterviewRoutes";
 
 // set up an express application
 const app = express()
@@ -14,7 +15,7 @@ const app = express()
 //middleware
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use('/uploads', express.static(path.resolve(__dirname, '../uploads/')))
 app.use((req,res,next)=>{
     console.log(req.body, req.path, req.method)
     next()
@@ -32,6 +33,7 @@ if (!dbURI) {
 app.use('/api/jobs', JobRoutes);
 app.use('/api/profiles', ProfileRoutes);
 app.use('/api/applications', ApplicationRoutes);
+app.use('/api/interviews', InterviewRoutes);
 
 // connect to the database
 mongoose.connect(dbURI)
