@@ -33,7 +33,7 @@ const Allprofiles = () => {
                     <img
                             src={`http://localhost:5550/${profile.profilePic}`} // Assuming profilePic contains the relative path to the image
                             alt={profile.firstname}
-                            style={{ maxWidth: '100px', maxHeight: '100px' }} // Set your desired width and height
+                            style={{ maxWidth: '300px', maxHeight: '300px' }} // Set your desired width and height
                         />
                     
                 </div>
