@@ -1,8 +1,17 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose, { Mongoose, Document } from "mongoose";
 import Application from "./Application";
 import Job from "./Job";
 
-const InterviewSchema = new mongoose.Schema({
+interface InterviewI extends Document{
+    job: mongoose.Schema.Types.ObjectId;
+    interviewStatus: string;
+    interviewDate: Date;
+    interviewTime: string;
+    location: string;
+    additionalNotes: string;
+}
+
+const InterviewSchema = new mongoose.Schema<InterviewI>({
     // applicant:{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: Application,
@@ -48,6 +57,6 @@ const InterviewSchema = new mongoose.Schema({
 
 },{timestamps:true});
 
-const Interview = mongoose.model('Interview', InterviewSchema);
+const Interview = mongoose.model<InterviewI>('Interview', InterviewSchema);
 
 export default Interview;

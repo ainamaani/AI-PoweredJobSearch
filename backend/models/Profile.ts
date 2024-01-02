@@ -1,6 +1,30 @@
-import mongoose from "mongoose";
+import mongoose,{Document} from "mongoose";
 
-const ProfileSchema = new mongoose.Schema({
+interface ProfileI extends Document{
+    firstname: string;
+    lastname: string;
+    gender: string;
+    nationality: string;
+    dateOfBirth: Date;
+    email: string;
+    phoneContact: string;
+    profilePic: string;
+    category: string;
+    profession: string;
+    personalDescription: string;
+    website: string;
+    github: string;
+    socialmedia:{
+        linkedIn: string;
+        twitter: string;
+        facebook: string;
+        instagram: string;
+    }  
+    resume: string;
+
+}
+
+const ProfileSchema = new mongoose.Schema<ProfileI>({
     // user:{
     //     type:mongoose.Schema.Types.ObjectId,
     //     ref:User,
@@ -128,6 +152,6 @@ const ProfileSchema = new mongoose.Schema({
 },{timestamps:true})
 
 
-const Profile = mongoose.model('Profile',ProfileSchema);
+const Profile = mongoose.model<ProfileI>('Profile',ProfileSchema);
 
 export default Profile;

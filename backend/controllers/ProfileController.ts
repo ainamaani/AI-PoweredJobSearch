@@ -1,5 +1,6 @@
 import Profile from "../models/Profile";
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import multer from "multer";
 
 const createNewProfile = async(req: Request,res: Response) =>{
@@ -82,6 +83,41 @@ const getCategoryProfiles = async(req: Request,res: Response) =>{
     }
 }
 
+const updateProfile = async(req: Request, res: Response) =>{
+    try {
+        const updatedFields = req.body;
+        const { id } = req.params;
+
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            return res.status(400).json({ error: "The id provided is not valid" });
+        }
+
+        const updatedProfileDetails = await Profile.findByIdAndUpdate(id,updatedFields,{new: true});
+        if(updatedProfileDetails){
+            return res.status(200).json(updatedProfileDetails);
+        }else{
+            return res.status(400).json({ error: "Failed to update the profile" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+const deleteProfile = async(req: Request, res: Response) =>{
+    try {
+        const { id } = req.params;
+        const profileToDelete = await Profile.findByIdAndDelete(id);
+        if(profileToDelete){
+            return res.status(200).json(profileToDelete);
+        }else{
+            return res.status(400).json({ error: "Failed to delete project" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
 export default {
-    createNewProfile,getProfiles,getProfileCategories,getCategoryProfiles
+    createNewProfile,getProfiles,getProfileCategories,getCategoryProfiles,
+    updateProfile,deleteProfile
 }

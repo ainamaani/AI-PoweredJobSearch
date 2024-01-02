@@ -3,7 +3,8 @@ const router : Router = express.Router();
 import upload from "../middleware/MulterConfig";
 import profilesController from "../controllers/ProfileController";
 
-const { createNewProfile,getProfiles,getProfileCategories,getCategoryProfiles } = profilesController;
+const { createNewProfile,getProfiles,getProfileCategories,
+    getCategoryProfiles,updateProfile,deleteProfile } = profilesController;
 
 router.post('/newprofile', upload.fields([{name: 'profilePic', maxCount: 1},{name: 'resume', maxCount:1}]) ,createNewProfile)
 
@@ -12,5 +13,9 @@ router.get('/', getProfiles);
 router.get('/categories', getProfileCategories);
 
 router.get('/:category', getCategoryProfiles);
+
+router.patch('/update/:id', updateProfile);
+
+router.delete('/delete/:id', deleteProfile);
 
 export default router;

@@ -1,6 +1,25 @@
-import mongoose from "mongoose";
+import mongoose,{ Document } from "mongoose";
 
-const JobSchema = new mongoose.Schema({
+interface JobI extends Document{
+    title:string;
+    company:string;
+    companyEmail:string;
+    companyContact:string;
+    description:string;
+    category:string;
+    skills:string;
+    experience:string;
+    qualifications:string;
+    location:string;
+    salaryRange: string;
+    status:string;
+    jobType:string;
+    additionalBenefits:string;
+    applicationDeadline:Date;
+    applicationInstructions:string;
+}
+
+const JobSchema = new mongoose.Schema<JobI>({
     title:{
         type:String,
         required:[true, "Job title is required"]
@@ -95,6 +114,6 @@ const JobSchema = new mongoose.Schema({
 },{timestamps:true});
 
 
-const Job = mongoose.model('Jobs',JobSchema);
+const Job = mongoose.model<JobI>('Jobs',JobSchema);
 
 export default Job;

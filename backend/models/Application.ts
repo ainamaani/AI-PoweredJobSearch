@@ -1,7 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import Job from './Job';
 
-const ApplicationSchema = new mongoose.Schema({
+interface ApplicationI extends Document{
+    job: mongoose.Schema.Types.ObjectId;
+    applicationDate: Date;
+    resume: string,
+    applicationLetter: string,
+    applicationStatus: string
+}
+
+const ApplicationSchema = new mongoose.Schema<ApplicationI>({
     // applicant:{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: User,
@@ -34,6 +42,6 @@ const ApplicationSchema = new mongoose.Schema({
     }
 },{timestamps:true});
 
-const Application = mongoose.model('Application', ApplicationSchema);
+const Application = mongoose.model<ApplicationI>('Application', ApplicationSchema);
 
 export default Application;
