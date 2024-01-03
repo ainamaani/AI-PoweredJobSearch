@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -29,14 +30,38 @@ export default function LoginView() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const [email, setEmail] = useState('');
+
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async(e) => {
+    try {
+      const loginData = { email,password }
+
+      const loginuser = await axios.post('http://localhost:5550/api/user/login',
+                              JSON.stringify(loginData),{
+                                headers:{
+                                  'Content-Type':'application/json'
+                                }
+                              }
+      );
+      if(loginuser.status === 200){
+        router.push('/dashboard')
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField 
+          name="email" 
+          label="Email address" 
+          value={email}
+          onChange={(e)=>{setEmail(e.target.value)}}
+        />
 
         <TextField
           name="password"
@@ -51,6 +76,8 @@ export default function LoginView() {
               </InputAdornment>
             ),
           }}
+          value={password}
+          onChange={(e)=>{setPassword(e.target.value)}}
         />
       </Stack>
 
@@ -66,7 +93,7 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={handleLogin}
       >
         Login
       </LoadingButton>

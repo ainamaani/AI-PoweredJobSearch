@@ -1,6 +1,7 @@
 import Application from "../models/Application";
 import { Request, Response } from "express";
 import path from "path";
+import Profile from "../models/Profile";
 
 const newJobApplication = async(req: Request, res: Response) =>{
     try {
@@ -82,9 +83,24 @@ const downloadApplicationLetter = async(req: Request, res: Response) =>{
     }
 }
 
+const deleteApplication = async(req: Request, res: Response) =>{
+    try {
+        const {id} = req.params;
+        const applicationDeleted = await Profile.findByIdAndDelete(id);
+        if(applicationDeleted){
+            return res.status(200).json(applicationDeleted);
+        }else{
+            return res.status(400).json({ error: "Failed to delete the application" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
 export default {
     newJobApplication,
     jobApplications,
     downloadResume,
-    downloadApplicationLetter
+    downloadApplicationLetter,
+    deleteApplication
 };
