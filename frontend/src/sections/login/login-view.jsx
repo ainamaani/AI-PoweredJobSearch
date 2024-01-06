@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import UseAuthContext from 'src/hooks/use-auth-context';
 import axios from 'axios';
 
 import Box from '@mui/material/Box';
@@ -28,6 +30,10 @@ export default function LoginView() {
 
   const router = useRouter();
 
+  const navigate = useNavigate();
+
+  const { dispatch } = UseAuthContext();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState('');
@@ -46,7 +52,12 @@ export default function LoginView() {
                               }
       );
       if(loginuser.status === 200){
-        router.push('/dashboard')
+        // save the user in local storage
+        localStorage.setItem('user', JSON.stringify(loginuser.data));
+        // update the auth api context.
+        dispatch({ type: 'LOGIN', payload: loginuser.data });
+        // navigate to the dashboard after login successfully.
+        navigate('/');
       }
     } catch (error) {
       console.log(error);
@@ -126,7 +137,7 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Minimal</Typography>
+          <Typography variant="h4">Sign in to CareerConnect</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?

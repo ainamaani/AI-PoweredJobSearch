@@ -1,5 +1,7 @@
-import { Typography } from "@mui/material";
+import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel } from "@mui/material";
 import React,{ useState, useEffect } from 'react';
+import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
@@ -29,6 +31,8 @@ const StyledPageContent = styled('div')({
 
 const Register = () => {
 
+    const navigate = useNavigate();
+
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
@@ -53,6 +57,17 @@ const Register = () => {
             )
             if(registeruser.status === 200){
                 console.log(registeruser.data);
+                setFirstname('');
+                setLastname('');
+                setEmail('');
+                setCompany('');
+                setCompanyEmail('');
+                setUserCategory('');
+                setPassword('');
+                setPasswordConfirm('');
+                
+                navigate('/login');
+
             }
         } catch (error) {
             console.log(error);

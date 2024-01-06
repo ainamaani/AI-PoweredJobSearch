@@ -1,6 +1,8 @@
 import mongoose,{Document} from "mongoose";
+import User from "./User";
 
 interface ProfileI extends Document{
+    user: mongoose.Schema.Types.ObjectId;
     firstname: string;
     lastname: string;
     gender: string;
@@ -25,11 +27,11 @@ interface ProfileI extends Document{
 }
 
 const ProfileSchema = new mongoose.Schema<ProfileI>({
-    // user:{
-    //     type:mongoose.Schema.Types.ObjectId,
-    //     ref:User,
-    //     required:[true, "The user for the profile is required"]
-    // },
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:User,
+        required:[true, "The user for the profile is required"]
+    },
     firstname:{
         type:String,
         required: [true, "The first name is required"]

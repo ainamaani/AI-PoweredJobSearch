@@ -1,8 +1,10 @@
 import mongoose, { Mongoose, Document } from "mongoose";
 import Application from "./Application";
 import Job from "./Job";
+import User from "./User";
 
 interface InterviewI extends Document{
+    applicant: mongoose.Schema.Types.ObjectId;
     job: mongoose.Schema.Types.ObjectId;
     interviewStatus: string;
     interviewDate: Date;
@@ -12,11 +14,11 @@ interface InterviewI extends Document{
 }
 
 const InterviewSchema = new mongoose.Schema<InterviewI>({
-    // applicant:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: Application,
-    //     required: [true, "The applicant for the interview is required"]
-    // },
+    applicant:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User,
+        required: [true, "The applicant for the interview is required"]
+    },
     job:{
         type: mongoose.Schema.Types.ObjectId,
         ref: Job,

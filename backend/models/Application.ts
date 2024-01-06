@@ -1,7 +1,9 @@
 import mongoose, { Document } from 'mongoose';
 import Job from './Job';
+import User from './User';
 
-interface ApplicationI extends Document{
+interface ApplicationI extends Document {
+    applicant: mongoose.Schema.Types.ObjectId;
     job: mongoose.Schema.Types.ObjectId;
     applicationDate: Date;
     resume: string,
@@ -10,11 +12,11 @@ interface ApplicationI extends Document{
 }
 
 const ApplicationSchema = new mongoose.Schema<ApplicationI>({
-    // applicant:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: User,
-    //     required: [true, "The applicant is required"]
-    // },
+    applicant:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User,
+        required: [true, "The applicant is required"]
+    },
     job:{
         type: mongoose.Schema.Types.ObjectId,
         ref: Job,

@@ -1,5 +1,6 @@
 import React,{ useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import UseAuthContext from 'src/hooks/use-auth-context';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -29,9 +30,9 @@ export default function Nav({ openNav, onCloseNav }) {
   const [isJobsOpen, setIsJobsOpen] = useState(false);
   const [isProfilesOpen, setIsProfilesOpen] = useState(false);
 
-  const pathname = usePathname();
+  const { user } = UseAuthContext();
 
-  const name = "Ainamaani Isaac"
+  const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
 
@@ -68,7 +69,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar src={account.photoURL} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{name}</Typography>
+        <Typography variant="subtitle2">{`${user?.firstname || ''} ${user?.lastname || ''}`}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {account.role}

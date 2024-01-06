@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import UseAuthContext from 'src/hooks/use-auth-context';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -33,6 +35,10 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
 
+  const { dispatch, user } = UseAuthContext();
+
+  const navigate = useNavigate();
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -40,6 +46,11 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  const handleLogOut = () =>{
+    dispatch({ type: 'LOGOUT' });
+    navigate('/login');
+  }
 
   return (
     <>
@@ -57,14 +68,14 @@ export default function AccountPopover() {
       >
         <Avatar
           src={account.photoURL}
-          alt={account.displayName}
+          alt={user?.firstname || ''}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {user?.firstname.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -85,10 +96,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+          {`${user?.firstname || ''} ${user?.lastname || ''}`}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user?.email}
           </Typography>
         </Box>
 
@@ -105,7 +116,7 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={handleLogOut}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout
