@@ -3,6 +3,7 @@ import ProfileRoutes from "./ProfileRoutes";
 import ApplicationRoutes from "./ApplicationRoutes";
 import InterviewRoutes from "./InterviewRoutes";
 import UserRoutes from "./UserRoutes";
+import ResetRoutes from "./ResetRoutes";
 
 import { Router } from "express";
 
@@ -12,4 +13,5 @@ export default (app: { use: (arg0: string, arg1: Router) => void; }) => {
     app.use('/api/applications', ApplicationRoutes);
     app.use('/api/interviews', InterviewRoutes);
     app.use('/api/user', UserRoutes);
+    app.use('/api/reset/', ResetRoutes);
 }
