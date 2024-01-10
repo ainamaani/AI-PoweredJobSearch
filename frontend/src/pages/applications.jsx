@@ -5,6 +5,7 @@ import { styled } from "@mui/system";
 import React,{useState, useEffect} from 'react';
 import axios from "axios";
 import { CalendarMonthRounded, CalendarTodayOutlined, VisibilityRounded } from "@mui/icons-material";
+import { saveAs } from "file-saver";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -99,12 +100,28 @@ const JobApplications = () => {
         }
     }
 
-    const handleResumeDownload = () =>{
-
+    const handleResumeDownload = async(applicationId) =>{
+        try {
+            const downloadresume = await axios.get(`http://localhost/api/applications/downloadresume/${applicationId}`,{responseType: 'blob'})
+            if(downloadresume.status === 200){
+                const blob = new Blob([downloadresume.data],{type: 'application.pdf'});
+                saveAs(blob, `${applicationId}.pdf`)
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    const handleApplicationLetterDownload = () =>{
-
+    const handleApplicationLetterDownload = async(applicationId) =>{
+        try {
+            const downloadapplicationletter = await axios.get(`http://localhost/api/applications/downloadapplicationletter/${applicationId}`,{responseType: 'blob'})
+            if(downloadapplicationletter.status === 200){
+                const blob = new Blob([downloadapplicationletter.data],{type: 'application.pdf'});
+                saveAs(blob, `${applicationId}.pdf`)
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return ( 
@@ -196,10 +213,10 @@ const JobApplications = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button color="primary" variant="contained"
-                    onClick={()=> handleResumeDownload()} 
+                    onClick={()=> handleResumeDownload(applicationToView._id)} 
                     >Download resume</Button>
                     <Button color="primary" variant="contained"
-                    onClick={()=> handleApplicationLetterDownload()} 
+                    onClick={()=> handleApplicationLetterDownload(applicationToView._id)} 
                     >Download Application letter</Button>
                 </DialogActions>
             </Dialog>

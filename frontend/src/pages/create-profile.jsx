@@ -3,6 +3,7 @@ import { Typography,TextField,Button,RadioGroup,Radio,
 import React,{useState} from 'react';
 import { styled } from "@mui/system";
 import axios from "axios";
+import UseAuthContext from "src/hooks/use-auth-context";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -29,6 +30,7 @@ const StyledPageContent = styled('div')({
 })
 
 const CreateProfile = () => {
+    const { user } = UseAuthContext();
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState(null);
@@ -51,7 +53,9 @@ const CreateProfile = () => {
     
     const handleCreateProfile = async(e) =>{
         e.preventDefault()
+        const userId = user.id;
         const formData = new FormData();
+        formData.append('user', userId);
         formData.append('firstname', firstname);
         formData.append('lastname', lastname);
         formData.append('dateOfBirth', dateOfBirth);

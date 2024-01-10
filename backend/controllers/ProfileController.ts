@@ -1,5 +1,6 @@
 import Profile from "../models/Profile";
 import { Request, Response } from "express";
+import path from "path";
 import mongoose from "mongoose";
 import multer from "multer";
 
@@ -11,10 +12,10 @@ const createNewProfile = async(req: Request,res: Response) =>{
 
 
         // Destructure other data properties from  the request object
-        const { firstname,lastname,dateOfBirth,gender,nationality,email,phoneContact,category,profession,
+        const { user,firstname,lastname,dateOfBirth,gender,nationality,email,phoneContact,category,profession,
                 personalDescription,website,github,linkedIn,twitter,facebook,instagram } = req.body;
         
-        const profile = await Profile.create({firstname,lastname,dateOfBirth,email,gender,nationality,phoneContact,category,
+        const profile = await Profile.create({user,firstname,lastname,dateOfBirth,email,gender,nationality,phoneContact,category,
                         profession,personalDescription,website,github,linkedIn,twitter,facebook,instagram,
                         profilePic:profilePicPath,resume:resumePath
                     });
@@ -85,16 +86,36 @@ const getCategoryProfiles = async(req: Request,res: Response) =>{
 
 const updateProfile = async(req: Request, res: Response) =>{
     try {
-        const updatedFields = req.body;
-        const { id } = req.params;
-
-        if(!mongoose.Types.ObjectId.isValid(id)){
-            return res.status(400).json({ error: "The id provided is not valid" });
+        const {id} = req.params;
+        // get profile corresponding to the user
+        const existingProfile = await Profile.findOne({ user: id });
+        if(!existingProfile){
+            return res.status(400).json({ error: "Profile to update not found"});
+        }
+        // Handle file updates
+        console.log(req.files);
+        if (req.files && ('profilePic' in req.files || 'resume' in req.files)) {
+            const profilePicPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['profilePic'][0].path;
+            const resumePath = (req.files as { [fieldname: string]: Express.Multer.File[] })['resume'][0].path;
+            // Update the profile with new file paths
+            await existingProfile.updateOne({
+            profilePic: profilePicPath,
+            resume: resumePath,
+            });
         }
 
-        const updatedProfileDetails = await Profile.findByIdAndUpdate(id,updatedFields,{new: true});
-        if(updatedProfileDetails){
-            return res.status(200).json(updatedProfileDetails);
+        // Destructure other data properties from the request object
+        const { user, firstname, lastname, dateOfBirth, gender, nationality, email, phoneContact, category, profession,
+        personalDescription, website, github, linkedIn, twitter, facebook, instagram } = req.body;
+
+        // Update the profile with other data properties
+        const updatedprofile = await existingProfile.updateOne({
+        user, firstname, lastname, dateOfBirth, email, gender, nationality, phoneContact, category,
+        profession, personalDescription, website, github, linkedIn, twitter, facebook, instagram,
+        });
+
+        if(updatedprofile){
+            return res.status(200).json(updatedprofile);
         }else{
             return res.status(400).json({ error: "Failed to update the profile" });
         }
@@ -117,7 +138,41 @@ const deleteProfile = async(req: Request, res: Response) =>{
     }
 }
 
+const getUserProfile = async(req: Request, res: Response) =>{
+    try {
+        const {id} = req.params;
+        const profile = await Profile.findOne({ user: id });
+        if(profile){
+            return res.status(200).json(profile);
+        }else{
+            return res.status(400).json({ error: "Failed to fetch the wanted project" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+
+}
+
+const handleDownloadResume = async(req: Request,res: Response) =>{
+    try {
+        const { id } = req.params;
+        // get the profile corresponding to the id
+        const profile = await Profile.findById(id);
+        if(!profile){
+            return res.status(400).json({ error: "The profile does not exist" });
+        }
+        if(!profile.resume){
+            return res.status(400).json({ error: "The resume is not available to be downloaded" });
+        }
+
+        const resumePath = profile.resume;
+        res.sendFile(path.resolve(resumePath));
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
 export default {
     createNewProfile,getProfiles,getProfileCategories,getCategoryProfiles,
-    updateProfile,deleteProfile
+    updateProfile,deleteProfile,getUserProfile,handleDownloadResume
 }

@@ -160,6 +160,47 @@ const fetchUsers = async(req: Request, res: Response) =>{
     }
 }
 
+const handleChangePassword = async(req: Request, res: Response) =>{
+    try {
+        const {id} = req.params;
+
+        const {currentPassword, newPassword} = req.body;
+        if(!currentPassword || !newPassword){
+            return res.status(400).json({ error: "All fields are required" });
+        }
+        // fetch user changing password
+        const userchanging = await User.findById(id);
+        if(!userchanging){
+            return res.status(400).json({ error: "The user trying to change password does not exist" })
+        }
+        const currentStoredPassword = userchanging.password;
+        // check if the supplied password is the correct current password
+        const matches = await bcrypt.compare(currentStoredPassword, currentPassword);
+        if(!matches){
+            return res.status(400).json({ error: "Please provide the correct current password" })
+        }
+        // check for the strength of the password
+        if(!validator.isStrongPassword(newPassword)){
+            return res.status(400).json({ error: "Please enter a strong password" });
+        }
+        // generate salt to hash new password
+        const salt = await bcrypt.genSalt(10);
+        // hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+        userchanging.password = hashedNewPassword;
+        userchanging.save({ validateBeforeSave:false })
+            .then((data)=>{
+                return res.status(200).json(data);
+            }).catch((error)=>{
+                return res.status(400).json({ error: error.message});
+            })
+        
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
 export default {
-    registerUser, loginUser, fetchUsers
+    registerUser, loginUser, fetchUsers, handleChangePassword
 };

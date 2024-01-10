@@ -4,7 +4,8 @@ import upload from "../middleware/MulterConfig";
 import profilesController from "../controllers/ProfileController";
 
 const { createNewProfile,getProfiles,getProfileCategories,
-    getCategoryProfiles,updateProfile,deleteProfile } = profilesController;
+    getCategoryProfiles,updateProfile,deleteProfile,getUserProfile,
+    handleDownloadResume } = profilesController;
 
 router.post('/newprofile', upload.fields([{name: 'profilePic', maxCount: 1},{name: 'resume', maxCount:1}]) ,createNewProfile)
 
@@ -14,8 +15,13 @@ router.get('/categories', getProfileCategories);
 
 router.get('/:category', getCategoryProfiles);
 
-router.patch('/update/:id', updateProfile);
+router.get('/profile/:id', getUserProfile);
 
 router.delete('/delete/:id', deleteProfile);
+
+router.get('/downloadresume/:id', handleDownloadResume);
+
+router.patch('/updateprofile/:id', upload.fields([{ name: 'profilePic', maxCount: 1 }, { name: 'resume', maxCount: 1 }]), updateProfile);
+
 
 export default router;

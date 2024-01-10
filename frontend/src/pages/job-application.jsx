@@ -59,7 +59,7 @@ const JobApplication = () => {
             <StyledPageContent>
                 <form onSubmit={handleJobApplication}>
                     <StyledTextField
-                        label="Upload your resume"
+                        label="Upload your resume in pdf"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
@@ -69,13 +69,13 @@ const JobApplication = () => {
                         onChange={(e)=> {setResume(e.target.files[0])}}      
                     />
                     <StyledTextField
-                        label="Upload your application letter"
+                        label="Upload your application letter in pdf"
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
                         InputLabelProps={{ shrink: true }}
                         type="file"
-                        inputProps={{ accept: ".pdf, .doc, .docx" }}
+                        inputProps={{ accept: ".pdf" }}
                         onChange={(e)=> {setApplicationLetter(e.target.files[0])}}   
                     />
                     <StyledButton variant="contained" type="submit">Apply for the job</StyledButton>

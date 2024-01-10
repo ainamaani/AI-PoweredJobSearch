@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import UseAuthContext from 'src/hooks/use-auth-context';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -112,7 +112,13 @@ export default function AccountPopover() {
         ))}
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
-
+        <MenuItem
+          sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+          disableRipple
+          disableTouchRipple
+        >
+          <Link to='/myprofile'>My profile</Link>
+        </MenuItem>
         <MenuItem
           disableRipple
           disableTouchRipple
@@ -121,6 +127,7 @@ export default function AccountPopover() {
         >
           Logout
         </MenuItem>
+        
       </Popover>
     </>
   );

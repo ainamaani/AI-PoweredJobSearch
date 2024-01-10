@@ -53,11 +53,11 @@ const jobApplications = async(req: Request, res: Response) =>{
 }
 
 const downloadResume = async(req: Request, res: Response) =>{
-    const resumeId = req.params;
+    const {id} = req.params;
     try {
-        const application = await Application.findById(resumeId);
+        const application = await Application.findById(id);
         if( !application || !application.resume ){
-            return res.status(404).json({ error: "Job application not found" });
+            return res.status(404).json({ error: "Applicant resume not found" });
         }
 
         const resumePath = application.resume;
@@ -68,9 +68,9 @@ const downloadResume = async(req: Request, res: Response) =>{
 }
 
 const downloadApplicationLetter = async(req: Request, res: Response) =>{
-    const applicationLetterId = req.params;
+    const {id} = req.params;
     try {
-        const application = await Application.findById(applicationLetterId);
+        const application = await Application.findById(id);
 
         if( !application || !application.applicationLetter ){
             return res.status(404).json({ error: "Job application not found" });

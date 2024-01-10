@@ -1,6 +1,9 @@
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Typography, Button } from "@mui/material";
 import React,{useEffect, useState} from 'react';
 import axios from "axios";
+import { saveAs } from "file-saver";
+import { DownloadOutlined } from "@mui/icons-material";
+
 
 const Allprofiles = () => {
 
@@ -20,6 +23,18 @@ const Allprofiles = () => {
         fetchAllProfiles();
     },[])
 
+    const handleDownloadProfileResume = async(profileId, firstname, lastname) =>{
+        try {
+            const downloadresume = await axios.get(`http://localhost:5550/api/profiles/downloadresume/${profileId}`, {responseType: 'blob'});
+            if(downloadresume.status === 200){
+                const blob = new Blob([downloadresume.data], {type: 'application/pdf'})
+                saveAs(blob, `${firstname}  ${lastname} resume.pdf` )
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return ( 
        <div>
         <Typography variant="h2">
@@ -35,6 +50,10 @@ const Allprofiles = () => {
                             alt={profile.firstname}
                             style={{ maxWidth: '300px', maxHeight: '300px' }} // Set your desired width and height
                         />
+
+                    <Button variant='outlined' endIcon={ <DownloadOutlined /> }
+                    onClick={() => handleDownloadProfileResume(profile._id, profile.firstname, profile.lastname)}
+                    >Download resume</Button>
                     
                 </div>
             ))
