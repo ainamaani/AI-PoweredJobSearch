@@ -93,6 +93,21 @@ const JobApplications = () => {
                                     }
             )
             if(response.status === 200){
+                const user = applicationToView.applicant;
+                const subject = 'Interview scheduled';
+                const message = 'Interview for the job applied scheduled for tomorrow';
+                const type = 'interview'
+                const notificationData = {user,subject,message,type };
+                const notification = await axios.post("http://localhost:5550/api/notifications/create",
+                                                JSON.stringify(notificationData),{
+                                                    headers:{
+                                                        'Content-Type':'application/json'
+                                                    }
+                                                }
+                )
+                if(notification.status === 200){
+                    console.log('Notification created successfully', notification.data);
+                }
                 console.log(response.data);
             }
         } catch (error) {

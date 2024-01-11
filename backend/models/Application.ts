@@ -1,10 +1,10 @@
-import mongoose, { Document } from 'mongoose';
-import Job from './Job';
-import User from './User';
+import mongoose, { Document, PopulatedDoc } from 'mongoose';
+import Job,{JobI} from './Job';
+import User, {UserI} from './User';
 
 interface ApplicationI extends Document {
-    applicant: mongoose.Schema.Types.ObjectId;
-    job: mongoose.Schema.Types.ObjectId;
+    applicant: PopulatedDoc<UserI & Document>;
+    job: PopulatedDoc<JobI & Document>;
     applicationDate: Date;
     resume: string,
     applicationLetter: string,

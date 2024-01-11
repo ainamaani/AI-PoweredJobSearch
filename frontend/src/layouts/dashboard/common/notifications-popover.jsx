@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { set, sub } from 'date-fns';
 import { faker } from '@faker-js/faker';
+import UseAuthContext from 'src/hooks/use-auth-context';
+import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -74,7 +76,9 @@ const NOTIFICATIONS = [
 ];
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(NOTIFICATIONS);
+  const {user} = UseAuthContext();
+
+  const [notifications, setNotifications] = useState([]);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
@@ -96,6 +100,20 @@ export default function NotificationsPopover() {
       }))
     );
   };
+
+  useEffect(()=>{
+      const fetchUserNotifications = async() =>{
+        try {
+          const usernotifications = await axios.get(`http://localhost:5550/api/notifications/user/${user.id}`);
+          if(usernotifications.status === 200){
+            setNotifications(usernotifications);
+          }
+        } catch (error) {
+          
+        }
+      }
+      fetchUserNotifications()
+  },[])
 
   return (
     <>
@@ -148,7 +166,7 @@ export default function NotificationsPopover() {
             }
           >
             {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem key={notification._id} notification={notification} />
             ))}
           </List>
 
@@ -161,7 +179,7 @@ export default function NotificationsPopover() {
             }
           >
             {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+              <NotificationItem key={notification._id} notification={notification} />
             ))}
           </List>
         </Scrollbar>
@@ -183,17 +201,17 @@ export default function NotificationsPopover() {
 NotificationItem.propTypes = {
   notification: PropTypes.shape({
     createdAt: PropTypes.instanceOf(Date),
-    id: PropTypes.string,
+    _id: PropTypes.string,
     isUnRead: PropTypes.bool,
-    title: PropTypes.string,
-    description: PropTypes.string,
+    subject: PropTypes.string,
+    message: PropTypes.string,
     type: PropTypes.string,
     avatar: PropTypes.any,
   }),
 };
 
 function NotificationItem({ notification }) {
-  const { avatar, title } = renderContent(notification);
+  const { avatar, subject } = renderContent(notification);
 
   return (
     <ListItemButton
@@ -210,7 +228,7 @@ function NotificationItem({ notification }) {
         <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
       </ListItemAvatar>
       <ListItemText
-        primary={title}
+        primary={subject}
         secondary={
           <Typography
             variant="caption"
@@ -233,41 +251,41 @@ function NotificationItem({ notification }) {
 // ----------------------------------------------------------------------
 
 function renderContent(notification) {
-  const title = (
+  const subject = (
     <Typography variant="subtitle2">
-      {notification.title}
+      {notification.subject}
       <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {notification.description}
+        &nbsp; {notification.message}
       </Typography>
     </Typography>
   );
 
   if (notification.type === 'order_placed') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_package.svg" />,
-      title,
+      avatar: <img alt={notification.subject} src="/assets/icons/ic_notification_package.svg" />,
+      subject,
     };
   }
   if (notification.type === 'order_shipped') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_shipping.svg" />,
-      title,
+      avatar: <img alt={notification.subject} src="/assets/icons/ic_notification_shipping.svg" />,
+      subject,
     };
   }
   if (notification.type === 'mail') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_mail.svg" />,
-      title,
+      avatar: <img alt={notification.subject} src="/assets/icons/ic_notification_mail.svg" />,
+      subject,
     };
   }
   if (notification.type === 'chat_message') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_chat.svg" />,
-      title,
+      avatar: <img alt={notification.subject} src="/assets/icons/ic_notification_chat.svg" />,
+      subject,
     };
   }
   return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
-    title,
+    avatar: notification.avatar ? <img alt={notification.subject} src={notification.avatar} /> : null,
+    subject,
   };
 }

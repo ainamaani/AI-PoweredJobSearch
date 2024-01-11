@@ -5,7 +5,7 @@ const router : Router = express.Router();
 import applicationsController from "../controllers/ApplicationController";
 
 const { newJobApplication, jobApplications, downloadResume, 
-    downloadApplicationLetter, deleteApplication } = applicationsController;
+    downloadApplicationLetter, deleteApplication, rejectApplication } = applicationsController;
 
 router.post('/apply', upload.fields([{name: 'resume', maxCount: 1},{name: 'applicationLetter', maxCount:1}]), newJobApplication )
 
@@ -16,6 +16,8 @@ router.get('/downloadresume/:id', downloadResume);
 router.get('/downloadapplicationletter/:id', downloadApplicationLetter);
 
 router.delete('/delete/:id', deleteApplication);
+
+router.get('/reject/:id', rejectApplication);
 
 export default router;
 

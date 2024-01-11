@@ -2,6 +2,7 @@ import Application from "../models/Application";
 import { Request, Response } from "express";
 import path from "path";
 import Profile from "../models/Profile";
+import sendEmail from "../functions/SendEmail";
 
 const newJobApplication = async(req: Request, res: Response) =>{
     try {
@@ -97,10 +98,54 @@ const deleteApplication = async(req: Request, res: Response) =>{
     }
 }
 
+const rejectApplication = async(req: Request,res: Response) =>{
+    try {
+        const { id } = req.params;
+        const applicationToReject = await Application.findById(id).populate('applicant').populate('job');
+        if(applicationToReject){
+            applicationToReject.applicationStatus = "Declined";
+            await applicationToReject.save({validateBeforeSave:false});
+            
+            // send email to the applicant after rejection
+            sendEmail(applicationToReject.applicant.email,
+                `${applicationToReject.job.title} application feedback`,
+                `Dear ${applicationToReject.applicant.firstname} ${applicationToReject.applicant.lastname}
+We appreciate your interest in the ${applicationToReject.job.title} position at ${applicationToReject.job.company}. 
+After careful consideration, we regret to inform you that your application has been declined.
+
+While we were impressed with your qualifications and experience, we have chosen to move forward 
+with other candidates who more closely match the requirements of the role.
+
+We want to express our gratitude for the time and effort you invested in the application process. 
+We encourage you to keep an eye on our career opportunities, as new positions become available.
+
+Thank you again for considering ${applicationToReject.job.company} as a potential employer. 
+We wish you the best in your job search and future endeavors.
+
+If you have any questions or would like feedback on your application, feel free to reach out.
+
+Best regards,
+
+Serunjogi Huzaifa
+Human Resource Manager
+Elite developers.
++256 770941412
+                
+                `
+                )
+        }else{
+            return res.status(400).json({ error: 'Failed to find the aplication' })
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
 export default {
     newJobApplication,
     jobApplications,
     downloadResume,
     downloadApplicationLetter,
-    deleteApplication
+    deleteApplication,
+    rejectApplication
 };

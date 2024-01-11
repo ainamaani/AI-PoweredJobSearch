@@ -1,6 +1,6 @@
 import mongoose,{ Document } from "mongoose";
 
-interface JobI extends Document{
+export interface JobI extends Document{
     title:string;
     company:string;
     companyEmail:string;
