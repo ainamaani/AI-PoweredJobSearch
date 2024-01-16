@@ -4,6 +4,7 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
+export const LandingPage = lazy(() => import('src/pages/landing'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
@@ -28,12 +29,21 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export default function Router() {
   const routes = useRoutes([
     {
+      path: '/',
       element: (
-        <DashboardLayout>
-          <Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <LandingPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: '/dashboard',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <DashboardLayout>
             <Outlet />
-          </Suspense>
-        </DashboardLayout>
+          </DashboardLayout>
+        </Suspense>
       ),
       children: [
         { element: <IndexPage />, index: true },

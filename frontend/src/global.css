@@ -1,2 +1,118 @@
 /* scrollbar */
 @import 'simplebar-react/dist/simplebar.min.css';
+
+
+.container {
+    background: #ecf0f7; 
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.nav, .left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.links ul, .right ul{
+    display: flex;
+    gap: 25px;
+}
+.links ul li, .right ul li{
+    list-style: none;
+}
+.links ul li a, .right ul li a{
+    text-decoration: none;
+    color: black;
+    font-size: 1.2em;
+}
+
+.landing-body{
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+}
+.guidelines{
+    display: flex;
+    position: relative;
+    left: 100px;
+}
+.card{
+    background: #fff !important;
+    border-radius: 8px;
+    width: 380px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin: 5px;
+    text-align: left !important;
+    padding: 5px;
+}
+.card .number{
+    background: #cce0ff;
+    border-radius: 8px;
+    position: relative;
+    top: 32px;
+    width: 60px;
+    height: 60px;
+}
+.card .number h1{
+    text-align: center;
+    position: relative;
+    bottom: 13px;
+}
+
+/* elements */
+.name span{
+    font-size: 1.8em;
+    color: #4d94ff;
+    border-bottom: 7px solid #4d94ff;
+}
+.register{
+    background:  #cce0ff ;
+    padding: 8px;
+    border-radius: 6px;
+}
+.welcome{
+    font-size: 50px;
+}
+.wel-title{
+    color: #4d94ff;
+    font-size: 1.2em;
+}
+.get-started{
+    position: relative;
+    left: 550px;
+}
+
+/* footer */
+.footer{
+    text-align: center;
+}
+
+.footer h3{
+    font-size: 1.6em;
+}
+/* popular categories */
+.popular{
+    display: flex;
+    justify-content: space-around;
+}
+.category{
+    background: #fff;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 6px;
+}
+.category .icon{
+    color: #4d94ff;
+}
+.popular-head{
+    text-align: center;
+    font-size: 1.6em;
+}
+
+
+
+

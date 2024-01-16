@@ -46,7 +46,7 @@ const getAllNotifications = async(req: Request,res: Response) =>{
 
 const changeNotificationStatus = async(req: Request, res: Response) =>{
     try {
-        const {id} = req.params;;
+        const {id} = req.params;
         const notification = await Notification.findById(id);
         if(notification){
             notification.isUnread = false;
