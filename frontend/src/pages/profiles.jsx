@@ -2,6 +2,8 @@ import { CircularProgress, Typography } from "@mui/material";
 import React,{useState, useEffect} from 'react';
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfileCategories = () => {
 

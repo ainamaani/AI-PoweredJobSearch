@@ -2,6 +2,8 @@ import { CircularProgress, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import React,{useEffect, useState} from 'react';
 import axios from "axios";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfilesCategory = () => {
     const { category } = useParams();

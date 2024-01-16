@@ -3,6 +3,8 @@ import UseAuthContext from "src/hooks/use-auth-context";
 import React,{ useEffect,useState } from 'react';
 import { CircularProgress, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyProfile = () => {
     const {user} = UseAuthContext();

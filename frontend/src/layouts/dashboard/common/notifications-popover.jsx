@@ -78,7 +78,7 @@ const NOTIFICATIONS = [
 export default function NotificationsPopover() {
   const {user} = UseAuthContext();
 
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState(NOTIFICATIONS);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
@@ -109,11 +109,11 @@ export default function NotificationsPopover() {
             setNotifications(usernotifications);
           }
         } catch (error) {
-          
+          console.log(error)
         }
       }
       fetchUserNotifications()
-  },[])
+  },[user.id])
 
   return (
     <>

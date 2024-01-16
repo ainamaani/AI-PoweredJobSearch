@@ -6,6 +6,9 @@ import { styled } from "@mui/system";
 import UseAuthContext from "src/hooks/use-auth-context";
 import { useParams } from "react-router-dom";
 
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
     marginTop: 20,
@@ -147,6 +150,10 @@ const UpdateProfile = () => {
                 setFacebook('');
                 setInstagram('');
                 setResume(null);
+
+                toast.success('Profile updated successfully',{
+                    position: 'top-right'
+                })
                 
             }
         } catch (error) {

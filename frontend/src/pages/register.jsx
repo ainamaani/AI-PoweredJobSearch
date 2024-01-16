@@ -1,9 +1,13 @@
-import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel } from "@mui/material";
+import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, InputAdornment, IconButton } from "@mui/material";
 import React,{ useState, useEffect } from 'react';
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
+import Iconify from "src/components/iconify";
+
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -32,6 +36,8 @@ const StyledPageContent = styled('div')({
 const Register = () => {
 
     const navigate = useNavigate();
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
@@ -68,6 +74,10 @@ const Register = () => {
                 
                 navigate('/login');
 
+                toast.success('Registration',{
+                    position: 'top-right'
+                })
+
             }
         } catch (error) {
             console.log(error);
@@ -75,12 +85,13 @@ const Register = () => {
     }
     
     return ( 
-        <div>
-            <Typography variant="h3">
-                Register for CareerConnect
-            </Typography>
-            <StyledPageContent>
+        <div className="register">
+            
+            <StyledPageContent className="content">
                 <form onSubmit={handleRegister}>
+                    <Typography variant="h3" className="register-head">
+                        Register for CareerConnect!!
+                    </Typography>
                     <StyledTextField
                         label="First name"
                         variant="outlined"
@@ -134,6 +145,16 @@ const Register = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        type={showPassword ? 'text' : 'password'}
+                        InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                        }}
                         value={password}
                         onChange={(e)=> {setPassword(e.target.value)}}   
                     />
@@ -142,10 +163,20 @@ const Register = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        type={showPassword ? 'text' : 'password'}
+                        InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                        }}
                         value={passwordConfirm}
                         onChange={(e)=> {setPasswordConfirm(e.target.value)}}   
                     />
-                    <StyledButton variant="contained" type="submit">Register</StyledButton>
+                    <StyledButton size="large" variant="contained" type="submit">Register</StyledButton>
                 </form>
             </StyledPageContent>
         </div>    

@@ -4,6 +4,8 @@ import React,{useState} from 'react';
 import { styled } from "@mui/system";
 import axios from "axios";
 import UseAuthContext from "src/hooks/use-auth-context";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -105,6 +107,10 @@ const CreateProfile = () => {
                 setTwitter('');
                 setInstagram('');
                 setResume(null);
+
+                toast.success('Profile created successfully',{
+                    position: 'top-right'
+                })
             }
         } catch (error) {
             if(error.response && error.response.data && error.response.data.errors){

@@ -2,6 +2,8 @@ import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel } from "@
 import React,{useState,useEffect} from 'react';
 import { styled } from "@mui/system";
 import axios from "axios";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 // Define a styled TextField component
@@ -81,6 +83,9 @@ const AddJobPosting = () => {
                 setAdditionalBenefits('');
                 setApplicationDeadline(null);
                 setApplicationInstructions('');
+                toast.success('Job posting added successfully',{
+                    position: 'top-right'
+                })
            }
         } catch (error) {
             if(error.response && error.response.data && error.response.data.errors ){

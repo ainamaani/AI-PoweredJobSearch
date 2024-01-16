@@ -1,6 +1,8 @@
 import { AnnouncementRounded, ArrowForward, AttachMoneyRounded, ContactSupportRounded, DirectionsCarRounded, MedicalServicesRounded, MicrowaveSharp, PaletteRounded } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import React,{useState} from 'react';
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const LandingPage = () => {
@@ -28,7 +30,7 @@ const LandingPage = () => {
                     <div className="right">
                         <ul>
                             <li><a href="/login">Login</a></li>
-                            <li><a className='register' href="/register">Register</a></li>
+                            <li><a className='register-link' href="/register">Register</a></li>
                         </ul>
                     </div>
                 </div>

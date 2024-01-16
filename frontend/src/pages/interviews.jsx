@@ -4,6 +4,9 @@ import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableHea
     TablePagination, 
     TableRow, Typography } from "@mui/material";
 
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const InterviewsScheduled = () => {

@@ -56,7 +56,7 @@ export default function LoginView() {
         // update the auth api context.
         dispatch({ type: 'LOGIN', payload: loginuser.data });
         // navigate to the dashboard after login successfully.
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (error) {
       console.log(error);

@@ -65,7 +65,7 @@
     color: #4d94ff;
     border-bottom: 7px solid #4d94ff;
 }
-.register{
+.register-link{
     background:  #cce0ff ;
     padding: 8px;
     border-radius: 6px;
@@ -111,6 +111,27 @@
 .popular-head{
     text-align: center;
     font-size: 1.6em;
+}
+
+/* REGISTER FORMS */
+.register{
+    background: #f1f1f1;
+
+}
+.content form{
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    width: 900px;
+    position: relative;
+    left: 17%;
+}
+.register-head{
+    text-align: center;
+}
+.fields{
+    position: relative;
+    left: 13%;
 }
 
 
