@@ -257,6 +257,7 @@ const CreateProfile = () => {
                             <MenuItem value="Science">Science</MenuItem>
                             <MenuItem value="Social Services">Social Services</MenuItem>
                             <MenuItem value="Transportation">Transportation</MenuItem>
+                            <MenuItem value="Tourism">Tourism</MenuItem>
                             {/* Add more professions as needed */}
                         </Select>
                     </FormControl>
