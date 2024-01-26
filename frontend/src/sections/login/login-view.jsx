@@ -22,6 +22,10 @@ import { bgGradient } from 'src/theme/css';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
@@ -39,8 +43,13 @@ export default function LoginView() {
 
   const [password, setPassword] = useState('');
 
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async(e) => {
     try {
+      // set the loading action to true when the login action starts
+      setLoading(true);
+
       const loginData = { email,password }
 
       const loginuser = await axios.post('http://localhost:5550/api/user/login',
@@ -56,10 +65,20 @@ export default function LoginView() {
         // update the auth api context.
         dispatch({ type: 'LOGIN', payload: loginuser.data });
         // navigate to the dashboard after login successfully.
-        navigate('/dashboard');
+        navigate('/register');
+        // display success toast
+        toast.success('Log in successful',{
+          position: 'top-right'
+        })
       }
     } catch (error) {
       console.log(error);
+      toast.error('Login failed!',{
+        position: 'top-right'
+      })
+    }finally{
+      // set the loading back to false when the login action has completed.
+      setLoading(false); 
     }
   };
 
@@ -92,7 +111,7 @@ export default function LoginView() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link to='/resetpassword'>Forgot password?</Link>
+        <Link className='get-started-link' to='/resetpassword'>Forgot password?</Link>
       </Stack>
 
       <LoadingButton
@@ -102,6 +121,7 @@ export default function LoginView() {
         variant="contained"
         color="inherit"
         onClick={handleLogin}
+        loading={loading}
       >
         Login
       </LoadingButton>
@@ -118,13 +138,6 @@ export default function LoginView() {
         height: 1,
       }}
     >
-      <Logo
-        sx={{
-          position: 'fixed',
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-        }}
-      />
 
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
@@ -138,48 +151,10 @@ export default function LoginView() {
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
+            <Link to='/register' variant="subtitle2" sx={{ ml: 0.5 }} className='get-started-link'>
               Get started
             </Link>
           </Typography>
-
-          <Stack direction="row" spacing={2}>
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:google-fill" color="#DF3E30" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:facebook-fill" color="#1877F2" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
-            </Button>
-          </Stack>
-
-          <Divider sx={{ my: 3 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              OR
-            </Typography>
-          </Divider>
 
           {renderForm}
         </Card>

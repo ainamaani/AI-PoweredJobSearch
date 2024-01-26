@@ -1,5 +1,7 @@
 import SvgColor from 'src/components/svg-color';
-import { AccessTimeOutlined } from '@mui/icons-material';
+import { AccessTimeOutlined, AccountCircleRounded, AddCircleRounded, 
+  AddRounded, AssignmentRounded, DashboardRounded, FormatListNumberedRounded, 
+  HandshakeRounded, Person2Rounded, WorkRounded } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -11,71 +13,61 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/dashboard',
-    icon: icon('ic_analytics'),
+    icon: <DashboardRounded />,
   },
   {
     title: 'Jobs',
-    icon: icon('ic_user'),
+    icon: <WorkRounded />,
     subLinks: [
       { 
         title: 'View job postings',
-        path: '/jobs',
-        icon: icon('ic_user')
+        path: 'dashboard/jobs',
+        icon: <FormatListNumberedRounded />
       },
       {
         title: 'Add job posting',
-        path: '/newjob',
-        icon: icon('ic_user')
+        path: 'dashboard/newjob',
+        icon: <AddCircleRounded />
       }
     ]
   },
   {
     title: 'Profiles',
-    icon: icon('ic_user'),
+    icon: <Person2Rounded />,
     subLinks: [
       {
         title: 'View profiles',
-        path: '/profiles',
-        icon: icon('ic_user')
+        path: 'dashboard/profiles',
+        icon: <AccountCircleRounded />
       },
       {
         title: 'Create profile',
-        path: '/newprofile',
-        icon: icon('ic_user')
+        path: 'dashboard/newprofile',
+        icon: <AddRounded />
       }
     ]  
   },
   {
     title: 'Applications',
-    path: '/applications',
-    icon: icon('ic_cart'),
+    path: 'dashboard/applications',
+    icon: <AssignmentRounded />,
   },
   {
     title: 'Interviews',
-    path: '/interviews',
-    icon: icon('ic_cart'),
+    path: 'dashboard/interviews',
+    icon: <HandshakeRounded />,
   },
   {
     title: 'product',
-    path: '/products',
+    path: 'dashboard/products',
     icon: icon('ic_cart'),
   },
   {
     title: 'blog',
-    path: '/blog',
+    path: 'dashboard/blog',
     icon: icon('ic_blog'),
   },
-  {
-    title: 'login',
-    path: '/login',
-    icon: icon('ic_lock'),
-  },
   
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: icon('ic_disabled'),
-  },
 ];
 
 export default navConfig;

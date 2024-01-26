@@ -52,38 +52,40 @@ const LandingPage = () => {
                         <img src={`${process.env.PUBLIC_URL}/assets/images/landing/manwithphone.png`} alt="Body" />
                     </div>
                 </div>
-                <h3 className='popular-head'>Popular categories</h3>
-                <div className="popular">
-                    <div className="category">
-                        <div className="icon"><AnnouncementRounded /></div>
-                        <h4>Marketing</h4>
-                        <p>109 positions</p>
-                    </div>
-                    <div className="category">
-                        <div className="icon"><PaletteRounded /></div>
-                        <h4>Design</h4>
-                        <p>109 positions</p>
-                    </div>
-                    <div className="category">
-                        <div className="icon"><ContactSupportRounded /></div>
-                        <h4>Customer care</h4>
-                        <p>109 positions</p>
-                    </div>
-                    <div className="category">
-                        <div className="icon"><AttachMoneyRounded /></div>
-                        <h4>Finance/Accounting</h4>
-                        <p>109 positions</p>
-                    </div>
-                    <div className="category">
-                        <div className="icon"><MedicalServicesRounded /></div>
-                        <h4>Health and care</h4>
-                        <p>109 positions</p>
-                    </div>
-                    <div className="category">
-                        <div className="icon"><DirectionsCarRounded /></div>
-                        <h4>Automative jobs</h4>
-                        <p>109 positions</p>
-                    </div>
+                <div className="popular-section">
+                    <h3 className='popular-head'>Popular categories</h3>
+                    <div className="popular">
+                        <div className="category">
+                            <div className="icon"><AnnouncementRounded /></div>
+                            <h4>Marketing</h4>
+                            <p>109 positions</p>
+                        </div>
+                        <div className="category">
+                            <div className="icon"><PaletteRounded /></div>
+                            <h4>Design</h4>
+                            <p>109 positions</p>
+                        </div>
+                        <div className="category">
+                            <div className="icon"><ContactSupportRounded /></div>
+                            <h4>Customer care</h4>
+                            <p>109 positions</p>
+                        </div>
+                        <div className="category">
+                            <div className="icon"><AttachMoneyRounded /></div>
+                            <h4>Finance/Accounting</h4>
+                            <p>109 positions</p>
+                        </div>
+                        <div className="category">
+                            <div className="icon"><MedicalServicesRounded /></div>
+                            <h4>Health and care</h4>
+                            <p>109 positions</p>
+                        </div>
+                        <div className="category">
+                            <div className="icon"><DirectionsCarRounded /></div>
+                            <h4>Automative jobs</h4>
+                            <p>109 positions</p>
+                        </div>
+                        </div>
                 </div>
                 <div className="footer">
                     <h3>How it works</h3>

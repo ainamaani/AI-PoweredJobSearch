@@ -1,13 +1,15 @@
-import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, InputAdornment, IconButton } from "@mui/material";
+import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, 
+    InputAdornment, IconButton } from "@mui/material";
 import React,{ useState, useEffect } from 'react';
 import { styled } from "@mui/system";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 import axios from "axios";
 import Iconify from "src/components/iconify";
 
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { LoadingButton } from "@mui/lab";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -48,12 +50,17 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
+    const [loading,setLoading] = useState(false);
+
     const handleRegister = async(e) =>{
+        
         e.preventDefault();
         const registerData = { 
             firstname,lastname,email,userCategory,company,companyEmail,password,passwordConfirm
         }
         try {
+            setLoading(true);
+
             const registeruser = await axios.post('http://localhost:5550/api/user/register',
                                                 JSON.stringify(registerData),{
                                                     headers:{
@@ -74,24 +81,29 @@ const Register = () => {
                 
                 navigate('/login');
 
-                toast.success('Registration',{
+                toast.success('Registration successful',{
                     position: 'top-right'
                 })
 
             }
         } catch (error) {
             console.log(error);
+            toast.error('Registration failed',{
+                position: 'top-right'
+            })
+        } finally{
+            setLoading(false);
         }
     }
     
     return ( 
-        <div className="register">
-            
+        <div className="register">  
             <StyledPageContent className="content">
                 <form onSubmit={handleRegister}>
                     <Typography variant="h3" className="register-head">
-                        Register for CareerConnect!!
+                        Register for CareerConnect.
                     </Typography>
+                    <div className="head-border-bottom">...</div>
                     <StyledTextField
                         label="First name"
                         variant="outlined"
@@ -176,7 +188,29 @@ const Register = () => {
                         value={passwordConfirm}
                         onChange={(e)=> {setPasswordConfirm(e.target.value)}}   
                     />
-                    <StyledButton size="large" variant="contained" type="submit">Register</StyledButton>
+                    {/* <LoadingButton
+                        fullWidth
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        color="inherit"
+                        onClick={handleLogin}
+                        loading={loading}
+                    >
+                        Login
+                    </LoadingButton> */}
+                    <LoadingButton
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        className="register-button"
+                        loading={loading}
+                    >
+                        Register
+                    </LoadingButton>
+                    <div className="already-with-account">
+                        <p>Already have an account? <Link to='/login'>Login</Link> </p> 
+                    </div>
                 </form>
             </StyledPageContent>
         </div>    

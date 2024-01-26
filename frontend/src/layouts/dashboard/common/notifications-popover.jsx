@@ -101,19 +101,19 @@ export default function NotificationsPopover() {
     );
   };
 
-  useEffect(()=>{
-      const fetchUserNotifications = async() =>{
-        try {
-          const usernotifications = await axios.get(`http://localhost:5550/api/notifications/user/${user.id}`);
-          if(usernotifications.status === 200){
-            setNotifications(usernotifications);
-          }
-        } catch (error) {
-          console.log(error)
-        }
-      }
-      fetchUserNotifications()
-  },[user.id])
+  // useEffect(()=>{
+  //     const fetchUserNotifications = async() =>{
+  //       try {
+  //         const usernotifications = await axios.get(`http://localhost:5550/api/notifications/user/${user.id}`);
+  //         if(usernotifications.status === 200){
+  //           setNotifications(usernotifications);
+  //         }
+  //       } catch (error) {
+  //         console.log(error)
+  //       }
+  //     }
+  //     fetchUserNotifications()
+  // },[user.id])
 
   return (
     <>
@@ -166,7 +166,7 @@ export default function NotificationsPopover() {
             }
           >
             {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification._id} notification={notification} />
+              <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
 
@@ -179,7 +179,7 @@ export default function NotificationsPopover() {
             }
           >
             {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification._id} notification={notification} />
+              <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
         </Scrollbar>
@@ -201,7 +201,7 @@ export default function NotificationsPopover() {
 NotificationItem.propTypes = {
   notification: PropTypes.shape({
     createdAt: PropTypes.instanceOf(Date),
-    _id: PropTypes.string,
+    id: PropTypes.string,
     isUnRead: PropTypes.bool,
     subject: PropTypes.string,
     message: PropTypes.string,

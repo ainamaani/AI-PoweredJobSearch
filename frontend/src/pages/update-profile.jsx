@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { LoadingButton } from "@mui/lab";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -57,6 +58,8 @@ const UpdateProfile = () => {
     const [instagram, setInstagram] = useState('');
     const [resume, setResume] = useState(null);
     const [initialProfileDetails, setInitialProfileDetails] = useState({});
+
+    const [loading, setLoading] = useState(false);
 
     // fetch current data
     useEffect(()=>{
@@ -123,6 +126,8 @@ const UpdateProfile = () => {
         
 
         try {
+            setLoading(false);
+
             const updatedProfile = await axios.patch(`http://localhost:5550/api/profiles/updateprofile/${user.id}`,
                                                    formData,{
                                                     headers:{
@@ -151,13 +156,18 @@ const UpdateProfile = () => {
                 setInstagram('');
                 setResume(null);
 
-                toast.success('Profile updated successfully',{
+                toast.success('Profile updated successfully :)',{
                     position: 'top-right'
                 })
                 
             }
         } catch (error) {
             console.log(error);
+            toast.error('Profile update failed!',{
+                position: 'top-right'
+            })
+        } finally{
+            setLoading(false);
         }
     }
 
@@ -400,7 +410,14 @@ const UpdateProfile = () => {
               {/* { errors.instagram && (
                   <span style={{color:'red'}}>{errors.instagram}</span>
               )} */}
-              <StyledButton variant="contained" type="submit">Create profile</StyledButton>
+              <LoadingButton
+                variant="contained"
+                type="submit"
+                size="large"
+                loading={loading}
+              >
+                Create profile
+              </LoadingButton>
           </form>
         </div>
      );

@@ -6,6 +6,7 @@ import axios from "axios";
 import UseAuthContext from "src/hooks/use-auth-context";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { LoadingButton } from "@mui/lab";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -52,6 +53,7 @@ const CreateProfile = () => {
     const [instagram, setInstagram] = useState('');
     const [resume, setResume] = useState(null);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
     
     const handleCreateProfile = async(e) =>{
         e.preventDefault()
@@ -79,6 +81,7 @@ const CreateProfile = () => {
 
         
         try {
+            setLoading(true);
             const profile = await axios.post('http://localhost:5550/api/profiles/newprofile',
                             formData,{
                                 headers:{
@@ -116,13 +119,15 @@ const CreateProfile = () => {
             if(error.response && error.response.data && error.response.data.errors){
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     }
 
     return ( 
-        <div>
+        <div className="add-job">
             <StyledPageContent>
-                <Typography variant="h3">
+                <Typography variant="h3" className="add-job-head">
                     Create profile
                 </Typography>
                 <form onSubmit={handleCreateProfile}>
@@ -362,7 +367,14 @@ const CreateProfile = () => {
                     { errors.instagram && (
                         <span style={{color:'red'}}>{errors.instagram}</span>
                     )}
-                    <StyledButton variant="contained" type="submit">Create profile</StyledButton>
+                    <LoadingButton
+                        variant="contained"
+                        type="submit"
+                        loading={loading}
+                        size="large"
+                    >
+                        Create profile
+                    </LoadingButton>
                 </form>
             </StyledPageContent>
         </div>

@@ -17,60 +17,62 @@ import { bgBlur } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
 
+import NotificationsPanel from 'src/components/notifications-panel';
+
 import Searchbar from './common/searchbar';
 import { NAV, HEADER } from './config-layout';
 import AccountPopover from './common/account-popover';
 import LanguagePopover from './common/language-popover';
 import NotificationsPopover from './common/notifications-popover';
-import NotificationsPanel from 'src/components/notifications-panel';
+
  
 
 // ----------------------------------------------------------------------
 
-export default function Header({ onOpenNav, children }) {
+export default function Header({ onOpenNav }) {
   const {user} = UseAuthContext()
 
   const theme = useTheme();
 
   const lgUp = useResponsive('up', 'lg');
 
-  const [showNotifications, setShowNotifications] = useState(false);
-  // state to store the notifications
-  const [notifications, setNotifications] = useState([]);
-  // state to store unread notifications
-  const [unreadNotifications, setUnreadNotifications] = useState([]);
+  // const [showNotifications, setShowNotifications] = useState(false);
+  // // state to store the notifications
+  // const [notifications, setNotifications] = useState([]);
+  // // state to store unread notifications
+  // const [unreadNotifications, setUnreadNotifications] = useState([]);
 
 
-  // fetch the notifications
-    useEffect(()=>{
-        const fetchNotifications = async() =>{
-            const allNotifications = await axios.get(`http://localhost:5550/api/notifications/user/${user.id}`)
-            if(allNotifications.status === 200){
-                const data = allNotifications.data
-                const unread = data.filter(notification => notification.notificationRead === false );
-                setNotifications(data);
-                setUnreadNotifications(unread);
-            }
-        }
-        fetchNotifications()
+  // // fetch the notifications
+  //   useEffect(()=>{
+  //       const fetchNotifications = async() =>{
+  //           const allNotifications = await axios.get(`http://localhost:5550/api/notifications/user/${user.id}`)
+  //           if(allNotifications.status === 200){
+  //               const data = allNotifications.data
+  //               const unread = data.filter(notification => notification.notificationRead === false );
+  //               setNotifications(data);
+  //               setUnreadNotifications(unread);
+  //           }
+  //       }
+  //       fetchNotifications()
         
-    },[user.id]);
+  //   },[user.id]);
 
 
-    const handleNotificationsClick = async() =>{
-      setShowNotifications(!showNotifications);
-      // change the read status of the notifications
+  //   const handleNotificationsClick = async() =>{
+  //     setShowNotifications(!showNotifications);
+  //     // change the read status of the notifications
       
-      try {
-        const changeStatus = await axios.get('http://localhost:5550/api/notifications/read');
+  //     try {
+  //       const changeStatus = await axios.get('http://localhost:5550/api/notifications/read');
               
-          if(changeStatus.status === 200){
-              console.log(changeStatus.data);
-          }
-      } catch (error) {
-          console.log(error);
-      }
-  }
+  //         if(changeStatus.status === 200){
+  //             console.log(changeStatus.data);
+  //         }
+  //     } catch (error) {
+  //         console.log(error);
+  //     }
+  // }
 
 
 

@@ -5,6 +5,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { LoadingButton } from "@mui/lab";
 
 
 // Define a styled TextField component
@@ -29,6 +30,7 @@ const JobApplication = () => {
 
     const [resume, setResume] = useState(null);
     const [applicationLetter, setApplicationLetter] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleJobApplication = async(e) =>{
         e.preventDefault();
@@ -38,6 +40,7 @@ const JobApplication = () => {
         formData.append('applicationLetter', applicationLetter);
 
         try {
+            setLoading(true);
             const jobapplication = await axios.post('http://localhost:5550/api/applications/apply',
                                             formData,{
                                                 headers:{
@@ -47,9 +50,17 @@ const JobApplication = () => {
             )
             if(jobapplication.status === 200){
                 console.log(jobapplication);
+                toast.success('Job application successful :)',{
+                    position : 'top-right'
+                })
             }
         } catch (error) {
             console.log(error)
+            toast.error('Application failed',{
+                position : 'top-right'
+            })
+        } finally{
+            setLoading(false)
         }
     }
 
@@ -80,7 +91,15 @@ const JobApplication = () => {
                         inputProps={{ accept: ".pdf" }}
                         onChange={(e)=> {setApplicationLetter(e.target.files[0])}}   
                     />
-                    <StyledButton variant="contained" type="submit">Apply for the job</StyledButton>
+                    <LoadingButton
+                        variant="contained"
+                        type="submit"
+                        loading={loading}
+                        size="large"
+                    >
+                        Apply for the job
+                    </LoadingButton>
+                    
                 </form>
             </StyledPageContent>
         </div>

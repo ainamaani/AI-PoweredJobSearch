@@ -21,7 +21,6 @@ import { VisibilityRounded } from '@mui/icons-material';
 export default function UserTableRow({
   selected,
   title,
-  avatarUrl,
   company,
   location,
   datePosted,
@@ -48,7 +47,6 @@ export default function UserTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={title} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
               {title}
             </Typography>
@@ -62,11 +60,11 @@ export default function UserTableRow({
         <TableCell align="center">{datePosted}</TableCell>
 
         <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+          <Label color={(status === 'closed' && 'error') || 'success'}>{status}</Label>
         </TableCell>
 
         <TableCell>
-          <Tooltip title="View" >
+          <Tooltip title="View job details" >
             <IconButton color='primary' size='large'
               onClick={handleOpenViewDialog}
             >
@@ -75,14 +73,14 @@ export default function UserTableRow({
           </Tooltip>
         </TableCell>
 
-        <TableCell align="right">
+        {/* <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
-      <Popover
+      {/* <Popover
         open={!!open}
         anchorEl={open}
         onClose={handleCloseMenu}
@@ -101,13 +99,12 @@ export default function UserTableRow({
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           Delete
         </MenuItem>
-      </Popover>
+      </Popover> */}
     </>
   );
 }
 
 UserTableRow.propTypes = {
-  avatarUrl: PropTypes.any,
   company: PropTypes.any,
   handleClick: PropTypes.func,
   handleOpenViewDialog: PropTypes.func,

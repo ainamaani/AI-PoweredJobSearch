@@ -5,6 +5,7 @@ import axios from "axios";
 import Iconify from "src/components/iconify";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { LoadingButton } from "@mui/lab";
 
 
 const ResetPassword = () => {
@@ -16,12 +17,15 @@ const ResetPassword = () => {
     const [resetPasswordError, setResetPasswordError] = useState('');
     const navigate = useNavigate();
 
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const [emailLoading, setEmailLoading] = useState(false);
+    const [resetLoading, setResetLoading] = useState(false);
 
     const handleEmailConfirmation = async(e) =>{
         e.preventDefault();
         setEmailError('');
         try {
+            setEmailLoading(true);
             const confirmEmail = await axios.post('http://localhost:5550/api/reset/code',
                                                 JSON.stringify({ email }),{
                                                     headers:{
@@ -32,12 +36,20 @@ const ResetPassword = () => {
             if(confirmEmail.status === 200){
                 console.log(confirmEmail.data);
                 setEmailVerified(true);
+                toast.success('Email successful verified :)',{
+                    position: 'top-right'
+                })
             }
         } catch (error) {
             console.log(error);
+            toast.error('Email verification failed',{
+                position: 'top-right'
+            })
             if(error.response && error.response.data && error.response.data.error){
                 setEmailError(error.response.data.error);
             }
+        } finally{
+            setEmailLoading(false);
         }
 
     }
@@ -46,6 +58,7 @@ const ResetPassword = () => {
     const handleResetPassword = async(e) =>{
         e.preventDefault();
         try {
+            setResetLoading(true);
             const resetpword = await axios.post('http://localhost:5550/api/reset/forgotpassword',
                                         JSON.stringify({ email, passwordResetCode, newPassword }),{
                                             headers:{
@@ -62,22 +75,29 @@ const ResetPassword = () => {
                 setEmailVerified(false);
                 navigate('/login');
 
-                toast.success('Password reset successful',{
+                toast.success('Password reset successful :)',{
                     position: 'top-right'
                 })
             }
         } catch (error) {
+            toast.error('Password reset failed',{
+                position: 'top-right'
+            })
             if(error.response && error.response.data && error.response.data.error){
                 setResetPasswordError(error.response.data.error);
             }
+        } finally{
+            setResetLoading(false);
         }
     }
     return ( 
-        <div className="content">
+        <div className="content" >
+            <div className="reset">
             <form onSubmit={handleResetPassword}>
                 <Typography variant="h3" className="register-head">
-                    Reset forgotten password!!
+                    Reset forgotten password.
                 </Typography>
+                <div className="head-border-bottom">...</div>
                 <div className="fields">
                 <TextField 
                         label="Enter your email"
@@ -93,14 +113,20 @@ const ResetPassword = () => {
                         value={email}
                         onChange={(e)=>{setEmail(e.target.value)}}
                 />
-                <Button variant="contained" onClick={handleEmailConfirmation}
+                <LoadingButton
                     sx={{marginTop: 2, 
                         marginBottom: 2, 
                         display: 'block'
                         
                     }}
                     size="large"
-                >Confirm Email</Button>
+                    variant="contained"
+                    onClick={handleEmailConfirmation}
+                    loading={emailLoading}
+                >
+                    Confirm Email
+                </LoadingButton>
+    
                 { emailError && <span style={{ color:"red" }}>{ emailError }</span> }
                 { emailVerified && (
                     <>
@@ -141,19 +167,25 @@ const ResetPassword = () => {
                             value={newPassword}
                             onChange={(e)=>{setNewPassword(e.target.value)}}
                         />
-                        <Button variant="contained" type="submit"
+                        <LoadingButton
                             sx={{marginTop: 2, 
                                 marginBottom: 2, 
                                 display: 'block' 
                             }}
+                            variant="contained"
+                            type="submit"
                             size="large"
-                        >Reset password</Button>
+                            loading={resetLoading}
+                        >
+                            Reset password
+                        </LoadingButton>
                         { resetPasswordError && <span style={{color:"red"}}>{resetPasswordError}</span> }
                     </>
                     )}
-                </div>
+                    </div>
                 
-            </form>
+                </form>
+            </div>
         </div>
      );
 }

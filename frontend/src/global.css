@@ -6,6 +6,7 @@
     background: #ecf0f7; 
     padding-left: 25px;
     padding-right: 25px;
+    height: 1000px;
 }
 
 .nav, .left {
@@ -24,6 +25,13 @@
     text-decoration: none;
     color: black;
     font-size: 1.2em;
+}
+
+.links ul li a:hover, .right ul li a:hover{
+    background: #cce0ff;
+    padding: 8px;
+    border-radius: 6px;
+    
 }
 
 .landing-body{
@@ -70,12 +78,16 @@
     padding: 8px;
     border-radius: 6px;
 }
+.register-link:hover {
+    background: #a7c8f9 !important;
+}
 .welcome{
     font-size: 50px;
 }
 .wel-title{
     color: #4d94ff;
     font-size: 1.2em;
+    font-style: italic;
 }
 .get-started{
     position: relative;
@@ -85,12 +97,18 @@
 /* footer */
 .footer{
     text-align: center;
+    position: relative;
+    top: 30px;
 }
 
 .footer h3{
     font-size: 1.6em;
 }
 /* popular categories */
+.popular-section{
+    position: relative;
+    top: 20px;
+}
 .popular{
     display: flex;
     justify-content: space-around;
@@ -120,20 +138,85 @@
 }
 .content form{
     background: #fff;
-    padding: 15px;
+    padding: 45px;
     border-radius: 8px;
     width: 900px;
     position: relative;
     left: 17%;
+    
 }
 .register-head{
     text-align: center;
+    color: #4d94ff;
 }
 .fields{
     position: relative;
     left: 13%;
 }
+.head-border-bottom{
+    background: #4d94ff;
+    position: relative;
+    left: 38%;
+    bottom: 5px !important;
+    width: 180px;
+    height: 7px;
+    border-radius: 8px;
+    color: #fff;
+    margin-bottom: 60px;  
+}
+.register-button{
+    position: relative;
+    left: 40%;
+}
+.already-with-account{
+    text-align: end;
+}
+.already-with-account a{
+    color: #4d94ff;
+}
 
+/* ADD JOB FORM */
+.add-job{
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 6px;
+}
+.add-job form{
+    position: relative;
+    left: 15%;
+}
+.add-job-head{
+    text-align: center;
+}
+.content .reset{
+    margin-top: 50px;
+}
+
+/* LOGIN FORM */
+.get-started-link{
+    color: #4d94ff;
+    margin-left: 10px;
+}
+
+/* JOBS PAGE */
+.applyLink {
+    background: #4d94ff;
+    margin-left: 5px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 6px;
+    color: #fff;
+}
+a{
+    text-decoration: none !important;
+}
+.applyLink a{
+    text-decoration: none;
+}
+.applyLink:hover{
+    background: #4b80d0;
+}
 
 
 
