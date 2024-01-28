@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useState,useEffect } from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
 import { Link } from 'react-router-dom';
+
 
 
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
@@ -328,7 +329,9 @@ export default function UserPage() {
                     <CalendarMonthRounded />
                     <div style={{ marginLeft: '8px' }}>
                       <strong >Application deadline</strong> <br />
-                      {jobToView.applicationDeadline}
+                      {jobToView.applicationDeadline ? (
+                        format(new Date(jobToView.applicationDeadline), 'do MMMM yyyy')
+                      ) : '' }
                     </div>
                   </Typography>
                   <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
@@ -349,7 +352,7 @@ export default function UserPage() {
               variant='outlined'>
                 Close
               </Button>
-              <Link className='applyLink' to={`/apply/${jobToView?._id}`}>Apply</Link>
+              <Link className='applyLink' to={`/dashboard/dashboard/apply/${jobToView?._id}`}>Apply</Link>
           </DialogActions>
 
         </Dialog>

@@ -59,7 +59,7 @@ export default function Router() {
         { path: 'dashboard/allprofiles', element: <AllProfilesPage /> },
         { path: 'dashboard/updateprofile/:id', element: <UpdateProfilePage /> },
         { path: 'dashboard/profiles/:category', element: <ProfilesCategoryPage /> },
-        { path: 'dashboard/apply/:id', element: <JobApplicationPage /> }
+        { path: 'dashboard/apply/:_id', element: <JobApplicationPage /> }
       ],
     },
     {

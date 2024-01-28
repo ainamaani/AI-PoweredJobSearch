@@ -17,7 +17,7 @@ router.get('/downloadapplicationletter/:id', downloadApplicationLetter);
 
 router.delete('/delete/:id', deleteApplication);
 
-router.get('/reject/:id', rejectApplication);
+router.get('/decline/:id', rejectApplication);
 
 export default router;
 

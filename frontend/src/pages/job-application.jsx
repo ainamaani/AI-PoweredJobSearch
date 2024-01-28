@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
+import UseAuthContext from "src/hooks/use-auth-context";
 
 
 // Define a styled TextField component
@@ -26,7 +27,11 @@ const StyledPageContent = styled('div')({
 })
 
 const JobApplication = () => {
-    const { id } = useParams();
+    const { _id } = useParams();
+
+    const { user } = UseAuthContext();
+
+    console.log(user);
 
     const [resume, setResume] = useState(null);
     const [applicationLetter, setApplicationLetter] = useState(null);
@@ -35,7 +40,8 @@ const JobApplication = () => {
     const handleJobApplication = async(e) =>{
         e.preventDefault();
         const formData = new FormData();
-        formData.append('job', id)
+        formData.append('applicant', user.id)
+        formData.append('job', _id)
         formData.append('resume', resume);
         formData.append('applicationLetter', applicationLetter);
 
@@ -66,8 +72,8 @@ const JobApplication = () => {
 
     return ( 
         <div>
-            <Typography>
-                Upload docs to apply for { id }
+            <Typography variant="h3">
+                Upload docs to apply for { _id }
             </Typography>
             <StyledPageContent>
                 <form onSubmit={handleJobApplication}>

@@ -59,7 +59,7 @@ const ProfileCategories = () => {
                             <div className="all">
                                 <Card className="card" style={{ margin: '10px' }}>
                                     <CardContent className="content">
-                                        <Link to="/allprofiles">All profiles</Link>
+                                        <Link to="/dashboard/dashboard/allprofiles">All profiles</Link>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -70,9 +70,6 @@ const ProfileCategories = () => {
                                         key={category}
                                         className="card"
                                         style={{ margin: '10px' }}
-                                        
-                                        // Replace 'your-image-url' with the actual image URL for the category
-                                        // or you can dynamically set the background image in a similar way to the text
                                         sx={{ backgroundImage: `url('${categoryImages[category]}')` }}
                                         >
                                                 
@@ -82,10 +79,10 @@ const ProfileCategories = () => {
                                                 height="140"
                                                 className="category-img"
                                                 image={categoryImages[category]}
-                                                // Use 'image' prop to set the background image dynamically
+                                                
                                             />
                                             <CardContent className="content">
-                                            <Link to={`/profiles/${category}`}>{category}</Link>
+                                            <Link to={`/dashboard/dashboard/profiles/${category}`}>{category}</Link>
                                             </CardContent>
                                         </Card>
                                     </div>

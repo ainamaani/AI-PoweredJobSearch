@@ -11,15 +11,16 @@ const newJobApplication = async(req: Request, res: Response) =>{
         const applicationLetterPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['applicationLetter'][0].path;
 
         // destructure other properties off the request object
-        const { job } = req.body;
+        const { applicant, job } = req.body;
 
         // create a new Application object and save it in the database
         const application = await Application.create({
-            job,resume:resumePath,applicationLetter:applicationLetterPath,
+            applicant, job,resume:resumePath,applicationLetter:applicationLetterPath,
             applicationDate:new Date()
         })
         if(application){
-            return res.status(200).json(application)
+            console.log(application);
+            return res.status(200).json(application);
         }else{
             return res.status(400).json({ error: "Failed to add the new application" });
         }
@@ -42,7 +43,7 @@ const newJobApplication = async(req: Request, res: Response) =>{
 
 const jobApplications = async(req: Request, res: Response) =>{
     try {
-        const jobapplications = await Application.find({}).populate('job').sort({ createdAt: -1 });
+        const jobapplications = await Application.find({}).populate('job').populate('applicant').sort({ createdAt: -1 });
         if(jobapplications){
             return res.status(200).json(jobapplications);
         }else{
