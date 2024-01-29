@@ -28,8 +28,8 @@ const InterviewSchema = new mongoose.Schema<InterviewI>({
         type: String,
         default: "Scheduled",
         enum: {
-            values: ["Scheduled","Cancelled","Completed"],
-            message: "The interview status must be one of 'Scheduled', 'Cancelled' or 'Completed'"
+            values: ["Scheduled","Cancelled","Completed","Due"],
+            message: "The interview status must be one of 'Scheduled', 'Cancelled', 'Due or 'Completed'"
         }
     },
     interviewDate:{

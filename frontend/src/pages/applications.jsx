@@ -125,7 +125,7 @@ const JobApplications = () => {
     const handleDeclineApplication = async() =>{
         try {
             const response = await axios.get(`http://localhost:5550/api/applications/decline/${applicationToDecline._id}`)
-            if(response.status = 200){
+            if(response.status === 200){
                 console.log("Rejected successfully", response.data)
             }
         } catch (error) {

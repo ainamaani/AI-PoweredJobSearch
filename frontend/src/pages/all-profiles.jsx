@@ -163,8 +163,7 @@ const Allprofiles = () => {
                                 right: "5px",
                                 color: "#000",
                                 }}
-                                onMouseEnter={handleMenuOpen(index)}
-                                
+                                onMouseEnter={handleMenuOpen(index)}    
                             >
                                 <MoreVertRounded />
                             </IconButton>
