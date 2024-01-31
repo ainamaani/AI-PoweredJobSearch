@@ -13,11 +13,11 @@ const registerUser = async(req: Request, res: Response) =>{
 
         // check passwords if they match
         if(password !== passwordConfirm){
-            throw new Error("The passwords do not match");
+            return res.status(400).json({"error" : "The passwords do not match"})
         }
 
         if(!validator.isStrongPassword(password)){
-            throw new Error("Please enter a strong password");
+            return res.status(400).json({ "error": "Please enter a strong password" })
         }
 
         // generate salt to hash the passwords
@@ -121,7 +121,7 @@ const loginUser = async(req: Request, res: Response) =>{
         }
         const user = await User.findOne({ email });
         if(!user){
-            return res.status(404).json({ error: "User with that email does not exist" });
+            return res.status(404).json({ error: "Invalid credentials" });
         }
 
         const storedPassword = user.password;
@@ -139,7 +139,7 @@ const loginUser = async(req: Request, res: Response) =>{
             return res.status(200).json({ token, email, id, firstname, lastname });
 
         }else{
-            return res.status(400).json({ error: "Passwords do not match" });
+            return res.status(400).json({ error: "Invalid credentials" });
         }
 
     } catch (error: any) {

@@ -10,6 +10,7 @@ import {format} from "date-fns"
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
     marginTop: 20,
@@ -36,11 +37,12 @@ const JobApplications = () => {
     const [isDeclineDialogOpen, setIsDeclineDialogOpen] = useState(false);
     const [applicationToDecline, setApplicationToDecline] = useState(null);
 
-
     const [interviewDate, setInterviewDate] = useState(null);
     const [interviewTime, setInterviewTime] = useState('');
     const [location, setLocation] = useState('');
     const [additionalNotes, setAdditionalNotes] = useState('');
+
+    const [errors, setErrors] = useState({});
 
     const [anchorEl, setAnchorEl] = useState(Array(applications.length).fill(null));
 
@@ -140,6 +142,7 @@ const JobApplications = () => {
              applicationId,interviewDate,interviewTime,location,additionalNotes
         }
         try {
+            setErrors({});
             const response = await axios.post("http://localhost:5550/api/interviews/schedule",
                                     JSON.stringify(interviewScheduleDetails),{
                                         headers:{
@@ -429,32 +432,40 @@ const JobApplications = () => {
                                 InputLabelProps={{ shrink: true }}
                                 value={interviewDate}
                                 type="date"
+                                error={errors.interviewDate}
                                 onChange={(e)=> {setInterviewDate(e.target.value)}}   
                             />
+                            { errors.interviewDate && <span style={{ color:"red", textAlign:"left" }}>{errors.interviewDate}</span> }
                             <StyledTextField
                                 label="Interview time"
                                 variant="outlined"
                                 required fullWidth
                                 sx={{ width: 500 }}
                                 value={interviewTime}
+                                error={errors.interviewDate}
                                 onChange={(e)=> {setInterviewTime(e.target.value)}}   
                             />
+                            { errors.interviewTime && <span style={{ color:"red", textAlign:"left" }}>{errors.interviewTime}</span> }
                             <StyledTextField
                                 label="Location( Provide link if online )"
                                 variant="outlined"
                                 required fullWidth
                                 sx={{ width: 500 }}
                                 value={location}
+                                error={errors.location}
                                 onChange={(e)=> {setLocation(e.target.value)}}   
                             />
+                            { errors.location && <span style={{ color:"red", textAlign:"left" }}>{errors.location}</span> }
                             <StyledTextField
                                 label="Additional notes about the interview"
                                 variant="outlined"
                                 required fullWidth
                                 sx={{ width: 500 }}
                                 value={additionalNotes}
+                                error={errors.additionalNotes}
                                 onChange={(e)=> {setAdditionalNotes(e.target.value)}}   
                             />
+                            { errors.additionalNotes && <span style={{ color:"red", textAlign:"left" }}>{errors.additionalNotes}</span> }
                             <StyledButton color="primary" variant="contained" type="submit">Schedule interview</StyledButton>
                         </form>
                     </div>

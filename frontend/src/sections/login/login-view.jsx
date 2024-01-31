@@ -45,10 +45,13 @@ export default function LoginView() {
 
   const [loading, setLoading] = useState(false);
 
+  const [error, setError] = useState('');
+
   const handleLogin = async(e) => {
     try {
       // set the loading action to true when the login action starts
       setLoading(true);
+      setError('');
 
       const loginData = { email,password }
 
@@ -71,8 +74,12 @@ export default function LoginView() {
           position: 'top-right'
         })
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
+      if(err && err.response && err.response.data && err.response.data.error){
+        setError(err.response.data.error);
+      
+      }
       toast.error('Login failed!',{
         position: 'top-right'
       })
@@ -109,6 +116,8 @@ export default function LoginView() {
           onChange={(e)=>{setPassword(e.target.value)}}
         />
       </Stack>
+
+      { error && <span style={{ color:"red", marginTop:"8px" }}>{error}</span> }
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
         <Link className='get-started-link' to='/resetpassword'>Forgot password?</Link>

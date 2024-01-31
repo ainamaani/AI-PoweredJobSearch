@@ -37,7 +37,10 @@ const JobApplication = () => {
     const [applicationLetter, setApplicationLetter] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const [errors, setErrors] = useState({})
+
     const handleJobApplication = async(e) =>{
+        setErrors({});
         e.preventDefault();
         const formData = new FormData();
         formData.append('applicant', user.id)
@@ -61,6 +64,9 @@ const JobApplication = () => {
                 })
             }
         } catch (error) {
+            if(error.response && error.response.data && error.response.data.errors){
+                setErrors(error.response.data.errors);
+            }
             console.log(error)
             toast.error('Application failed',{
                 position : 'top-right'
@@ -87,6 +93,9 @@ const JobApplication = () => {
                         inputProps={{ accept: ".pdf" }}
                         onChange={(e)=> {setResume(e.target.files[0])}}      
                     />
+                    { errors.resume && (
+                            <span style={{color:'red', textAlign:"left"}}>{errors.resume}</span>
+                        )}
                     <StyledTextField
                         label="Upload your application letter in pdf"
                         variant="outlined"
@@ -97,6 +106,9 @@ const JobApplication = () => {
                         inputProps={{ accept: ".pdf" }}
                         onChange={(e)=> {setApplicationLetter(e.target.files[0])}}   
                     />
+                    { errors.applicationLetter && (
+                            <span style={{color:'red', textAlign:"left"}}>{errors.applicationLetter}</span>
+                        )}
                     <LoadingButton
                         variant="contained"
                         type="submit"
