@@ -1,15 +1,22 @@
 import User from "../models/User";
+import Company from "../models/Company";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import validator from "validator";
 import sendEmail from "../functions/SendEmail";
+import upload from "../middleware/MulterConfig";
 
 const registerUser = async(req: Request, res: Response) =>{
     try {
+        let companyLogo = null;
+        if(req.files && 'companyLogo' in req.files){
+            companyLogo = (req.files as { [fieldname: string]: Express.Multer.File[] })['companyLogo'][0].path;
+        }
+        
         const { firstname, lastname, email, userCategory, company, 
-            companyEmail, password, passwordConfirm } = req.body;
+            companyEmail,companyDescription, industry, location,companyWebsiteUrl, password, passwordConfirm } = req.body;
 
         // check passwords if they match
         if(password !== passwordConfirm){
@@ -28,8 +35,16 @@ const registerUser = async(req: Request, res: Response) =>{
 
         //register the user in the database
         const newUser = await User.create({
-            firstname,lastname,email,userCategory,company,companyEmail,password:hashedPassword
+            firstname,lastname,email,userCategory,password:hashedPassword
         })
+
+        if (newUser.userCategory === "Recruiter"){
+            // register the company and details
+            const newcompany = await Company.create({
+                company, companyEmail, companyDescription, industry, 
+                location, member : email, companyWebsiteUrl, companyLogo
+        })
+        }
 
         if(newUser){
             sendEmail(newUser.email, 

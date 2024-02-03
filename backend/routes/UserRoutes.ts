@@ -1,10 +1,11 @@
 import express, { Express,Router } from "express";
 const router : Router = express.Router();
+import upload from "../middleware/MulterConfig";
 
 import userControllers from "../controllers/UserController";
 const { registerUser,loginUser,fetchUsers,handleChangePassword } = userControllers;
 
-router.post('/register', registerUser);
+router.post('/register',upload.fields([{name: 'companyLogo', maxCount: 1}]), registerUser);
 
 router.post('/login', loginUser);
 

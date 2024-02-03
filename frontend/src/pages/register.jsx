@@ -45,6 +45,11 @@ const Register = () => {
     const [userCategory, setUserCategory] = useState('');
     const [company, setCompany] = useState('');
     const [companyEmail, setCompanyEmail]  = useState('');
+    const [companyDescription, setCompanyDescription] = useState('');
+    const [companyLogo, setCompanyLogo] = useState(null);
+    const [industry, setIndustry] = useState('');
+    const [location, setLocation] = useState('');
+    const [companyWebsiteUrl, setCompanyWebsiteUrl] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
@@ -60,16 +65,31 @@ const Register = () => {
         setErrors({});
         setError('');
 
-        const registerData = { 
-            firstname,lastname,email,userCategory,company,companyEmail,password,passwordConfirm
-        }
+        const formData = new FormData();
+        formData.append('firstname', firstname);
+        formData.append('lastname', lastname);
+        formData.append('email', email);
+        formData.append('userCategory', userCategory);
+        formData.append('company', company);
+        formData.append('companyEmail', companyEmail);
+        formData.append('companyDescription', companyDescription);
+        formData.append('companyLogo', companyLogo);
+        formData.append('industry', industry);
+        formData.append('location', location);
+        formData.append('companyWebsiteUrl', companyWebsiteUrl);
+        formData.append('password', password);
+        formData.append('passwordConfirm', passwordConfirm);
+
+        // const registerData = { 
+        //     firstname,lastname,email,userCategory,company,companyEmail,password,passwordConfirm
+        // }
         try {
             setLoading(true);
 
             const registeruser = await axios.post('http://localhost:5550/api/user/register',
-                                                JSON.stringify(registerData),{
+                                                formData,{
                                                     headers:{
-                                                        'Content-Type':'application/json'
+                                                        'Content-Type':'multipart/form-data'
                                                     }
                                                 }
             )
@@ -151,14 +171,6 @@ const Register = () => {
                     { errors.email && (
                             <span style={{color:'red', textAlign:"left"}}>{errors.email}</span>
                         )}
-                {/* <StyledRadioGroup value={jobType} onChange={(e)=> {setJobType(e.target.value)}} >
-                    <FormControlLabel value="full-time" control={<Radio />} label="Full time" />
-                    <FormControlLabel value="part-time" control={<Radio />} label="Part time" />
-                    <FormControlLabel value="contract" control={<Radio />} label="Contract" />
-                </StyledRadioGroup>
-                { errors.jobType && (
-                    <span style={{color:'red'}}>{errors.jobType}</span>
-                )} */}
                     <StyledRadioGroup value={userCategory} onChange={(e)=> {setUserCategory(e.target.value)}} >
                         <FormControlLabel value="Job seeker" control={<Radio />} label="Job seeker" />
                         <FormControlLabel value="Recruiter" control={<Radio />} label="Recruiter" />
@@ -191,6 +203,67 @@ const Register = () => {
                             />
                             { errors.companyEmail && (
                                 <span style={{color:'red', textAlign:"left"}}>{errors.companyEmail}</span>
+                            )}
+                            <StyledTextField
+                                label="Company Description"
+                                variant="outlined"
+                                required fullWidth
+                                sx={{ width: 800 }}
+                                error={errors.companyDescription}
+                                value={companyDescription}
+                                onChange={(e)=> {setCompanyDescription(e.target.value)}}   
+                            />
+                            { errors.companyDescription && (
+                                <span style={{color:'red', textAlign:"left"}}>{errors.companyDescription}</span>
+                            )}
+                            <StyledTextField
+                                label="Industry"
+                                variant="outlined"
+                                required fullWidth
+                                sx={{ width: 800 }}
+                                error={errors.industry}
+                                value={industry}
+                                onChange={(e)=> {setIndustry(e.target.value)}}   
+                            />
+                            { errors.industry && (
+                                <span style={{color:'red', textAlign:"left"}}>{errors.industry}</span>
+                            )}
+                            <StyledTextField
+                                label="Company location"
+                                variant="outlined"
+                                required fullWidth
+                                sx={{ width: 800 }}
+                                error={errors.location}
+                                value={location}
+                                onChange={(e)=> {setLocation(e.target.value)}}   
+                            />
+                            { errors.location && (
+                                <span style={{color:'red', textAlign:"left"}}>{errors.location}</span>
+                            )}
+                            <StyledTextField
+                                label="Company logo"
+                                variant="outlined"
+                                required fullWidth
+                                InputLabelProps={{ shrink: true }}
+                                inputProps={{ accept: ".jpeg,.jgp,.png" }}
+                                sx={{ width: 800 }}
+                                type="file"
+                                onChange={(e)=> {setCompanyLogo(e.target.files[0])}}   
+                            />
+                            { errors.companyLogo && (
+                                <span style={{color:'red', textAlign:"left"}}>{errors.companyLogo}</span>
+                            )}
+                            <StyledTextField
+                                label="Company website link"
+                                variant="outlined"
+                                required fullWidth
+                                sx={{ width: 800 }}
+                                error={errors.companyWebsiteUrl}
+                                value={companyWebsiteUrl}
+                                onChange={(e)=> {setCompanyWebsiteUrl(e.target.value)}}   
+                            />
+                            { errors.companyWebsiteUrl && (
+                                <span style={{color:'red', textAlign:"left"}}>{errors.companyWebsiteUrl}</span>
                             )}
                         </>
                     )}

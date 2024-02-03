@@ -16,6 +16,7 @@ export const ProfilesPage = lazy(() => import('src/pages/profiles'));
 export const MyProfilePage = lazy(() => import('src/pages/my-profile'));
 export const InterviewsPage = lazy(() => import('src/pages/interviews'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
+export const CompaniesPage = lazy(() => import('src/pages/companies'));
 export const ApplicationsPage = lazy(() => import('src/pages/applications'));
 export const AllProfilesPage = lazy(() => import('src/pages/all-profiles'));
 export const UpdateProfilePage = lazy(() => import('src/pages/update-profile'));
@@ -52,6 +53,7 @@ export default function Router() {
         { path: 'dashboard/applications', element: <ApplicationsPage /> },
         { path: 'dashboard/profiles', element: <ProfilesPage /> },
         { path: 'dashboard/interviews', element: <InterviewsPage /> },
+        { path: 'dashboard/companies', element: <CompaniesPage /> },
         { path: 'dashboard/blog', element: <BlogPage /> },
         { path: 'dashboard/newjob', element: < AddJobPostingPage /> },
         { path: 'dashboard/newprofile', element: <CreateProfilePage /> },

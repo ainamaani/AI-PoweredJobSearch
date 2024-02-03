@@ -6,8 +6,6 @@ export interface UserI extends Document {
     lastname: string;
     email: string;
     userCategory: "Job seeker" | "Recruiter";
-    company?: string;
-    companyEmail?: string;
     password: string;
 }
 
@@ -47,43 +45,43 @@ const UserSchema = new mongoose.Schema<UserI>({
             message: "The user category must be either 'Job seeker' or 'Recruiter'" 
         }
     },
-    company:{
-        type:String,
-        required: [
-            function (){
-            // make 'company' required only when the userCategory is 'Recruiter'
-            return this.userCategory  === "Recruiter";
-        },
-        "The company name is required"
-    ]
-    },
-    companyEmail:{
-        type:String,
-        required: [
-        function(){
-        // make 'companyEmail' required only when the userCategory is 'Recruiter'
-        return this.userCategory === "Recruiter";
-        },
-        "The company email is required"
-    ],
-        validate: {
-            validator: async function (value:string) {
-                if(value !== ''){
-                    // Check if the email format is valid
-                const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-                if (value !== null && !emailRegex.test(value)) {
-                    throw new Error('Invalid email format. Please provide a valid email address.');
-                }
+    // company:{
+    //     type:String,
+    //     required: [
+    //         function (){
+    //         // make 'company' required only when the userCategory is 'Recruiter'
+    //         return this.userCategory  === "Recruiter";
+    //     },
+    //     "The company name is required"
+    // ]
+    // },
+    // companyEmail:{
+    //     type:String,
+    //     required: [
+    //     function(){
+    //     // make 'companyEmail' required only when the userCategory is 'Recruiter'
+    //     return this.userCategory === "Recruiter";
+    //     },
+    //     "The company email is required"
+    // ],
+    //     validate: {
+    //         validator: async function (value:string) {
+    //             if(value !== ''){
+    //                 // Check if the email format is valid
+    //             const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    //             if (value !== null && !emailRegex.test(value)) {
+    //                 throw new Error('Invalid email format. Please provide a valid email address.');
+    //             }
 
-                // Check if the email is already in use
-                const existingMember = await User.findOne({ email: value });
-                if (existingMember) {
-                    throw new Error('Email already exists');
-                }  
-                }
-            }
-        }
-    },
+    //             // Check if the email is already in use
+    //             const existingMember = await User.findOne({ email: value });
+    //             if (existingMember) {
+    //                 throw new Error('Email already exists');
+    //             }  
+    //             }
+    //         }
+    //     }
+    // },
     password:{
         type:String,
         required: [true, "The password is required."]
