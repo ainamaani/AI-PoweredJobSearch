@@ -17,6 +17,8 @@ export interface JobI extends Document{
     additionalBenefits:string;
     applicationDeadline:Date;
     applicationInstructions:string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 const JobSchema = new mongoose.Schema<JobI>({
