@@ -1,9 +1,13 @@
 import express,{ Router }  from "express";
 const router: Router = express.Router();
+import RequireAuth from "../middleware/RequireAuth";
 import interviewsController from "../controllers/InterviewController";
+
 
 const { scheduleInterview, getInterviews, cancelInterview, 
         doneInterview, getSingleInterview, rescheduleInterview } = interviewsController;
+
+
 
 router.post('/schedule', scheduleInterview);
 

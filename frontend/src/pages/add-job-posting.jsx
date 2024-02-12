@@ -1,10 +1,11 @@
-import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel } from "@mui/material";
+import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, InputAdornment } from "@mui/material";
 import React,{useState,useEffect} from 'react';
 import { styled } from "@mui/system";
 import axios from "axios";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
+import { BookmarkAddRounded, BusinessRounded, CalendarMonthRounded, CardGiftcardOutlined, CardGiftcardRounded, CategoryRounded, ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, TitleRounded, WorkRounded } from "@mui/icons-material";
 
 
 // Define a styled TextField component
@@ -106,7 +107,7 @@ const AddJobPosting = () => {
         <div>
             <StyledPageContent>
                 <div className="add-job">
-                    <Typography variant="h3" className="add-job-head">
+                    <Typography variant="h4" className="add-job-head">
                         Add job posting 
                     </Typography>
                     <form onSubmit={handleAddJobPosting}>
@@ -115,6 +116,13 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <WorkRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.title}
                             value={title}
                             onChange={(e)=> {setTitle(e.target.value)}}   
@@ -128,6 +136,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={company}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <BusinessRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.company}
                             onChange={(e)=> {setCompany(e.target.value)}}
                         />
@@ -140,6 +155,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={description}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <DescriptionRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.description}
                             onChange={(e)=> {setDescription(e.target.value)}}
                         />
@@ -152,6 +174,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={location}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <LocationOnRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.location}
                             onChange={(e)=> {setLocation(e.target.value)}}
                         />
@@ -164,6 +193,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={category}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <CategoryRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.category}
                             onChange={(e)=> {setCategory(e.target.value)}}
                         />
@@ -184,6 +220,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={skills}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <ConstructionRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.skills}
                             onChange={(e)=> {setSkills(e.target.value)}}
                         />
@@ -196,6 +239,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={qualifications}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <SchoolRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.qualifications}
                             onChange={(e)=> {setQualifications(e.target.value)}}
                         />
@@ -208,6 +258,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={experience}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <HourglassBottomRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.experience}
                             onChange={(e)=> {setExperience(e.target.value)}}
                         />
@@ -220,6 +277,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={salaryRange}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <LocalAtmRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.salaryRange}
                             onChange={(e)=> {setSalaryRange(e.target.value)}}
                         />
@@ -232,6 +296,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={additionalBenefits}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <CardGiftcardRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.additionalBenefits}
                             onChange={(e)=> {setAdditionalBenefits(e.target.value)}}
                         />
@@ -248,6 +319,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={applicationDeadline}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <CalendarMonthRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.applicationDeadline}
                             onChange={(e)=> {setApplicationDeadline(e.target.value)}}
                         />
@@ -260,6 +338,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={applicationInstructions}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <BookmarkAddRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.applicationInstructions}
                             onChange={(e)=> {setApplicationInstructions(e.target.value)}}
                         />
@@ -272,6 +357,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={companyEmail}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <EmailRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.companyEmail}
                             onChange={(e)=> {setCompanyEmail(e.target.value)}}
                         />
@@ -284,6 +376,13 @@ const AddJobPosting = () => {
                             required fullWidth
                             value={companyContact}
                             sx={{ width: 800 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <PhoneRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             error={errors.companyContact}
                             onChange={(e)=> {setCompanyContact(e.target.value)}}
                         />

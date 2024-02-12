@@ -1,6 +1,7 @@
 import express,{ Router } from "express";
 const router : Router = express.Router();
 import jobsController from "../controllers/JobsController";
+import RequireAuth from "../middleware/RequireAuth";
 
 const { addNewJob,fetchJobs } = jobsController;
 

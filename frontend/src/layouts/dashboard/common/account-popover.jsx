@@ -19,6 +19,7 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
+    
   },
   {
     label: 'Profile',
@@ -117,7 +118,7 @@ export default function AccountPopover() {
           disableRipple
           disableTouchRipple
         >
-          <Link to='/myprofile'>My profile</Link>
+          <Link to='/dashboard/dashboard/myprofile'>My profile</Link>
         </MenuItem>
         <MenuItem
           disableRipple

@@ -1,6 +1,7 @@
 import express, { Express,Router } from "express";
 const router : Router = express.Router();
 import upload from "../middleware/MulterConfig";
+import RequireAuth from "../middleware/RequireAuth";
 
 import userControllers from "../controllers/UserController";
 const { registerUser,loginUser,fetchUsers,handleChangePassword } = userControllers;

@@ -1,4 +1,4 @@
-import { Typography,TextField,Button } from "@mui/material";
+import { Typography,TextField,Button, InputAdornment } from "@mui/material";
 import { styled } from "@mui/system";
 import React,{ useEffect, useState } from 'react';
 import axios from "axios";
@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
 import UseAuthContext from "src/hooks/use-auth-context";
+import { ArticleRounded, DescriptionRounded } from "@mui/icons-material";
 
 
 // Define a styled TextField component
@@ -78,7 +79,7 @@ const JobApplication = () => {
 
     return ( 
         <div>
-            <Typography variant="h3">
+            <Typography variant="h4">
                 Upload docs to apply for { _id }
             </Typography>
             <StyledPageContent>
@@ -89,6 +90,13 @@ const JobApplication = () => {
                         required fullWidth
                         sx={{ width: 800 }}
                         InputLabelProps={{ shrink: true }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <DescriptionRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         type="file"
                         inputProps={{ accept: ".pdf" }}
                         onChange={(e)=> {setResume(e.target.files[0])}}      
@@ -102,6 +110,13 @@ const JobApplication = () => {
                         required fullWidth
                         sx={{ width: 800 }}
                         InputLabelProps={{ shrink: true }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <ArticleRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         type="file"
                         inputProps={{ accept: ".pdf" }}
                         onChange={(e)=> {setApplicationLetter(e.target.files[0])}}   

@@ -16,7 +16,7 @@ export const authReducer = (state,action) =>{
 }
 
 const AuthContextProvider = ({ children }) => {
-
+    const [loading, setLoading] = useState(true);
     const [state, dispatch] = useReducer(authReducer, {
         user: null
     });
@@ -28,9 +28,15 @@ const AuthContextProvider = ({ children }) => {
             const user = JSON.parse(userobject);
             dispatch({ type: 'LOGIN', payload:user });
         }
+        setLoading(false);
     },[])
 
     const contextValue = React.useMemo(() => ({ ...state, dispatch }), [state]);
+
+    // If loading, you can render a loading indicator
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     console.log('AuthContext state: ', state);
 

@@ -300,7 +300,7 @@ export default function UserPage() {
                   <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                     <HourglassBottomRounded />
                     <div style={{ marginLeft: '8px' }}>
-                      <strong  >Experience</strong> <br />
+                      <strong >Experience</strong> <br />
                       {jobToView.experience}
                     </div>
                   </Typography>

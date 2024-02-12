@@ -1,10 +1,10 @@
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, 
     DialogTitle, IconButton, Paper, Table, TableBody, TableCell, TableContainer, 
-    TableHead, TablePagination, TableRow, Tooltip, Typography,TextField, Popover, MenuItem } from "@mui/material";
+    TableHead, TablePagination, TableRow, Tooltip, Typography,TextField, Popover, MenuItem, InputAdornment } from "@mui/material";
 import { styled } from "@mui/system";
 import React,{useState, useEffect} from 'react';
 import axios from "axios";
-import { ArticleRounded, BusinessRounded, CalendarMonthRounded, CalendarTodayOutlined, Cancel, CancelRounded, Description, DescriptionRounded, DownloadForOfflineRounded, EmailRounded, FileCopy, LocalAtmRounded, PersonRounded, Title, VisibilityRounded, Work } from "@mui/icons-material";
+import { ArticleRounded, BusinessRounded, CalendarMonthRounded, CalendarTodayOutlined, Cancel, CancelRounded, Description, DescriptionRounded, DownloadForOfflineRounded, EmailRounded, FileCopy, LocalAtmRounded, PersonRounded, TimerRounded, Title, VisibilityRounded, Work } from "@mui/icons-material";
 import { saveAs } from "file-saver";
 import {format} from "date-fns"
 import { toast } from "react-toastify";
@@ -199,7 +199,7 @@ const JobApplications = () => {
 
     return ( 
         <div>
-            <Typography variant="h3">Job applications</Typography>
+            <Typography variant="h4">Job applications</Typography>
             {
                 applications ? (
                     <TableContainer component={Paper}>
@@ -430,6 +430,13 @@ const JobApplications = () => {
                                 required fullWidth
                                 sx={{ width: 500 }}
                                 InputLabelProps={{ shrink: true }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                          <CalendarMonthRounded />
+                                        </InputAdornment>
+                                      )
+                                }}
                                 value={interviewDate}
                                 type="date"
                                 error={errors.interviewDate}
@@ -441,6 +448,13 @@ const JobApplications = () => {
                                 variant="outlined"
                                 required fullWidth
                                 sx={{ width: 500 }}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                          <TimerRounded />
+                                        </InputAdornment>
+                                      )
+                                }}
                                 value={interviewTime}
                                 error={errors.interviewDate}
                                 onChange={(e)=> {setInterviewTime(e.target.value)}}   

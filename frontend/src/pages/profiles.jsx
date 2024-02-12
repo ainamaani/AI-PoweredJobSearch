@@ -52,7 +52,7 @@ const ProfileCategories = () => {
 
     return ( 
         <div className="categories">
-            <Typography variant="h3">Profiles</Typography>
+            <Typography variant="h4">Profiles</Typography>
                
                 { categories ? (
                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>

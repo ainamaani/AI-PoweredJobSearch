@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
+import UseAuthContext from 'src/hooks/use-auth-context';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
@@ -28,6 +29,7 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const { user } = UseAuthContext();
   const routes = useRoutes([
     {
       path: '/',
@@ -39,29 +41,31 @@ export default function Router() {
     },
     {
       path: '/dashboard',
-      element: (
+      element: user ? (
         <Suspense fallback={<div>Loading...</div>}>
           <DashboardLayout>
             <Outlet />
           </DashboardLayout>
         </Suspense>
+      ) : (
+        <Navigate to="/login" replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'dashboard/jobs', element: <UserPage /> },
-        { path: 'dashboard/products', element: <ProductsPage /> },
-        { path: 'dashboard/applications', element: <ApplicationsPage /> },
-        { path: 'dashboard/profiles', element: <ProfilesPage /> },
-        { path: 'dashboard/interviews', element: <InterviewsPage /> },
-        { path: 'dashboard/companies', element: <CompaniesPage /> },
-        { path: 'dashboard/blog', element: <BlogPage /> },
-        { path: 'dashboard/newjob', element: < AddJobPostingPage /> },
-        { path: 'dashboard/newprofile', element: <CreateProfilePage /> },
-        { path: 'dashboard/myprofile', element: <MyProfilePage/> },
-        { path: 'dashboard/allprofiles', element: <AllProfilesPage /> },
-        { path: 'dashboard/updateprofile/:id', element: <UpdateProfilePage /> },
-        { path: 'dashboard/profiles/:category', element: <ProfilesCategoryPage /> },
-        { path: 'dashboard/apply/:_id', element: <JobApplicationPage /> }
+        { path: 'dashboard/jobs', element: user ? <UserPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/products', element: user ? <ProductsPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/applications', element:  user ? <ApplicationsPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/profiles', element:  user ? <ProfilesPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/interviews', element:  user ? <InterviewsPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/companies', element:  user ? <CompaniesPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/blog', element:  user ? <BlogPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/newjob', element:  user ? < AddJobPostingPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/newprofile', element:  user ? <CreateProfilePage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/myprofile', element:  user ? <MyProfilePage/> : <Navigate to="/login" /> },
+        { path: 'dashboard/allprofiles', element:  user ? <AllProfilesPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/updateprofile/:id', element:  user ? <UpdateProfilePage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/profiles/:category', element:  user ? <ProfilesCategoryPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/apply/:_id', element:  user ? <JobApplicationPage /> : <Navigate to="/login" /> }
       ],
     },
     {

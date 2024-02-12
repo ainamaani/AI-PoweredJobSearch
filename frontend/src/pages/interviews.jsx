@@ -158,7 +158,7 @@ const InterviewsScheduled = () => {
 
     return ( 
         <div>
-            <Typography variant="h3">
+            <Typography variant="h4">
                 Scheduled Interviews
             </Typography>
             { interviews? (

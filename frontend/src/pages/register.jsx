@@ -8,6 +8,7 @@ import Iconify from "src/components/iconify";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
+import { BusinessRounded, CategoryRounded, DescriptionRounded, EmailRounded, HttpRounded, LocationOnRounded, LockRounded, PersonRounded } from "@mui/icons-material";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -131,7 +132,7 @@ const Register = () => {
         <div className="register">  
             <StyledPageContent className="content">
                 <form onSubmit={handleRegister}>
-                    <Typography variant="h3" className="register-head">
+                    <Typography variant="h4"  className="register-head">
                         Register for CareerConnect.
                     </Typography>
                     <div className="head-border-bottom">...</div>
@@ -139,7 +140,14 @@ const Register = () => {
                         label="First name"
                         variant="outlined"
                         required fullWidth
-                        sx={{ width: 800 }}
+                        sx={{ width: 600 }}
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position='start'>
+                                <PersonRounded />
+                              </InputAdornment>
+                            )
+                          }}
                         error={errors.firstname}
                         value={firstname}
                         onChange={(e)=> {setFirstname(e.target.value)}}   
@@ -151,7 +159,14 @@ const Register = () => {
                         label="Last name"
                         variant="outlined"
                         required fullWidth
-                        sx={{ width: 800 }}
+                        sx={{ width: 600 }}
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position='start'>
+                                <PersonRounded />
+                              </InputAdornment>
+                            )
+                          }}
                         error={errors.lastname}
                         value={lastname}
                         onChange={(e)=> {setLastname(e.target.value)}}   
@@ -163,7 +178,14 @@ const Register = () => {
                         label="Email"
                         variant="outlined"
                         required fullWidth
-                        sx={{ width: 800 }}
+                        sx={{ width: 600 }}
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position='start'>
+                                <EmailRounded />
+                              </InputAdornment>
+                            )
+                          }}
                         error={errors.email}
                         value={email}
                         onChange={(e)=> {setEmail(e.target.value)}}   
@@ -184,7 +206,14 @@ const Register = () => {
                                 label="Company"
                                 variant="outlined"
                                 required fullWidth
-                                sx={{ width: 800 }}
+                                sx={{ width: 600 }}
+                                InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position='start'>
+                                        <BusinessRounded />
+                                      </InputAdornment>
+                                    )
+                                  }}
                                 error={errors.company}
                                 value={company}
                                 onChange={(e)=> {setCompany(e.target.value)}}   
@@ -196,7 +225,14 @@ const Register = () => {
                                 label="Company Email"
                                 variant="outlined"
                                 required fullWidth
-                                sx={{ width: 800 }}
+                                sx={{ width: 600 }}
+                                InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position='start'>
+                                        <EmailRounded />
+                                      </InputAdornment>
+                                    )
+                                  }}
                                 error={errors.companyEmail}
                                 value={companyEmail}
                                 onChange={(e)=> {setCompanyEmail(e.target.value)}}   
@@ -208,7 +244,14 @@ const Register = () => {
                                 label="Company Description"
                                 variant="outlined"
                                 required fullWidth
-                                sx={{ width: 800 }}
+                                sx={{ width: 600 }}
+                                InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position='start'>
+                                        <DescriptionRounded />
+                                      </InputAdornment>
+                                    )
+                                  }}
                                 error={errors.companyDescription}
                                 value={companyDescription}
                                 onChange={(e)=> {setCompanyDescription(e.target.value)}}   
@@ -220,7 +263,14 @@ const Register = () => {
                                 label="Industry"
                                 variant="outlined"
                                 required fullWidth
-                                sx={{ width: 800 }}
+                                sx={{ width: 600 }}
+                                InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position='start'>
+                                        <CategoryRounded />
+                                      </InputAdornment>
+                                    )
+                                  }}
                                 error={errors.industry}
                                 value={industry}
                                 onChange={(e)=> {setIndustry(e.target.value)}}   
@@ -232,7 +282,14 @@ const Register = () => {
                                 label="Company location"
                                 variant="outlined"
                                 required fullWidth
-                                sx={{ width: 800 }}
+                                sx={{ width: 600 }}
+                                InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position='start'>
+                                        <LocationOnRounded />
+                                      </InputAdornment>
+                                    )
+                                  }}
                                 error={errors.location}
                                 value={location}
                                 onChange={(e)=> {setLocation(e.target.value)}}   
@@ -246,7 +303,7 @@ const Register = () => {
                                 required fullWidth
                                 InputLabelProps={{ shrink: true }}
                                 inputProps={{ accept: ".jpeg,.jgp,.png" }}
-                                sx={{ width: 800 }}
+                                sx={{ width: 600 }}
                                 type="file"
                                 onChange={(e)=> {setCompanyLogo(e.target.files[0])}}   
                             />
@@ -257,7 +314,14 @@ const Register = () => {
                                 label="Company website link"
                                 variant="outlined"
                                 required fullWidth
-                                sx={{ width: 800 }}
+                                sx={{ width: 600 }}
+                                InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position='start'>
+                                        <HttpRounded />
+                                      </InputAdornment>
+                                    )
+                                  }}
                                 error={errors.companyWebsiteUrl}
                                 value={companyWebsiteUrl}
                                 onChange={(e)=> {setCompanyWebsiteUrl(e.target.value)}}   
@@ -271,7 +335,7 @@ const Register = () => {
                         label="Password"
                         variant="outlined"
                         required fullWidth
-                        sx={{ width: 800 }}
+                        sx={{ width: 600 }}
                         type={showPassword ? 'text' : 'password'}
                         InputProps={{
                             endAdornment: (
@@ -281,6 +345,11 @@ const Register = () => {
                                 </IconButton>
                               </InputAdornment>
                             ),
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <LockRounded />
+                                </InputAdornment>
+                              )
                         }}
                         error={errors.password}
                         value={password}
@@ -294,7 +363,7 @@ const Register = () => {
                         label="Confirm password"
                         variant="outlined"
                         required fullWidth
-                        sx={{ width: 800 }}
+                        sx={{ width: 600 }}
                         type={showPassword ? 'text' : 'password'}
                         InputProps={{
                             endAdornment: (
@@ -304,6 +373,11 @@ const Register = () => {
                                 </IconButton>
                               </InputAdornment>
                             ),
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <LockRounded />
+                                </InputAdornment>
+                              )
                         }}
                         error={errors.passwordConfirm}
                         value={passwordConfirm}
@@ -313,14 +387,17 @@ const Register = () => {
                     <LoadingButton
                         size="large"
                         type="submit"
+                        color="inherit"
                         variant="contained"
                         className="register-button"
                         loading={loading}
                     >
                         Register
                     </LoadingButton>
-                    <div className="already-with-account">
-                        <p>Already have an account? <Link to='/login'>Login</Link> </p> 
+                    <div className="alread-with-account">
+                        <span style={{ 
+                          color: 'blue'
+                        }}>Already have an account? <Link to='/login'>Login</Link> </span> 
                     </div>
                 </form>
             </StyledPageContent>

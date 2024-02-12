@@ -3,9 +3,13 @@ import upload from "../middleware/MulterConfig";
 
 const router : Router = express.Router();
 import applicationsController from "../controllers/ApplicationController";
+import RequireAuth from "../middleware/RequireAuth";
 
 const { newJobApplication, jobApplications, downloadResume, 
     downloadApplicationLetter, deleteApplication, rejectApplication } = applicationsController;
+
+// require auth for all application routes.
+router.use(RequireAuth);
 
 router.post('/apply', upload.fields([{name: 'resume', maxCount: 1},{name: 'applicationLetter', maxCount:1}]), newJobApplication )
 

@@ -34,7 +34,26 @@ const followCompany = async(req: Request, res: Response) =>{
     }
 }
 
+const unfollowCompany = async(req: Request,res: Response) => {
+    const { companyId } = req.params;
+    const { userId } = req.body;
+
+    try {
+        const removeFollowing = await Company.findByIdAndUpdate(
+            companyId,
+            {$pull: { followers: userId }},
+            { new: true }
+        ) 
+        if(removeFollowing){
+            return res.status(200).json(removeFollowing);
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
 export default {
     fetchCompanies,
-    followCompany
+    followCompany,
+    unfollowCompany
 }

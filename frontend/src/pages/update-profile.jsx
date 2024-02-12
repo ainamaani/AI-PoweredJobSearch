@@ -1,5 +1,8 @@
 import { Typography,TextField,Button,RadioGroup,MenuItem,Select,
-          Radio,FormControlLabel,FormControl,InputLabel } from "@mui/material";
+          Radio,FormControlLabel,FormControl,InputLabel,InputAdornment } from "@mui/material";
+import { CalendarMonthRounded, Category, CategoryRounded, ConstructionRounded, 
+        DescriptionRounded, EmailRounded, FacebookRounded, GitHub, HttpRounded, Instagram, 
+        LinkedIn, PersonRounded, PhoneRounded, PublicRounded, Twitter } from "@mui/icons-material";
 import React,{ useState, useEffect } from 'react';
 import axios from "axios";
 import { styled } from "@mui/system";
@@ -189,6 +192,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <PersonRounded />
+                        </InputAdornment>
+                      )
+                }}
                   error={firstname}
                   value={firstname}
                   onChange={(e)=> {setFirstname(e.target.value)}}   
@@ -202,6 +212,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <PersonRounded />
+                        </InputAdornment>
+                      )
+                }}
                   value={lastname}
                   error={lastname}
                   onChange={(e)=> {setLastname(e.target.value)}}   
@@ -214,6 +231,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <CalendarMonthRounded />
+                        </InputAdornment>
+                      )
+                }}
                   type="date"
                   sx={{ width: 800 }}
                   value={dateOfBirth}
@@ -235,6 +259,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <PublicRounded />
+                        </InputAdornment>
+                      )
+                }}
                   value={nationality}
                   error={errors.nationality}
                   onChange={(e)=> {setNationality(e.target.value)}}   
@@ -247,6 +278,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <EmailRounded />
+                        </InputAdornment>
+                      )
+                }}
                   error={errors.email}
                   value={email}
                   onChange={(e)=> {setEmail(e.target.value)}}   
@@ -259,6 +297,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <PhoneRounded />
+                        </InputAdornment>
+                      )
+                }}
                   value={phoneContact}
                   error={errors.phoneContact}
                   onChange={(e)=> {setPhoneContact(e.target.value)}}   
@@ -288,6 +333,13 @@ const UpdateProfile = () => {
                   id="category"
                   label="Select a category"
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <CategoryRounded />
+                        </InputAdornment>
+                      )
+                }}
                   onChange={(e) => setCategory(e.target.value)}
                   >
                       <MenuItem value="" disabled>Select a Category</MenuItem>
@@ -320,6 +372,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <ConstructionRounded />
+                        </InputAdornment>
+                      )
+                }}
                   error={errors.profession}
                   value={profession}
                   onChange={(e)=> {setProfession(e.target.value)}}   
@@ -332,6 +391,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   required fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <DescriptionRounded />
+                        </InputAdornment>
+                      )
+                }}
                   error={errors.personalDescription}
                   value={personalDescription}
                   onChange={(e)=> {setPersonalDescription(e.target.value)}}   
@@ -344,6 +410,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <HttpRounded />
+                        </InputAdornment>
+                      )
+                }}
                   error={errors.website}
                   value={website}
                   onChange={(e)=> {setWebsite(e.target.value)}}   
@@ -356,6 +429,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <GitHub />
+                        </InputAdornment>
+                      )
+                }}
                   value={github}
                   error={errors.github}
                   onChange={(e)=> {setGithub(e.target.value)}}   
@@ -378,6 +458,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <LinkedIn />
+                        </InputAdornment>
+                      )
+                }}
                   error={errors.linkedIn}
                   value={linkedIn}
                   onChange={(e)=> {setLinkedIn(e.target.value)}}   
@@ -390,6 +477,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <FacebookRounded />
+                        </InputAdornment>
+                      )
+                }}
                   value={facebook}
                   error={errors.facebook}
                   onChange={(e)=> {setFacebook(e.target.value)}}   
@@ -402,6 +496,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <Twitter />
+                        </InputAdornment>
+                      )
+                }}
                   error={errors.twitter}
                   value={twitter}
                   onChange={(e)=> {setTwitter(e.target.value)}}   
@@ -414,6 +515,13 @@ const UpdateProfile = () => {
                   variant="outlined"
                   fullWidth
                   sx={{ width: 800 }}
+                  InputProps={{
+                    startAdornment: (
+                        <InputAdornment position='start'>
+                          <Instagram />
+                        </InputAdornment>
+                      )
+                }}
                   error={errors.instagram}
                   value={instagram}
                   onChange={(e)=> {setInstagram(e.target.value)}}   

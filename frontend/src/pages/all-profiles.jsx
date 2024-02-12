@@ -88,7 +88,7 @@ const Allprofiles = () => {
 
     return ( 
        <div>
-        <Typography variant="h3">
+        <Typography variant="h4">
             All profiles
         </Typography>
         <div style={{ display: "flex", flexWrap: "wrap" }}>

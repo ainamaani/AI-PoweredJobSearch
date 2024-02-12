@@ -6,6 +6,7 @@ import Iconify from "src/components/iconify";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
+import { EmailRounded, KeyRounded, LockRounded } from "@mui/icons-material";
 
 
 const ResetPassword = () => {
@@ -110,6 +111,13 @@ const ResetPassword = () => {
                             width: 600,
                             display: 'block'
                         }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <EmailRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         value={email}
                         onChange={(e)=>{setEmail(e.target.value)}}
                 />
@@ -140,6 +148,13 @@ const ResetPassword = () => {
                                 width: 600,
                                 display: 'block'
                             }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <KeyRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
                             value={passwordResetCode}
                             onChange={(e)=>{setPasswordResetCode(e.target.value)}}
                         />
@@ -163,6 +178,12 @@ const ResetPassword = () => {
                                     </IconButton>
                                   </InputAdornment>
                                 ),
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                        <LockRounded />
+                                    </InputAdornment>
+                                    )
+                                
                             }}
                             value={newPassword}
                             onChange={(e)=>{setNewPassword(e.target.value)}}

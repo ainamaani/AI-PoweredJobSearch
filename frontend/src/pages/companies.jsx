@@ -1,3 +1,4 @@
+import { FavoriteRounded, RemoveCircleRounded } from '@mui/icons-material';
 import { CircularProgress, Typography, Card, CardMedia, CardContent, CardActions, Button } from '@mui/material';
 import axios from 'axios';
 import React,{useState, useEffect} from 'react';
@@ -7,6 +8,7 @@ const Companies = () => {
 
     const {user} = UseAuthContext();
     const [companies, setCompanies] = useState([]);
+    const [followedCompanies, setFollowedCompanies] = useState([]);
 
     useEffect(()=>{
         const fetchCompanies = async() =>{
@@ -20,8 +22,29 @@ const Companies = () => {
                 console.log(error);
             }
         }
+
+        const loadFollowedCompanies = () => {
+            const savedFollowedCompanies = JSON.parse(localStorage.getItem(`followedCompanies_${user.id}`));
+            if (savedFollowedCompanies) {
+                setFollowedCompanies(savedFollowedCompanies);
+            }
+        }
+
         fetchCompanies();
-    },[]);
+        loadFollowedCompanies();
+    },[user.id]);
+
+    const handleFollowToggle = async (companyId) => {
+        try {
+            if (isCompanyFollowed(companyId)) {
+                await handleUnfollowCompany(companyId);
+            } else {
+                await handleFollowCompany(companyId);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleFollowCompany = async(companyId) =>{
         try {
@@ -34,6 +57,10 @@ const Companies = () => {
             )
             if(response.status === 200){
                 console.log("Company follow successfully");
+                const updatedFollowedCompanies = [...followedCompanies, companyId];
+                setFollowedCompanies(updatedFollowedCompanies);
+                localStorage.setItem(`followedCompanies_${user.id}`, JSON.stringify(updatedFollowedCompanies));
+
             }
 
         } catch (error) {
@@ -41,9 +68,37 @@ const Companies = () => {
         }
     }
 
+    const handleUnfollowCompany = async(companyId) => {
+        try {
+            const response = await axios.post(`http://localhost:5550/api/companies/unfollow/${companyId}`,
+                                    JSON.stringify({ userId : user.id}),{
+                                        headers:{
+                                            'Content-Type':'application/json'
+                                        }
+                                    }
+            )
+            if (response.status === 200) {
+                console.log("Company unfollowed successfully");
+                const updatedFollowedCompanies = followedCompanies.filter(id => id !== companyId);
+                setFollowedCompanies(updatedFollowedCompanies);
+                localStorage.setItem(`followedCompanies_${user.id}`, JSON.stringify(updatedFollowedCompanies));
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    // const isCompanyFollowed = (companyId) => {
+    //     return followedCompanies.includes(companyId);
+    // }
+
+    const isCompanyFollowed = companyId => followedCompanies.includes(companyId);
+
+
     return ( 
         <div>
-            <Typography variant='h3'>
+            <Typography variant='h4'>
                 Company list
             </Typography>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -52,15 +107,18 @@ const Companies = () => {
                     companies.map((company)=>(
                         <div >
                             <Card
-                            key={company._id}
-                            style={{ 
-                                margin: "20px", 
-                                width: "250px", 
-                                height: "350px",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center"
-                            }}
+                                key={company._id}
+                                style={{ 
+                                    margin: "20px", 
+                                    width: "250px", 
+                                    height: "350px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Add shadow
+                                    borderRadius: '10px', // Add border radius
+                                    overflow: 'hidden' // Hide overflowing content
+                                }}
                         >
                             <CardMedia 
                                 component='img'
@@ -86,8 +144,19 @@ const Companies = () => {
                             </CardContent>
                             <CardActions>
                                 <Button variant='contained'
-                                    onClick={() => {handleFollowCompany(company._id)}}
-                                >follow</Button>
+                                    startIcon={ isCompanyFollowed(company._id) ? <RemoveCircleRounded /> : <FavoriteRounded /> }
+                                    style={{
+                                        backgroundColor: isCompanyFollowed(company._id) ? '#f44336' : '#3f51b5', // Change button background color
+                                        color: 'white', 
+                                        borderRadius: '14px', 
+                                        padding: '8px 16px', 
+                                        transition: 'background-color 0.3s',
+                                        position: 'absolute',
+                                        bottom: '30px',
+                                        right: '80px',
+                                    }}
+                                    onClick={() => { handleFollowToggle(company._id) }}
+                                >{isCompanyFollowed(company._id) ? 'Following' : 'Follow'}</Button>
                             </CardActions>
             
                         </Card>

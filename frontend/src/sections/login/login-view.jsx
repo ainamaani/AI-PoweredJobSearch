@@ -24,6 +24,7 @@ import Iconify from 'src/components/iconify';
 
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { EmailRounded, LockRounded, PasswordRounded } from '@mui/icons-material';
 
 
 // ----------------------------------------------------------------------
@@ -68,7 +69,7 @@ export default function LoginView() {
         // update the auth api context.
         dispatch({ type: 'LOGIN', payload: loginuser.data });
         // navigate to the dashboard after login successfully.
-        navigate('/register');
+        navigate('/dashboard');
         // display success toast
         toast.success('Log in successful',{
           position: 'top-right'
@@ -95,6 +96,13 @@ export default function LoginView() {
         <TextField 
           name="email" 
           label="Email address" 
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <EmailRounded style={{ fontSize: "20px" }} />
+              </InputAdornment>
+            )
+          }}
           value={email}
           onChange={(e)=>{setEmail(e.target.value)}}
         />
@@ -104,6 +112,11 @@ export default function LoginView() {
           label="Password"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <LockRounded />
+              </InputAdornment>
+            ),
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">

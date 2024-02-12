@@ -2,6 +2,7 @@ import  express,{ Router }  from "express";
 const router : Router = express.Router();
 import upload from "../middleware/MulterConfig";
 import profilesController from "../controllers/ProfileController";
+import RequireAuth from "../middleware/RequireAuth";
 
 const { createNewProfile,getProfiles,getProfileCategories,
     getCategoryProfiles,updateProfile,deleteProfile,getUserProfile,
