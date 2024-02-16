@@ -1,16 +1,23 @@
-import { AnnouncementRounded, ArrowForward, AttachMoneyRounded, ContactSupportRounded, DirectionsCarRounded, MedicalServicesRounded, MicrowaveSharp, PaletteRounded } from '@mui/icons-material';
+import { AnnouncementRounded, ArrowForward, AttachMoneyRounded, ContactSupportRounded, 
+    DirectionsCarRounded, MedicalServicesRounded,PaletteRounded } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import React,{useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 
 const LandingPage = () => {
 
-    const [landing, setLanding] = useState('')
+    const [landing, setLanding] = useState('');
+    const navigate = useNavigate();
+
+    const handleGetStarted = () => {
+        navigate('/register');
+    }
     
     return ( 
-            <div className="container" >
+            <div className="container-landing" >
                 <div className="nav">
                     <div className="left">
                         <div className="name">
@@ -20,8 +27,7 @@ const LandingPage = () => {
                         <div className="links">
                             <ul>
                                 <li><a href="#">Home</a></li>
-                                <li><a href="#">Blog</a></li>
-                                <li><a href="#">Explore</a></li>
+                                <li><a href="#">Jobs</a></li>
                                 <li><a href="#">About</a></li>
                                 <li><a href="#">Contact</a></li>
                             </ul>
@@ -44,6 +50,7 @@ const LandingPage = () => {
                             obcaecati, deleniti esse suscipit voluptatem excepturi accusantium 
                             iste? Placeat rerum ipsa nobis eum provident?</p>
                         <Button 
+                        onClick={handleGetStarted}
                         size='large' variant='contained' className='get-started' endIcon={<ArrowForward/>}>
                             Get started
                         </Button>
@@ -88,7 +95,7 @@ const LandingPage = () => {
                         </div>
                 </div>
                 <div className="footer">
-                    <h3>How it works</h3>
+                    {/* <h3>How it works</h3>
                     <p>Explore the following steps to help you find a job easily</p>
                     <div className="guidelines">
                         <div className="card">
@@ -118,7 +125,7 @@ const LandingPage = () => {
                                 <span>Third, apply to the company and wait</span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
             </div>

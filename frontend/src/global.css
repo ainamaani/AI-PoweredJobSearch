@@ -2,11 +2,16 @@
 @import 'simplebar-react/dist/simplebar.min.css';
 
 
-.container {
-    background: #ecf0f7; 
-    padding-left: 25px;
-    padding-right: 25px;
-    height: 1000px;
+.container-landing {
+    background: #f1f1f1; 
+    height: 900px;
+}
+
+.nav {
+    background: #fff;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    padding: 10px;
 }
 
 .nav, .left {
@@ -37,6 +42,9 @@
 .landing-body{
     display: grid;
     grid-template-columns: 2fr 2fr;
+    background-color: #fff;
+    border-radius: 8px;
+    padding-left: 10px;
 }
 .guidelines{
     display: flex;
@@ -82,7 +90,7 @@
     background: #a7c8f9 !important;
 }
 .welcome{
-    font-size: 50px;
+    font-size: 40px;
 }
 .wel-title{
     color: #4d94ff;
@@ -112,6 +120,7 @@
 .popular{
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
 .category{
     background: #fff;
