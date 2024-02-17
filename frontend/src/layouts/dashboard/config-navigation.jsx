@@ -1,7 +1,7 @@
 import SvgColor from 'src/components/svg-color';
 import { AccessTimeOutlined, AccountCircleRounded, AddCircleRounded, 
   AddRounded, AssignmentRounded, BusinessRounded, DashboardRounded, FormatListNumberedRounded, 
-  HandshakeRounded, Person2Rounded, WorkRounded } from '@mui/icons-material';
+  HandshakeRounded, MapRounded, Person2Rounded, WorkRounded } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +61,11 @@ const navConfig = [
     title: 'Companies',
     path: 'dashboard/companies',
     icon: <BusinessRounded />,
+  },
+  {
+    title: 'Roadmap',
+    path: 'dashboard/addroadmap',
+    icon: <MapRounded />,
   },
   {
     title: 'product',
