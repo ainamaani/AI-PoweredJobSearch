@@ -148,10 +148,11 @@ const loginUser = async(req: Request, res: Response) =>{
             const email = user.email;
             const firstname = user.firstname;
             const lastname = user.lastname;
+            const sector = user.sector;
             const id = user._id;
 
             // return the token to indicate authentication and other credentials neccessary.
-            return res.status(200).json({ token, email, id, firstname, lastname });
+            return res.status(200).json({ token, email, id, firstname, lastname, sector });
 
         }else{
             return res.status(400).json({ error: "Invalid credentials" });

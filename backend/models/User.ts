@@ -6,6 +6,7 @@ export interface UserI extends Document {
     lastname: string;
     email: string;
     userCategory: "Job seeker" | "Recruiter";
+    sector: string;
     password: string;
 }
 
@@ -44,6 +45,9 @@ const UserSchema = new mongoose.Schema<UserI>({
             values: ["Job seeker", "Recruiter"],
             message: "The user category must be either 'Job seeker' or 'Recruiter'" 
         }
+    },
+    sector:{
+        type:String
     },
     // company:{
     //     type:String,

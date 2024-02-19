@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import RoadMap from "../models/Roadmap";
-import { RoadMapI } from "../models/Roadmap";
+import RoadMap from "../models/RoadMap";
+import { RoadMapI } from "../models/RoadMap";
 
 const handleAddRoadMap = async(req: Request, res: Response) =>{
     try {

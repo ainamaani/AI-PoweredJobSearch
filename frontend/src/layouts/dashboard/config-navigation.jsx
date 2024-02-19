@@ -63,8 +63,13 @@ const navConfig = [
     icon: <BusinessRounded />,
   },
   {
-    title: 'Roadmap',
+    title: 'Add Roadmap',
     path: 'dashboard/addroadmap',
+    icon: <AddCircleRounded />,
+  },
+  {
+    title: 'Learning Roadmaps',
+    path: 'dashboard/roadmaps',
     icon: <MapRounded />,
   },
   {

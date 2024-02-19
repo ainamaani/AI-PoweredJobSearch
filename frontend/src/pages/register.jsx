@@ -1,5 +1,5 @@
 import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, 
-    InputAdornment, IconButton } from "@mui/material";
+    InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import React,{ useState, useEffect } from 'react';
 import { styled } from "@mui/system";
 import { useNavigate,Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import Iconify from "src/components/iconify";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
-import { BusinessRounded, CategoryRounded, DescriptionRounded, EmailRounded, HttpRounded, LocationOnRounded, LockRounded, PersonRounded } from "@mui/icons-material";
+import { BusinessRounded, CategoryRounded, DescriptionRounded, EmailRounded, FactoryRounded, HttpRounded, LocationOnRounded, LockRounded, PersonRounded } from "@mui/icons-material";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -43,6 +43,7 @@ const Register = () => {
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
+    const [sector, setSector] = useState('');
     const [userCategory, setUserCategory] = useState('');
     const [company, setCompany] = useState('');
     const [companyEmail, setCompanyEmail]  = useState('');
@@ -70,6 +71,7 @@ const Register = () => {
         formData.append('firstname', firstname);
         formData.append('lastname', lastname);
         formData.append('email', email);
+        formData.append('sector', sector);
         formData.append('userCategory', userCategory);
         formData.append('company', company);
         formData.append('companyEmail', companyEmail);
@@ -99,10 +101,16 @@ const Register = () => {
                 setFirstname('');
                 setLastname('');
                 setEmail('');
+                setSector('');
                 setCompany('');
                 setCompanyEmail('');
                 setUserCategory('');
                 setPassword('');
+                setCompanyDescription('');
+                setCompanyLogo(null);
+                setIndustry('');
+                setLocation('');
+                setCompanyWebsiteUrl('');
                 setPasswordConfirm('');
                 
                 navigate('/login');
@@ -193,6 +201,53 @@ const Register = () => {
                     { errors.email && (
                             <span style={{color:'red', textAlign:"left"}}>{errors.email}</span>
                         )}
+                        
+                    <FormControl fullWidth >
+                        <InputLabel id="sector">Select sector</InputLabel>
+                        <Select
+                        value={sector}
+                        fullWidth
+                        id="sector"
+                        label="Select a sector"
+                        sx={{ width: 600 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <FactoryRounded />
+                                </InputAdornment>
+                              )
+                        }}
+                        onChange={(e) => setSector(e.target.value)}
+                        >
+                            <MenuItem value="" disabled>Select a sector</MenuItem>
+                            <MenuItem value="Accounting">Accounting</MenuItem>
+                            <MenuItem value="Agriculture">Agriculture</MenuItem>
+                            <MenuItem value="Architecture">Architecture</MenuItem>
+                            <MenuItem value="Arts and Entertainment">Arts and Entertainment</MenuItem>
+                            <MenuItem value="Business and Management">Business and Management</MenuItem>
+                            <MenuItem value="Construction">Construction</MenuItem>
+                            <MenuItem value="Education">Education</MenuItem>
+                            <MenuItem value="Engineering">Engineering</MenuItem>
+                            <MenuItem value="Finance">Finance</MenuItem>
+                            <MenuItem value="Healthcare">Healthcare</MenuItem>
+                            <MenuItem value="Information Technology">Information Technology</MenuItem>
+                            <MenuItem value="Software Development">Software Development</MenuItem>
+                            <MenuItem value="Legal">Legal</MenuItem>
+                            <MenuItem value="Manufacturing">Manufacturing</MenuItem>
+                            <MenuItem value="Marketing and Sales">Marketing and Sales</MenuItem>
+                            <MenuItem value="Media and Communications">Media and Communications</MenuItem>
+                            <MenuItem value="Nonprofit">Nonprofit</MenuItem>
+                            <MenuItem value="Real Estate">Real Estate</MenuItem>
+                            <MenuItem value="Science">Science</MenuItem>
+                            <MenuItem value="Social Services">Social Services</MenuItem>
+                            <MenuItem value="Transportation">Transportation</MenuItem>
+                            <MenuItem value="Tourism">Tourism</MenuItem>
+                        </Select>
+                    </FormControl>
+                    { errors.sector && (
+                            <span style={{color:'red', textAlign:"left"}}>{errors.sector}</span>
+                    )}
+
                     <StyledRadioGroup value={userCategory} onChange={(e)=> {setUserCategory(e.target.value)}} >
                         <FormControlLabel value="Job seeker" control={<Radio />} label="Job seeker" />
                         <FormControlLabel value="Recruiter" control={<Radio />} label="Recruiter" />

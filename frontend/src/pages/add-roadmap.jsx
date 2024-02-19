@@ -74,8 +74,8 @@ const AddRoadMap = () => {
     }
 
     return ( 
-        <div>
-            <Typography variant="h4">
+        <div className="add-job">
+            <Typography variant="h4" className="add-job-head">
                 Add roadmap
             </Typography>
             <form onSubmit={handleAddLearningRoadMap}>
@@ -244,8 +244,10 @@ const AddRoadMap = () => {
                 <TextField 
                     label="Front mini image"
                     variant="outlined"
+                    type="file"
                     required fullWidth
                     error={errors.roleFrontImage}
+                    InputLabelProps={{ shrink: true }}
                     sx={{ 
                         width: 800,
                         display: 'block',
