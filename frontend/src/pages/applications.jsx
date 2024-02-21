@@ -64,6 +64,7 @@ const JobApplications = () => {
         fetchJobApplications(); 
     },[]);
 
+
     // menu and pop over code
     const handleMenuOpen = (index) => (event) => {
         const newAnchorEl = [...anchorEl];
