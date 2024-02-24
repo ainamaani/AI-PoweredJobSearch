@@ -1,19 +1,18 @@
 import mongoose,{Document} from "mongoose";
 
 export interface RoadMapI extends Document {
-    profession : string;
-    role : string;
-    description : string;
-    step : {
-        title : string;
-        subStep : {
-            name : string;
-            url : string;
-        }
-    };
-    roleBackgroundImage : string;
-    roleFrontImage : string;
-
+    profession: string;
+    role: string;
+    description: string;
+    steps: {
+      title: string;
+      subSteps: {
+        name: string;
+        url: string;
+      }[];
+    }[];
+    roleBackgroundImage: string;
+    roleFrontImage: string;
 }
 
 const RoadMapSchema = new mongoose.Schema<RoadMapI>({
@@ -29,22 +28,22 @@ const RoadMapSchema = new mongoose.Schema<RoadMapI>({
         type: String,
         required: [true, "The role description is required"]
     },
-    step : {
-        title : {
-            type: String,
-            required: [true, "The step title is required"]
+    steps: [{
+        title: {
+          type: String,
+          required: [true, "The step title is required"]
         },
-        subStep : {
-            name : {
-                type: String,
-                required: [true, "The sub step name is required"]
-            },
-            url : {
-                type: String,
-                required: [true, "The sub step url is required"]
-            }
-        }
-    },
+        subSteps: [{
+          name: {
+            type: String,
+            required: [true, "The sub step name is required"]
+          },
+          url: {
+            type: String,
+            required: [true, "The sub step url is required"]
+          }
+        }]
+    }],
     roleBackgroundImage : {
         type : String,
         required : [true, "The role background image is required"]   
