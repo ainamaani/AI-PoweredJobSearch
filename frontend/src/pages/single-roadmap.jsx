@@ -1,14 +1,16 @@
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Avatar, Button, CircularProgress, IconButton, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import React,{ useEffect, useState } from 'react';
 import axios from "axios";
-import { ArrowBackRounded, ExpandMoreRounded } from "@mui/icons-material";
+import { ArrowBackRounded, ArrowForwardRounded, ExpandMoreRounded } from "@mui/icons-material";
 
 const SingleRoadMap = () => {
 
     const [singleRoadMap, setSingleRoadMap] = useState({});
 
     const {id} = useParams();
+
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const fetchSingleRoadMap = async() => {
@@ -24,24 +26,34 @@ const SingleRoadMap = () => {
         fetchSingleRoadMap();
     },[id]);
 
+    const handleRewind = () =>{
+        navigate('/dashboard/dashboard/roadmaps');
+    }
+
     return ( 
         <div>
             <Typography variant="h4">
                 Single road map details
             </Typography>
+            <IconButton size="large" onClick={handleRewind}>
+                <ArrowBackRounded />
+            </IconButton>
             { singleRoadMap ? (
-                <div style={{ display:"grid",gridTemplateColumns:"1.5fr 2.5fr" }}>
-                    <div className="left-single">
-                        <IconButton size="large">
-                            <ArrowBackRounded />
-                        </IconButton>
-                        <Avatar alt="front-image" 
+                <div style={{ display:"grid",gridTemplateColumns:"1.5fr 2.5fr", gap:"4px" }}>
+                    <div className="left-single" style={{
+                        background:"white",
+                        padding:"10px",
+                        borderRadius:"6px"
+                    }}>
+                        <Avatar alt="front-image" style={{
+                            marginBottom:"20px"
+                        }}
                             src={`http://localhost:5550/${singleRoadMap.roleFrontImage}`}
                         />
-                        <Typography variant="h4">
+                        <Typography variant="h5">
                             {singleRoadMap.role}
                         </Typography>
-                        <Typography variant="h4">
+                        <Typography variant="subtitle">
                             {singleRoadMap.description}
                         </Typography>
                     </div>
@@ -53,20 +65,32 @@ const SingleRoadMap = () => {
                                 aria-controls={`panel${index + 1}-content`}
                                 id={`panel${index + 1}-header`}
                             >
-                                {step.title}
+                                <Typography variant="h5">
+                                    {step.title}
+                                </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <Typography variant="body1">
-                                    Substeps:
-                                </Typography>
                                 {step?.subSteps?.map((subStep, subStepIndex) => (
-                                <div key={subStepIndex}>
-                                    <Typography variant="body1">
-                                        Name: {subStep.name}
-                                    </Typography>
-                                    <Typography variant="body1">
+                                <div style={{ 
+                                    display:"flex", 
+                                    alignItems:"center", 
+                                    justifyContent:"space-between",
+                                    borderBottom: "1px solid #f1f1f1", 
+                                    padding: "8px 0" 
+                                    }} key={subStepIndex}>
+                                    <div className="sub-step">
+                                        <Typography variant="body1">
+                                            {subStep.name}
+                                        </Typography>
+                                    </div>
+                                    <div className="url-link">
+                                        <Link to={subStep.url}>
+                                            <ArrowForwardRounded style={{color:"black"}} />
+                                        </Link>
+                                    </div>
+                                    {/* <Typography variant="body1">
                                         URL: {subStep.url}
-                                    </Typography>
+                                    </Typography> */}
                                 </div>
                                 ))}
                             </AccordionDetails>
