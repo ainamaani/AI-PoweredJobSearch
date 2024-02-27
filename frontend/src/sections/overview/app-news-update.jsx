@@ -23,8 +23,8 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
 
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
-          {list.map((news) => (
-            <NewsItem key={news.id} news={news} />
+          {list.map((job) => (
+            <JobItem key={job._id} job={job} />
           ))}
         </Stack>
       </Scrollbar>
@@ -47,20 +47,30 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
 AppNewsUpdate.propTypes = {
   title: PropTypes.string,
   subheader: PropTypes.string,
-  list: PropTypes.array.isRequired,
+  list: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string,
+      title: PropTypes.string,
+      company: PropTypes.string,
+      description: PropTypes.string,
+      // Add more fields as needed to match the Job model
+    })
+  ),
 };
 
 // ----------------------------------------------------------------------
 
-function NewsItem({ news }) {
-  const { image, title, description, postedAt } = news;
+function JobItem({ job }) {
+  const { title, company, description, createdAt } = job;
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
+      {/* Image */}
+      {/* NOTE: You may not have an image field in your Job model. Remove this if not needed */}
       <Box
         component="img"
         alt={title}
-        src={image}
+        src="https://images.unsplash.com/photo-1487528278747-ba99ed528ebc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8am9ic3xlbnwwfHwwfHx8MA%3D%3D"
         sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }}
       />
 
@@ -75,17 +85,18 @@ function NewsItem({ news }) {
       </Box>
 
       <Typography variant="caption" sx={{ pr: 3, flexShrink: 0, color: 'text.secondary' }}>
-        {fToNow(postedAt)}
+        {fToNow(createdAt)}
       </Typography>
     </Stack>
   );
 }
 
-NewsItem.propTypes = {
-  news: PropTypes.shape({
-    image: PropTypes.string,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    postedAt: PropTypes.instanceOf(Date),
+JobItem.propTypes = {
+  job: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    company: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    createdAt: PropTypes.instanceOf(Date).isRequired,
   }),
 };

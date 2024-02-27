@@ -1,4 +1,10 @@
 import { faker } from '@faker-js/faker';
+import { CircularProgress } from '@mui/material';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+
+
+import UseAuthContext from 'src/hooks/use-auth-context';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -16,20 +22,39 @@ import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
 
+
 // ----------------------------------------------------------------------
 
 export default function AppView() {
+  const {user} = UseAuthContext();
+  const [recentJobs, setRecentJobs] = useState([]);
+
+
+  useEffect(()=>{
+    try {
+        const handleFetchRecentJobs = async() =>{
+          const recentJobsData = await axios.get("http://localhost:5550/api/jobs/");
+          if(recentJobsData.status === 200){
+            setRecentJobs(recentJobsData.data.slice(0, 5));
+          }
+      }
+      handleFetchRecentJobs();
+    } catch (error) {
+      console.log(error);
+    }
+  },[])
+
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+        Hi {user.firstname}, Welcome back 👋
       </Typography>
 
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Weekly Sales"
-            total={714000}
+            title="Job postings"
+            total={679}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
           />
@@ -37,8 +62,8 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="New Users"
-            total={1352831}
+            title="Developer jobs"
+            total={96}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
@@ -46,8 +71,8 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Item Orders"
-            total={1723315}
+            title="Interviews"
+            total={4}
             color="warning"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
           />
@@ -154,16 +179,16 @@ export default function AppView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={8}>
-          <AppNewsUpdate
-            title="News Update"
-            list={[...Array(5)].map((_, index) => ({
-              id: faker.string.uuid(),
-              title: faker.person.jobTitle(),
-              description: faker.commerce.productDescription(),
-              image: `/assets/images/covers/cover_${index + 1}.jpg`,
-              postedAt: faker.date.recent(),
-            }))}
-          />
+          { recentJobs ? (
+            <AppNewsUpdate
+              title="Recently posted"
+              list={recentJobs}
+            />
+          ):(
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+                <CircularProgress />
+            </div>
+          ) }
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
