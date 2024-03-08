@@ -142,11 +142,28 @@ Elite developers.
     }
 }
 
+
+const fetchUserApplications = async(req: Request, res: Response) =>{
+    const {id} = req.params;
+
+    try {
+        const userApplications = await Application.find({ applicant:id });
+        if(userApplications){
+            return res.status(200).json(userApplications);
+        }else{
+            return res.status(400).json({ error: "Failed to retrieve the documents" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
+
 export default {
     newJobApplication,
     jobApplications,
     downloadResume,
     downloadApplicationLetter,
     deleteApplication,
-    rejectApplication
+    rejectApplication,
+    fetchUserApplications
 };

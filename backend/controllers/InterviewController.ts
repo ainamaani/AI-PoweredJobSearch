@@ -114,7 +114,22 @@ const rescheduleInterview = async(req: Request, res: Response) =>{
     }
 }
 
+const fetchUserInterviews = async(req: Request, res: Response) =>{
+    const {id} = req.params;
+
+    try {
+        const userInterviews = await Interview.find({ applicant:id });
+        if(userInterviews){
+            return res.status(200).json(userInterviews);
+        }else{
+            return res.status(400).json({ error: "Failed to retrieve the documents" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
 export default {
     scheduleInterview, getInterviews, cancelInterview, doneInterview, getSingleInterview,
-    rescheduleInterview
+    rescheduleInterview, fetchUserInterviews
 }

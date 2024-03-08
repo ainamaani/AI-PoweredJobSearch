@@ -5,7 +5,9 @@ import interviewsController from "../controllers/InterviewController";
 
 
 const { scheduleInterview, getInterviews, cancelInterview, 
-        doneInterview, getSingleInterview, rescheduleInterview } = interviewsController;
+        doneInterview, getSingleInterview, rescheduleInterview,
+        fetchUserInterviews
+        } = interviewsController;
 
 
 
@@ -14,6 +16,8 @@ router.post('/schedule', scheduleInterview);
 router.get('/', getInterviews);
 
 router.get('/:id', getSingleInterview);
+
+router.get('/user/:id', fetchUserInterviews);
 
 router.get('/cancel/:id', cancelInterview);
 

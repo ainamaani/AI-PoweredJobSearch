@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { CircularProgress } from '@mui/material';
+import { AssignmentRounded, HandshakeRounded, WorkRounded } from '@mui/icons-material';
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import axios, { all } from 'axios';
 
 
 import UseAuthContext from 'src/hooks/use-auth-context';
@@ -23,11 +24,16 @@ import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
 
 
+
 // ----------------------------------------------------------------------
 
 export default function AppView() {
   const {user} = UseAuthContext();
   const [recentJobs, setRecentJobs] = useState([]);
+  const [allJobs, setAllJobs] = useState([]);
+  const [allUserApplications, setAllUserApplications] = useState([])
+  const [allUserInterviews, setAllUserInterviews] = useState([]);
+  // const [userProfessionJobs, setAllUserProfessionJobs] = useState([]);
 
 
   useEffect(()=>{
@@ -35,15 +41,44 @@ export default function AppView() {
         const handleFetchRecentJobs = async() =>{
           const recentJobsData = await axios.get("http://localhost:5550/api/jobs/");
           if(recentJobsData.status === 200){
+            setAllJobs(recentJobsData.data);
             setRecentJobs(recentJobsData.data.slice(0, 5));
           }
-      }
+        }
+
+        const handleFetchUserApplications = async() =>{
+          const userAppications = await axios.get(`http://localhost:5550/api/applications/${user.id}`);
+          if(userAppications.status === 200){
+            setAllUserApplications(userAppications.data);
+          }
+        }
+
+        const handleFetchUserInterviews = async() =>{
+          const userInterviews = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
+          if(userInterviews.status === 200){
+            setAllUserInterviews(userInterviews.data);
+          }
+        }
+
+        // const handleFetchUserProfessionJobs = async() =>{
+        //   const allUserProfessionJobs = await axios.get(`http://localhost:5550/api/jobs/${user.sector}`);
+        //   if(allUserProfessionJobs.status === 200){
+        //     setAllUserProfessionJobs(allUserProfessionJobs.data);
+        //   }
+        // }
+
+      
       handleFetchRecentJobs();
+      handleFetchUserApplications();
+      handleFetchUserInterviews();
+      // handleFetchUserProfessionJobs();
+
     } catch (error) {
       console.log(error);
     }
-  },[])
+  },[user.id]);
 
+  
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -52,42 +87,63 @@ export default function AppView() {
 
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Job postings"
-            total={679}
-            color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
-          />
+        {allJobs.length > 0 ? (
+            <AppWidgetSummary
+              title="Job postings"
+              total={allJobs.length}
+              icon={<WorkRounded />}
+            />
+          ) : (
+            <Typography variant='subtitle2'>No jobs found.</Typography>
+          )}
         </Grid>
 
-        <Grid xs={12} sm={6} md={3}>
+        {/* <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
             title="Developer jobs"
             total={96}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
-        </Grid>
+        </Grid> */}
 
         <Grid xs={12} sm={6} md={3}>
-          <AppWidgetSummary
+          {allUserInterviews.length > 0 ? (
+              <AppWidgetSummary
+                  title="Interviews"
+                  total={allUserInterviews.length}
+                  icon={<HandshakeRounded />}
+                />
+                ) : (
+                  <Typography>No interviews found.</Typography>
+                )}
+              {/* <AppWidgetSummary
             title="Interviews"
-            total={4}
+            total={allUserInterviews ? allUserInterviews.length : 0}
             color="warning"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
-          />
+          /> */}
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
+        {allUserApplications.length > 0 ? (
           <AppWidgetSummary
-            title="Bug Reports"
-            total={234}
+            title="Applications"
+            total={allUserApplications.length}
+            icon={<AssignmentRounded />}
+          />
+        ) : (
+          <Typography>No applications found.</Typography>
+        )}
+          {/* <AppWidgetSummary
+            title="Applications"
+            total={allUserApplications ? allUserApplications.length : "Zero"}
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
-          />
+          /> */}
         </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
+        {/* <Grid xs={12} md={6} lg={8}>
           <AppWebsiteVisits
             title="Website Visits"
             subheader="(+43%) than last year"
@@ -127,9 +183,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
             title="Current Visits"
             chart={{
@@ -141,9 +197,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
+        {/* <Grid xs={12} md={6} lg={8}>
           <AppConversionRates
             title="Conversion Rates"
             subheader="(+43%) than last year"
@@ -162,9 +218,9 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AppCurrentSubject
             title="Current Subject"
             chart={{
@@ -176,7 +232,7 @@ export default function AppView() {
               ],
             }}
           />
-        </Grid>
+        </Grid> */}
 
         <Grid xs={12} md={6} lg={8}>
           { recentJobs ? (
@@ -191,7 +247,7 @@ export default function AppView() {
           ) }
         </Grid>
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AppOrderTimeline
             title="Order Timeline"
             list={[...Array(5)].map((_, index) => ({
@@ -207,9 +263,9 @@ export default function AppView() {
               time: faker.date.past(),
             }))}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={4}>
+        {/* <Grid xs={12} md={6} lg={4}>
           <AppTrafficBySite
             title="Traffic by Site"
             list={[
@@ -235,9 +291,9 @@ export default function AppView() {
               },
             ]}
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid xs={12} md={6} lg={8}>
+        {/* <Grid xs={12} md={6} lg={8}>
           <AppTasks
             title="Tasks"
             list={[
@@ -248,7 +304,7 @@ export default function AppView() {
               { id: '5', name: 'Sprint Showcase' },
             ]}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Container>
   );
