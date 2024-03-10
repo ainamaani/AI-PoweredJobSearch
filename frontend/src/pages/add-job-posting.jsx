@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
-import { BookmarkAddRounded, BusinessRounded, CalendarMonthRounded, CardGiftcardOutlined, CardGiftcardRounded, CategoryRounded, ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, TitleRounded, WorkRounded } from "@mui/icons-material";
+import { AddCircleRounded, BookmarkAddRounded, BusinessRounded, CalendarMonthRounded, CardGiftcardOutlined, CardGiftcardRounded, CategoryRounded, ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, TitleRounded, WorkRounded } from "@mui/icons-material";
 
 
 // Define a styled TextField component
@@ -92,7 +92,7 @@ const AddJobPosting = () => {
                 })
            }
         } catch (error) {
-            toast.success('Job posting failed',{
+            toast.error('Job posting failed',{
                 position: 'top-right'
             })
             if(error.response && error.response.data && error.response.data.errors ){
@@ -107,15 +107,24 @@ const AddJobPosting = () => {
         <div>
             <StyledPageContent>
                 <div className="add-job">
-                    <Typography variant="h4" className="add-job-head">
-                        Add job posting 
-                    </Typography>
+                    <div className="head">
+                        <div className="heading-title" style={{
+                            marginTop: "45px"
+                        }}>
+                            <Typography variant="h4" className="add-job-head">
+                                Add job posting 
+                            </Typography>
+                        </div>
+                        {/* <div className="icon">
+                            <AddCircleRounded color="success"/>
+                        </div> */}
+                    </div>
                     <form onSubmit={handleAddJobPosting}>
                         <StyledTextField
                             label="Job title"
                             variant="outlined"
                             required fullWidth
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -135,7 +144,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={company}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -154,7 +163,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={description}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -173,7 +182,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={location}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -192,7 +201,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={category}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -219,7 +228,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={skills}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -238,7 +247,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={qualifications}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -257,7 +266,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={experience}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -276,7 +285,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={salaryRange}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -295,7 +304,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={additionalBenefits}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -318,7 +327,7 @@ const AddJobPosting = () => {
                             }}
                             required fullWidth
                             value={applicationDeadline}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -337,7 +346,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={applicationInstructions}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -356,7 +365,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={companyEmail}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -375,7 +384,7 @@ const AddJobPosting = () => {
                             variant="outlined"
                             required fullWidth
                             value={companyContact}
-                            sx={{ width: 800 }}
+                            sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position='start'>
@@ -387,7 +396,7 @@ const AddJobPosting = () => {
                             onChange={(e)=> {setCompanyContact(e.target.value)}}
                         />
                         { errors.companyContact && (
-                            <span style={{color:'red'}}>{errors.companyContact}</span>
+                            <span style={{color:'red', display:'block'}}>{errors.companyContact}</span>
                         )}
                         <LoadingButton
                             variant="contained"

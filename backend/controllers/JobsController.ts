@@ -1,5 +1,6 @@
 import Job from "../models/Job";
 import { Request, Response } from "express";
+import CheckJobApplicationDeadline from "../functions/CheckJobApplicationDeadline";
 
 const addNewJob = async(req: Request,res: Response) =>{
     const { title,company,companyEmail,companyContact,description,category,skills,experience,
@@ -34,6 +35,7 @@ const addNewJob = async(req: Request,res: Response) =>{
 
 const fetchJobs = async(req: Request,res: Response) =>{
     try {
+        CheckJobApplicationDeadline();
         const jobs = await Job.find({}).sort({ createdAt: -1 });
         if(jobs){
             return res.status(200).json(jobs);

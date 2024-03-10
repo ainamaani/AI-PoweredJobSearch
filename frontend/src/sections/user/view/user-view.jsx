@@ -1,12 +1,17 @@
 import axios from 'axios';
 import { useState,useEffect } from 'react';
 import { formatDistanceToNow, format } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-
-
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { AccessTimeRounded, BookmarkAddRounded, BuildRounded, CalendarMonthRounded, CardGiftcardRounded, CategoryRounded, ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, Title, TitleRounded, VisibilityRounded, WorkRounded } from '@mui/icons-material';
+import { CircularProgress, Dialog, DialogActions, DialogContent, 
+  DialogTitle, 
+  InputAdornment, 
+  TextField} from '@mui/material';
+import { AccessTimeRounded, BookmarkAddRounded, BuildRounded, CalendarMonthRounded, 
+  CardGiftcardRounded, CategoryRounded, ConstructionRounded, DescriptionRounded, EmailRounded, 
+  HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, 
+  SearchRounded, 
+  Title, TitleRounded, VisibilityRounded, WorkRounded } from '@mui/icons-material';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -53,7 +58,13 @@ export default function UserPage() {
 
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
-  const [jobToView, setJobToView] = useState(null)
+  const [jobToView, setJobToView] = useState(null);
+
+  const [searchInput, setSearchInput] = useState('');
+
+  const [searchLocationInput, setSearchLocationInput] = useState('');
+
+  const navigate = useNavigate();
 
 
   useEffect(()=>{
@@ -70,9 +81,28 @@ export default function UserPage() {
     fetchJobs()
   },[])
 
-  useEffect(()=>{
-    console.log(jobs);
-  })
+
+  const handleAddNewJob = () =>{
+    navigate('/dashboard/dashboard/newjob');
+  }
+
+  // Functions to handle input change
+  const handleSearchInputChange = (event) =>{
+    setSearchInput(event.target.value);
+  }
+
+  const handleSearchLocationInputChange = (event) =>{
+    setSearchLocationInput(event.target.value);
+  }
+
+  // Filter the jobs based on the search input value
+  const filteredJobs = jobs?.filter(job => 
+    job.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
+  const filteredJobsByLocation = jobs?.filter(job => 
+    job.location.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -152,29 +182,57 @@ export default function UserPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Job postings</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}
+          onClick={handleAddNewJob}
+        >
           New job
         </Button>
       </Stack>
 
       <Card>
         <UserTableToolbar
-          numSelected={selected.length}
+          // numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
+          searchInput={searchInput}
+          onSearchInputChange={handleSearchInputChange}
         />
 
         <Scrollbar>
           { jobs ? (
-            <TableContainer sx={{ overflow: 'unset' }}>
+            <TableContainer sx={{ overflow: 'unset' }} style={{
+              paddingLeft:'5px'
+            }}>
+                  <TextField
+                    label="Search by title.."
+                    variant="filled"
+                    value={searchInput}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SearchRounded />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearchInputChange}
+                    style={{ marginBottom: '20px' }}
+                  />
+                  {/* <TextField
+                    label="Search by location.."
+                    variant="outlined"
+                    value={searchLocationInput}
+                    onChange={handleSearchLocationInputChange}
+                    style={{ marginBottom: '20px' }}
+                  /> */}
               <Table sx={{ minWidth: 800 }}>
+          
                 <UserTableHead
                   order={order}
                   orderBy={orderBy}
                   rowCount={jobs.length}
-                  numSelected={selected.length}
+                  // numSelected={selected.length}
                   onRequestSort={handleSort}
-                  onSelectAllClick={handleSelectAllClick}
+                  // onSelectAllClick={handleSelectAllClick}
                   headLabel={[
                     { id: 'title', label: 'Title' },
                     { id: 'company', label: 'Company' },
@@ -185,9 +243,10 @@ export default function UserPage() {
                     { id: '' },
                   ]}
                 />
+                
                 <TableBody>
-                {dataFiltered && dataFiltered.length > 0 ? (
-                  dataFiltered
+                {filteredJobs && filteredJobs.length > 0 ? (
+                  filteredJobs
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((job) => (
                       <UserTableRow
@@ -197,7 +256,7 @@ export default function UserPage() {
                         location={job.location}
                         datePosted={formatDistanceToNow( new Date(job.createdAt),{addSuffix:true , includeSeconds:true} )}
                         status={job.status}
-                        selected={selected.indexOf(job.title) !== -1}
+                        // selected={selected.indexOf(job.title) !== -1}
                         handleClick={(event) => handleClick(event, job.title)}
                         handleOpenViewDialog={() => handleOpenViewDialog(job)}
                       />

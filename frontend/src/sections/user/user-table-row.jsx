@@ -19,7 +19,7 @@ import { VisibilityRounded } from '@mui/icons-material';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
-  selected,
+  // selected,
   title,
   company,
   location,
@@ -40,10 +40,11 @@ export default function UserTableRow({
 
   return (
     <>
-      <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
-        <TableCell padding="checkbox">
+      <TableRow hover tabIndex={-1} >
+      {/* role="checkbox" selected={selected}  should be inside the above line of code */}
+        {/* <TableCell padding="checkbox">
           <Checkbox disableRipple checked={selected} onChange={handleClick} />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -111,6 +112,6 @@ UserTableRow.propTypes = {
   datePosted: PropTypes.any,
   title: PropTypes.any,
   location: PropTypes.any,
-  selected: PropTypes.any,
+  // selected: PropTypes.any,
   status: PropTypes.string,
 };
