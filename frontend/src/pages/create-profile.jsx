@@ -2,6 +2,7 @@ import { Typography,TextField,Button,RadioGroup,Radio,
     FormControlLabel,Select,MenuItem, FormControl, InputLabel, InputAdornment } from "@mui/material";
 import React,{useState} from 'react';
 import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UseAuthContext from "src/hooks/use-auth-context";
 import { toast } from "react-toastify";
@@ -57,6 +58,8 @@ const CreateProfile = () => {
     const [resume, setResume] = useState(null);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
     
     const handleCreateProfile = async(e) =>{
         e.preventDefault()
@@ -114,6 +117,7 @@ const CreateProfile = () => {
                 setInstagram('');
                 setResume(null);
 
+                navigate('/dashboard');
                 toast.success('Profile created successfully',{
                     position: 'top-right'
                 })
@@ -122,6 +126,9 @@ const CreateProfile = () => {
             if(error.response && error.response.data && error.response.data.errors){
                 setErrors(error.response.data.errors);
             }
+            toast.error('Profile creation failed',{
+                position: 'top-right'
+            })
         } finally {
             setLoading(false);
         }
@@ -273,7 +280,7 @@ const CreateProfile = () => {
                     )}
 
                     <FormControl fullWidth >
-                        <InputLabel id="category" >Select your profession category</InputLabel>
+                        <InputLabel id="category" >Select category</InputLabel>
                         <Select
                         value={category}
                         fullWidth

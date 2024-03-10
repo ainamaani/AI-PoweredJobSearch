@@ -1,11 +1,11 @@
-import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, InputAdornment } from "@mui/material";
+import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, InputAdornment, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import React,{useState,useEffect} from 'react';
 import { styled } from "@mui/system";
 import axios from "axios";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
-import { AddCircleRounded, BookmarkAddRounded, BusinessRounded, CalendarMonthRounded, CardGiftcardOutlined, CardGiftcardRounded, CategoryRounded, ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, TitleRounded, WorkRounded } from "@mui/icons-material";
+import { AddCircleRounded, BookmarkAddRounded, BusinessRounded, CalendarMonthRounded, CardGiftcardOutlined, CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, TitleRounded, WorkRounded } from "@mui/icons-material";
 
 
 // Define a styled TextField component
@@ -48,7 +48,9 @@ const AddJobPosting = () => {
     const [jobType, setJobType] = useState('');
     const [additionalBenefits, setAdditionalBenefits] = useState('');
     const [applicationDeadline, setApplicationDeadline] = useState(null);
+    const [applyFromWithinApp, setApplyFromWithinApp] = useState('');
     const [applicationInstructions, setApplicationInstructions] = useState('');
+    const [additionalComments, setAdditionalComments] = useState('');
     const [errors, setErrors] = useState({}); 
     const [loading, setLoading] = useState(false);
 
@@ -59,7 +61,8 @@ const AddJobPosting = () => {
     const handleAddJobPosting = async (e) => {
         e.preventDefault();
         const jobData = { title,company,companyEmail,companyContact,description,category,skills,qualifications,
-        experience,location,salaryRange,jobType,additionalBenefits,applicationDeadline,applicationInstructions }
+        experience,location,salaryRange,jobType,additionalBenefits,applyFromWithinApp,
+        applicationDeadline,applicationInstructions,additionalComments }
         try {
            setLoading(true);
            const response = await axios.post('http://localhost:5550/api/jobs/newjob',
@@ -85,8 +88,10 @@ const AddJobPosting = () => {
                 setDescription('');
                 setJobType('');
                 setAdditionalBenefits('');
+                setApplyFromWithinApp('');
                 setApplicationDeadline(null);
                 setApplicationInstructions('');
+                setAdditionalComments('');
                 toast.success('Job posting added successfully',{
                     position: 'top-right'
                 })
@@ -341,6 +346,23 @@ const AddJobPosting = () => {
                         { errors.applicationDeadline && (
                             <span style={{color:'red'}}>{errors.applicationDeadline}</span>
                         )}
+                    
+                        <FormControl fullWidth >
+                            <InputLabel id="applyFromWithinApp" >Allow application from this app</InputLabel>
+                            <Select
+                                value={applyFromWithinApp}
+                                fullWidth required
+                                id="category"
+                                label="Allow applications from this app"
+                                sx={{ width: 700 }}
+                                onChange={(e) => setApplyFromWithinApp(e.target.value)}
+                            >
+                                <MenuItem value="" disabled>Select one</MenuItem>
+                                <MenuItem value="yes">Yes</MenuItem>
+                                <MenuItem value="no">No</MenuItem>
+                                
+                            </Select>
+                        </FormControl>
                         <StyledTextField
                             label="Application instructions"
                             variant="outlined"
@@ -359,6 +381,25 @@ const AddJobPosting = () => {
                         />
                         { errors.applicationInstructions && (
                             <span style={{color:'red'}}>{errors.applicationInstructions}</span>
+                        )}
+                        <StyledTextField
+                            label="Any additional information"
+                            variant="outlined"
+                            required fullWidth
+                            value={additionalComments}
+                            sx={{ width: 700 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                      <CommentRounded />
+                                    </InputAdornment>
+                                  )
+                            }}
+                            error={errors.additionalComments}
+                            onChange={(e)=> {setAdditionalComments(e.target.value)}}
+                        />
+                        { errors.additionalComments && (
+                            <span style={{color:'red'}}>{errors.additionalComments}</span>
                         )}
                         <StyledTextField
                             label="Hiring company email"

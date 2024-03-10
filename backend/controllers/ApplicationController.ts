@@ -3,15 +3,21 @@ import { Request, Response } from "express";
 import path from "path";
 import Profile from "../models/Profile";
 import sendEmail from "../functions/SendEmail";
+import { error } from "console";
 
 const newJobApplication = async(req: Request, res: Response) =>{
     try {
+        // destructure other properties off the request object
+        const { applicant, job } = req.body;
+
+        // first check if the user has already applied
+        const existingApplication = await Application.findOne({ applicant:applicant, job:job });
+        if(existingApplication){
+            return res.status(400).json({ error:"You have already applied for this job" });
+        }
         // get uploaded files from the request object
         const resumePath = (req.files as { [fieldname: string]: Express.Multer.File[] })['resume'][0].path;
         const applicationLetterPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['applicationLetter'][0].path;
-
-        // destructure other properties off the request object
-        const { applicant, job } = req.body;
 
         // create a new Application object and save it in the database
         const application = await Application.create({

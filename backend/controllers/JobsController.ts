@@ -4,12 +4,12 @@ import CheckJobApplicationDeadline from "../functions/CheckJobApplicationDeadlin
 
 const addNewJob = async(req: Request,res: Response) =>{
     const { title,company,companyEmail,companyContact,description,category,skills,experience,
-            qualifications,location,salaryRange,jobType,additionalBenefits,
-            applicationDeadline,applicationInstructions } = req.body;
+            qualifications,location,salaryRange,jobType,additionalBenefits,applyFromWithinApp,
+            applicationDeadline,applicationInstructions,additionalComments } = req.body;
 
     try {
         const newJob = await Job.create({ title,company,companyEmail,companyContact,description,category,skills,experience,
-            qualifications,location,salaryRange,jobType,additionalBenefits,
+            qualifications,location,salaryRange,jobType,additionalBenefits,applyFromWithinApp,additionalComments,
             applicationDeadline,applicationInstructions })
 
         if(newJob){
@@ -47,5 +47,20 @@ const fetchJobs = async(req: Request,res: Response) =>{
     }
 }
 
+const fetchSingleJob = async(req: Request, res: Response) =>{
+    const {id} = req.params;
+    try {
+        const singleJob = await Job.findById(id);
+        if(singleJob){
+            return res.status(200).json(singleJob);
+        }else{
+            return res.status(400).json({error: "Failed to fetch single job"});
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
 export default {
-    addNewJob,fetchJobs}
+    addNewJob,fetchJobs,fetchSingleJob
+}

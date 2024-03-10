@@ -2,7 +2,7 @@ import { Typography,TextField,Button, InputAdornment } from "@mui/material";
 import { styled } from "@mui/system";
 import React,{ useEffect, useState } from 'react';
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
@@ -36,9 +36,26 @@ const JobApplication = () => {
 
     const [resume, setResume] = useState(null);
     const [applicationLetter, setApplicationLetter] = useState(null);
+    const [jobBeingAppliedFor, setJobBeingAppliedFor] = useState({});
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
+    const [error, setError] = useState('');
     const [errors, setErrors] = useState({})
+
+    useEffect(()=>{
+        try {
+            const fetchJobBeingAppliedFor = async() =>{
+                const response = await axios.get(`http://localhost:5550/api/jobs/${_id}`);
+                if(response.status === 200){
+                    setJobBeingAppliedFor(response.data);
+                }
+            }
+            fetchJobBeingAppliedFor();
+        } catch (err) {
+            console.log(err);
+        }
+    },[_id]);
 
     const handleJobApplication = async(e) =>{
         setErrors({});
@@ -59,81 +76,91 @@ const JobApplication = () => {
                                             }
             )
             if(jobapplication.status === 200){
-                console.log(jobapplication);
+                navigate('/dashboard/dashboard/jobs');
                 toast.success('Job application successful :)',{
                     position : 'top-right'
                 })
             }
-        } catch (error) {
-            if(error.response && error.response.data && error.response.data.errors){
-                setErrors(error.response.data.errors);
+        } catch (er) {
+            if(er.response && er.response.data && er.response.data.error){
+                setError(er.response.data.error);
+                toast.error("You have already applied for this job" ,{
+                    position : 'top-center'
+                })
+                navigate('/dashboard/dashboard/jobs');
             }
-            console.log(error)
-            toast.error('Application failed',{
-                position : 'top-right'
-            })
+            
         } finally{
             setLoading(false)
         }
     }
 
     return ( 
-        <div>
+        <div style={{
+            background: "#fff",
+            borderRadius: "8px",
+            padding: "20px"
+        }}>
             <Typography variant="h4">
-                Upload docs to apply for { _id }
+                Apply for {jobBeingAppliedFor.title} at {jobBeingAppliedFor.company}
+            </Typography>
+            <Typography variant="subtitle1">
+                Please scan all other relevant documents(if any) and attach them to the resume.
             </Typography>
             <StyledPageContent>
-                <form onSubmit={handleJobApplication}>
-                    <StyledTextField
-                        label="Upload your resume in pdf"
-                        variant="outlined"
-                        required fullWidth
-                        sx={{ width: 800 }}
-                        InputLabelProps={{ shrink: true }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                  <DescriptionRounded />
-                                </InputAdornment>
-                              )
-                        }}
-                        type="file"
-                        inputProps={{ accept: ".pdf" }}
-                        onChange={(e)=> {setResume(e.target.files[0])}}      
-                    />
-                    { errors.resume && (
-                            <span style={{color:'red', textAlign:"left"}}>{errors.resume}</span>
-                        )}
-                    <StyledTextField
-                        label="Upload your application letter in pdf"
-                        variant="outlined"
-                        required fullWidth
-                        sx={{ width: 800 }}
-                        InputLabelProps={{ shrink: true }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                  <ArticleRounded />
-                                </InputAdornment>
-                              )
-                        }}
-                        type="file"
-                        inputProps={{ accept: ".pdf" }}
-                        onChange={(e)=> {setApplicationLetter(e.target.files[0])}}   
-                    />
-                    { errors.applicationLetter && (
-                            <span style={{color:'red', textAlign:"left"}}>{errors.applicationLetter}</span>
-                        )}
-                    <LoadingButton
-                        variant="contained"
-                        type="submit"
-                        loading={loading}
-                        size="large"
-                    >
-                        Apply for the job
-                    </LoadingButton>
-                    
-                </form>
+                <div >
+                    <form onSubmit={handleJobApplication}>
+                        <StyledTextField
+                            label="Upload your resume in pdf"
+                            variant="outlined"
+                            required fullWidth
+                            sx={{ width: 500 }}
+                            InputLabelProps={{ shrink: true }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <DescriptionRounded />
+                                    </InputAdornment>
+                                )
+                            }}
+                            type="file"
+                            inputProps={{ accept: ".pdf" }}
+                            onChange={(e)=> {setResume(e.target.files[0])}}      
+                        />
+                        { errors.resume && (
+                                <span style={{color:'red', textAlign:"left"}}>{errors.resume}</span>
+                            )}
+                        <StyledTextField
+                            label="Upload your application letter in pdf"
+                            variant="outlined"
+                            required fullWidth
+                            sx={{ width: 500 }}
+                            InputLabelProps={{ shrink: true }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <ArticleRounded />
+                                    </InputAdornment>
+                                )
+                            }}
+                            type="file"
+                            inputProps={{ accept: ".pdf" }}
+                            onChange={(e)=> {setApplicationLetter(e.target.files[0])}}   
+                        />
+                        { errors.applicationLetter && (
+                                <span style={{color:'red', textAlign:"left"}}>{errors.applicationLetter}</span>
+                            )}
+                        <LoadingButton
+                            variant="contained"
+                            type="submit"
+                            loading={loading}
+                            size="large"
+                        >
+                            Apply for the job
+                        </LoadingButton>
+                        
+                    </form>
+                </div>
             </StyledPageContent>
         </div>
      );

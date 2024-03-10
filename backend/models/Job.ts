@@ -17,6 +17,8 @@ export interface JobI extends Document{
     additionalBenefits:string;
     applicationDeadline:Date;
     applicationInstructions:string;
+    applyFromWithinApp:string;
+    additionalComments:string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -108,9 +110,23 @@ const JobSchema = new mongoose.Schema<JobI>({
             message: "Enter a valid application deadline, it can't be a past date!!"
         }
     },
+    applyFromWithinApp:{
+        type:String,
+        required:[true, "Whether to apply from within the application or not is required"],
+        enum:{
+            values: ["yes","no"],
+            message: "The response must be one of the values 'yes' or 'no' ",
+            default: "yes"
+        }
+    },
     applicationInstructions:{
         type:String,
         required:[true, "The information on how to apply is required"]
+    },
+    additionalComments:{
+        type:String,
+        required:[true, "Addional comments required, if none, type None."],
+        default: "None"
     }
     
 },{timestamps:true});

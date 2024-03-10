@@ -8,7 +8,7 @@ import { CircularProgress, Dialog, DialogActions, DialogContent,
   InputAdornment, 
   TextField} from '@mui/material';
 import { AccessTimeRounded, BookmarkAddRounded, BuildRounded, CalendarMonthRounded, 
-  CardGiftcardRounded, CategoryRounded, ConstructionRounded, DescriptionRounded, EmailRounded, 
+  CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, EmailRounded, 
   HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, 
   SearchRounded, 
   Title, TitleRounded, VisibilityRounded, WorkRounded } from '@mui/icons-material';
@@ -400,6 +400,13 @@ export default function UserPage() {
                       {jobToView.applicationInstructions}
                     </div>
                   </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CommentRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Additional information</strong> <br />
+                      {jobToView?.additionalComments}
+                    </div>
+                  </Typography>
                 </>
               )
             }
@@ -411,7 +418,14 @@ export default function UserPage() {
               variant='outlined'>
                 Close
               </Button>
-              <Link className='applyLink' to={`/dashboard/dashboard/apply/${jobToView?._id}`}>Apply</Link>
+              {jobToView?.status === "open" && jobToView?.applyFromWithinApp === "yes" && (
+                <Link 
+                  className='applyLink' 
+                  to={`/dashboard/dashboard/apply/${jobToView?._id}`}
+                >
+                  Apply
+                </Link>
+              )}
           </DialogActions>
 
         </Dialog>
