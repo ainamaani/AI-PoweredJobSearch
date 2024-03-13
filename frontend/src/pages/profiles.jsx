@@ -59,7 +59,7 @@ const ProfileCategories = () => {
                             <div className="all">
                                 <Card className="card" style={{ margin: '10px' }}>
                                     <CardContent className="content">
-                                        <Link to="/dashboard/dashboard/allprofiles">All profiles</Link>
+                                        <Link className="profile-links" to="/dashboard/dashboard/allprofiles">All profiles</Link>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -82,7 +82,7 @@ const ProfileCategories = () => {
                                                 
                                             />
                                             <CardContent className="content">
-                                            <Link to={`/dashboard/dashboard/profiles/${category}`}>{category}</Link>
+                                            <Link className="profile-links" to={`/dashboard/dashboard/profiles/${category}`}>{category}</Link>
                                             </CardContent>
                                         </Card>
                                     </div>

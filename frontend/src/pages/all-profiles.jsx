@@ -79,7 +79,7 @@ const Allprofiles = () => {
             const downloadresume = await axios.get(`http://localhost:5550/api/profiles/downloadresume/${profileId}`, {responseType: 'blob'});
             if(downloadresume.status === 200){
                 const blob = new Blob([downloadresume.data], {type: 'application/pdf'})
-                saveAs(blob, `${firstname}  ${lastname} resume.pdf` )
+                saveAs(blob, `${firstname} ${lastname} resume.pdf` )
             }
         } catch (error) {
             console.log(error);

@@ -14,11 +14,21 @@ const createNewProfile = async(req: Request,res: Response) =>{
         // Destructure other data properties from  the request object
         const { user,firstname,lastname,dateOfBirth,gender,nationality,email,phoneContact,category,profession,
                 personalDescription,website,github,linkedIn,twitter,facebook,instagram } = req.body;
+
+        const profileData : any = {
+            user,firstname,lastname,dateOfBirth,email,gender,
+            nationality,phoneContact,category,profession,personalDescription,website,
+            github,profilePic:profilePicPath,resume:resumePath,
+            socialmedia:{
+                linkedIn,twitter,facebook,instagram
+            }
+        }
+
+        // Remove properties with undefined values to prevent overriding default values
+        Object.keys(profileData).forEach(key => profileData[key] === undefined && delete profileData[key]);
         
-        const profile = await Profile.create({user,firstname,lastname,dateOfBirth,email,gender,nationality,phoneContact,category,
-                        profession,personalDescription,website,github,linkedIn,twitter,facebook,instagram,
-                        profilePic:profilePicPath,resume:resumePath
-                    });
+        const profile = await Profile.create(profileData);
+                    
 
         if(profile){
             return res.status(200).json(profile);

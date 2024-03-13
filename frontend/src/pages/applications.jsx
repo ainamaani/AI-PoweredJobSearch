@@ -1,10 +1,14 @@
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, 
     DialogTitle, IconButton, Paper, Table, TableBody, TableCell, TableContainer, 
-    TableHead, TablePagination, TableRow, Tooltip, Typography,TextField, Popover, MenuItem, InputAdornment } from "@mui/material";
+    TableHead, TablePagination, TableRow, Tooltip, Typography,TextField, Popover, MenuItem, 
+    InputAdornment } from "@mui/material";
 import { styled } from "@mui/system";
 import React,{useState, useEffect} from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ArticleRounded, BusinessRounded, CalendarMonthRounded, CalendarTodayOutlined, Cancel, CancelRounded, Description, DescriptionRounded, DownloadForOfflineRounded, EmailRounded, FileCopy, LocalAtmRounded, PersonRounded, TimerRounded, Title, VisibilityRounded, Work } from "@mui/icons-material";
+import { ArticleRounded, BusinessRounded, CalendarMonthRounded, CalendarTodayOutlined, Cancel, 
+    CancelRounded, Description, DescriptionRounded, DownloadForOfflineRounded, EmailRounded, 
+    FileCopy, LocalAtmRounded, PersonRounded, TimerRounded, Title, VisibilityRounded, Work } from "@mui/icons-material";
 import { saveAs } from "file-saver";
 import {format} from "date-fns"
 import { toast } from "react-toastify";
@@ -43,6 +47,8 @@ const JobApplications = () => {
     const [additionalNotes, setAdditionalNotes] = useState('');
 
     const [errors, setErrors] = useState({});
+
+    const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState(Array(applications.length).fill(null));
 
@@ -125,18 +131,30 @@ const JobApplications = () => {
         setIsDeclineDialogOpen(false);
     }
 
+
     const handleDeclineApplication = async() =>{
         try {
             const response = await axios.get(`http://localhost:5550/api/applications/decline/${applicationToDecline._id}`)
             if(response.status === 200){
-                console.log("Rejected successfully", response.data)
+                console.log("Rejected successfully", response.data);
+                handleCloseDeclineDialog();
+                // Refresh the page
+                window.location.reload();
+                 
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            handleCloseDeclineDialog();
+            toast.error("Application decline failed",{
+                position: "top-right"
+            });
         }
     }
 
-    const handleScheduleInterview = async() =>{
+
+    const handleScheduleInterview = async(event) =>{
+        event.preventDefault();
+
         const applicationId = interviewToSchedule._id;
 
         const interviewScheduleDetails = {
@@ -152,46 +170,52 @@ const JobApplications = () => {
                                     }
             )
             if(response.status === 200){
-                const user = applicationToView.applicant;
-                const subject = 'Interview scheduled';
-                const message = 'Interview for the job applied scheduled for tomorrow';
-                const type = 'interview'
-                const notificationData = {user,subject,message,type };
-                const notification = await axios.post("http://localhost:5550/api/notifications/create",
-                                                JSON.stringify(notificationData),{
-                                                    headers:{
-                                                        'Content-Type':'application/json'
-                                                    }
-                                                }
-                )
-                if(notification.status === 200){
-                    console.log('Notification created successfully', notification.data);
-                }
                 console.log(response.data);
+                handleCloseScheduleDialog();
+                navigate('/dashboard/dashboard/interviews');
+                // const user = applicationToView.applicant;
+                // const subject = 'Interview scheduled';
+                // const message = 'Interview for the job applied scheduled for tomorrow';
+                // const type = 'interview'
+                // const notificationData = {user,subject,message,type };
+                // const notification = await axios.post("http://localhost:5550/api/notifications/create",
+                //                                 JSON.stringify(notificationData),{
+                //                                     headers:{
+                //                                         'Content-Type':'application/json'
+                //                                     }
+                //                                 }
+                // )
+                // if(notification.status === 200){
+                //     console.log('Notification created successfully', notification.data);
+                // }
+                // console.log(response.data);
             }
-        } catch (error) {
-            console.log(error);
+        } catch (errorr) {
+            if(errorr.response && errorr.response.data && errorr.response.data.errors){
+                setErrors(errorr.response.data.errors);
+            }
+            console.log(errorr);
         }
     }
 
-    const handleResumeDownload = async(applicationId) =>{
+    const handleResumeDownload = async(applicationId,applicantFirstName,applicantLastName,jobAppliedFor) =>{
         try {
-            const downloadresume = await axios.get(`http://localhost/api/applications/downloadresume/${applicationId}`,{responseType: 'blob'})
+            const downloadresume = await axios.get(`http://localhost:5550/api/applications/downloadresume/${applicationId}`,{responseType: 'blob'})
             if(downloadresume.status === 200){
                 const blob = new Blob([downloadresume.data],{type: 'application.pdf'});
-                saveAs(blob, `${applicationId}.pdf`)
+                saveAs(blob, `${applicantFirstName} ${applicantLastName} applicant for ${jobAppliedFor} resume.pdf`)
             }
         } catch (error) {
             console.log(error);
         }
     }
 
-    const handleApplicationLetterDownload = async(applicationId) =>{
+    const handleApplicationLetterDownload = async(applicationId,applicantFirstName,applicantLastName,jobAppliedFor) =>{
         try {
-            const downloadapplicationletter = await axios.get(`http://localhost/api/applications/downloadapplicationletter/${applicationId}`,{responseType: 'blob'})
+            const downloadapplicationletter = await axios.get(`http://localhost:5550/api/applications/downloadapplicationletter/${applicationId}`,{responseType: 'blob'})
             if(downloadapplicationletter.status === 200){
                 const blob = new Blob([downloadapplicationletter.data],{type: 'application.pdf'});
-                saveAs(blob, `${applicationId}.pdf`)
+                saveAs(blob, `${applicantFirstName} ${applicantLastName} ${jobAppliedFor} application letter.pdf`)
             }
         } catch (error) {
             console.log(error);
@@ -217,16 +241,39 @@ const JobApplications = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
+                                
                                 { applications ? (
                                     applications
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((application, index)=>(
+                                    .map((application, index)=>{
+
+                                        let color = "inherit";
+                                        let fontWeight = "normal";
+                                
+                                        if (application.applicationStatus === "Pending") {
+                                            color = "orange";
+                                            fontWeight = "bold";
+                                        } else if (application.applicationStatus === "Declined") {
+                                            color = "red";
+                                            fontWeight = "bold";
+                                        } else if (application.applicationStatus === "Accepted") {
+                                            color = "green";
+                                            fontWeight = "bold";
+                                        }
+                                    return (    
                                         <TableRow key={application._id}>
                                             <TableCell>{application.job.title}</TableCell>
                                             <TableCell>{application.applicant?.firstname} {application.applicant?.lastname}</TableCell>
                                             <TableCell>{application.job.company}</TableCell>
                                             <TableCell>{ format(new Date(application.applicationDate), 'do MMMM yyyy') }</TableCell>
-                                            <TableCell>{application.applicationStatus}</TableCell>
+                                            <TableCell
+                                            style={{
+                                                color,
+                                                fontWeight,
+                                            }}
+                                        >
+                                            {application.applicationStatus}
+                                        </TableCell>
                                             <TableCell>
                                                 <Tooltip title="Download attachments">
                                                     <IconButton size="large"
@@ -252,7 +299,12 @@ const JobApplications = () => {
                                                 >
                                                     <MenuItem 
                                                         
-                                                        onClick={()=> handleResumeDownload(application._id)}
+                                                        onClick={()=> handleResumeDownload(
+                                                            application._id,
+                                                            application.applicant?.firstname,
+                                                            application.applicant?.lastname,
+                                                            application.job?.title
+                                                            )}
                                                     >   
                                                         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-around' }}>
                                                             <Typography variant="subtitle2" >Download Resume</Typography>
@@ -260,7 +312,12 @@ const JobApplications = () => {
                                                         </div>
                                                     </MenuItem>
                                                     <MenuItem
-                                                    onClick={()=> handleApplicationLetterDownload(application._id)} 
+                                                    onClick={()=> handleApplicationLetterDownload(
+                                                        application._id,
+                                                        application.applicant?.firstname,
+                                                        application.applicant?.lastname,
+                                                        application.job?.title
+                                                        )} 
 
                                                     //     onClick={() =>
                                                     //         handleDownloadProfileResume(
@@ -301,7 +358,8 @@ const JobApplications = () => {
                                             </TableCell>
                                             
                                         </TableRow>
-                                    ))
+                                     )
+                                    })
                                 ):(
                                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
                                         <CircularProgress />
@@ -457,7 +515,7 @@ const JobApplications = () => {
                                       )
                                 }}
                                 value={interviewTime}
-                                error={errors.interviewDate}
+                                error={errors.interviewTime}
                                 onChange={(e)=> {setInterviewTime(e.target.value)}}   
                             />
                             { errors.interviewTime && <span style={{ color:"red", textAlign:"left" }}>{errors.interviewTime}</span> }

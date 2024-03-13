@@ -38,6 +38,19 @@
     border-radius: 6px;
     
 }
+.profile-links {
+    color: #000;
+    font-weight: 600;
+    font-size: 1.2em;
+}
+.profile-links:hover {
+    background: #f1f1f1;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 4px;
+}
 
 .landing-body{
     display: grid;

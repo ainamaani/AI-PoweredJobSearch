@@ -15,6 +15,8 @@ const scheduleInterview = async(req: Request, res: Response) => {
                 location, additionalNotes, interviewStatus: "Scheduled" });
 
             if(interview){
+                application.applicationStatus = "Accepted";
+                application.save({ validateBeforeSave:false });
                 return res.status(200).json(interview);
             }else{
                 return res.status(400).json({ error: "Failed to schedule interview" })
