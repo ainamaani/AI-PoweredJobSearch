@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Interview from "../models/Interview";
 import Application from "../models/Application";
+import CheckInterviewDueStatus from "../functions/CheckInterviewDueStatus";
 
 const scheduleInterview = async(req: Request, res: Response) => {
     const { applicationId,interviewDate,interviewTime,location,additionalNotes } = req.body;
@@ -10,6 +11,16 @@ const scheduleInterview = async(req: Request, res: Response) => {
         if(application){
             const job = application.job;
             const applicant = application.applicant;
+
+            const interviewAlreadyScheduled = await Interview.findOne({ 
+                applicant:applicant, 
+                job:job,
+                interviewDate:interviewDate,
+                interviewTime:interviewTime
+            });
+            if(interviewAlreadyScheduled){
+                return res.status(400).json({ error: "The same exact interview has already been scheduled." });
+            }
 
             const interview = await Interview.create({ applicant, job, interviewDate, interviewTime, 
                 location, additionalNotes, interviewStatus: "Scheduled" });
@@ -42,6 +53,7 @@ const scheduleInterview = async(req: Request, res: Response) => {
 
 const getInterviews = async(req: Request, res: Response) =>{
     try {
+        CheckInterviewDueStatus();
         const interviews = await Interview.find({}).populate('job').populate('applicant').sort({ createdAt: -1 });
         if(interviews){
             return res.status(200).json(interviews);

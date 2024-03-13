@@ -162,6 +162,7 @@ const InterviewsScheduled = () => {
                 Scheduled Interviews
             </Typography>
             { interviews? (
+                
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -179,14 +180,36 @@ const InterviewsScheduled = () => {
                             { interviews ? (
                                 interviews
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((interview)=>(
+                                    .map((interview)=>{
+                                        let color = "inherit";
+                                        let fontWeight = "normal";
+                                
+                                        if (interview.interviewStatus === "Scheduled") {
+                                            color = "orange";
+                                            fontWeight = "bold";
+                                        } else if (interview.interviewStatus === "Cancelled") {
+                                            color = "red";
+                                            fontWeight = "bold";
+                                        } else if (interview.interviewStatus === "Completed") {
+                                            color = "green";
+                                            fontWeight = "bold";
+                                        }else if (interview.interviewStatus === "Due") {
+                                            color = "gray";
+                                            fontWeight = "bold";
+                                        }
+                                    return (
                                         <TableRow key={interview._id}>
                                             <TableCell>{interview.job?.title}</TableCell>
                                             <TableCell>{interview.applicant?.firstname} {interview.applicant?.lastname}</TableCell>
                                             <TableCell>{ format(new Date(interview.interviewDate), 'do MMMM yyyy') }</TableCell>
                                             <TableCell>{interview.interviewTime.toUpperCase()}</TableCell>
                                             <TableCell>{interview.location}</TableCell>
-                                            <TableCell>{interview.interviewStatus}</TableCell>
+                                            <TableCell
+                                                style={{
+                                                    color,
+                                                    fontWeight,
+                                                }}
+                                            >{interview.interviewStatus}</TableCell>
                                             <TableCell>
                                                 <Tooltip title="Reshedule interview">
                                                     <IconButton 
@@ -212,7 +235,8 @@ const InterviewsScheduled = () => {
                                                 
                                             </TableCell>
                                         </TableRow>
-                                ))
+                                    )   
+                                })
                             ):(
                                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
                                     <CircularProgress />

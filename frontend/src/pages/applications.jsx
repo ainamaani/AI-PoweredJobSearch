@@ -48,6 +48,8 @@ const JobApplications = () => {
 
     const [errors, setErrors] = useState({});
 
+    const [error, setError] = useState('');
+
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState(Array(applications.length).fill(null));
@@ -63,8 +65,8 @@ const JobApplications = () => {
                 if(response.status === 200){
                     setApplications(response.data);
                 }
-            } catch (error) {
-                console.log(error);
+            } catch (errorrr) {
+                console.log(errorrr);
             }
         }
         fetchJobApplications(); 
@@ -142,8 +144,8 @@ const JobApplications = () => {
                 window.location.reload();
                  
             }
-        } catch (error) {
-            console.log(error);
+        } catch (responseError) {
+            console.log(responseError);
             handleCloseDeclineDialog();
             toast.error("Application decline failed",{
                 position: "top-right"
@@ -162,6 +164,7 @@ const JobApplications = () => {
         }
         try {
             setErrors({});
+            setError('');
             const response = await axios.post("http://localhost:5550/api/interviews/schedule",
                                     JSON.stringify(interviewScheduleDetails),{
                                         headers:{
@@ -194,7 +197,12 @@ const JobApplications = () => {
             if(errorr.response && errorr.response.data && errorr.response.data.errors){
                 setErrors(errorr.response.data.errors);
             }
-            console.log(errorr);
+            if(errorr.response && errorr.response.data && errorr.response.data.error){
+                setError(errorr.response.data.error);
+            }
+            toast.error("Interview schedule failed",{
+                position: "top-right"
+            });
         }
     }
 
@@ -205,8 +213,8 @@ const JobApplications = () => {
                 const blob = new Blob([downloadresume.data],{type: 'application.pdf'});
                 saveAs(blob, `${applicantFirstName} ${applicantLastName} applicant for ${jobAppliedFor} resume.pdf`)
             }
-        } catch (error) {
-            console.log(error);
+        } catch (downloadError) {
+            console.log(downloadError);
         }
     }
 
@@ -217,8 +225,8 @@ const JobApplications = () => {
                 const blob = new Blob([downloadapplicationletter.data],{type: 'application.pdf'});
                 saveAs(blob, `${applicantFirstName} ${applicantLastName} ${jobAppliedFor} application letter.pdf`)
             }
-        } catch (error) {
-            console.log(error);
+        } catch (applicationLetterDownloadError) {
+            console.log(applicationLetterDownloadError);
         }
     }
 
@@ -539,6 +547,7 @@ const JobApplications = () => {
                                 onChange={(e)=> {setAdditionalNotes(e.target.value)}}   
                             />
                             { errors.additionalNotes && <span style={{ color:"red", textAlign:"left" }}>{errors.additionalNotes}</span> }
+                            { error && <span style={{ color:"red", marginTop:"8px", marginBottom:"6px" }}>{error}</span> }
                             <StyledButton color="primary" variant="contained" type="submit">Schedule interview</StyledButton>
                         </form>
                     </div>
