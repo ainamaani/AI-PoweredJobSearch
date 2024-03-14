@@ -1,5 +1,6 @@
-import { FavoriteRounded, RemoveCircleRounded } from '@mui/icons-material';
-import { CircularProgress, Typography, Card, CardMedia, CardContent, CardActions, Button } from '@mui/material';
+import { FavoriteRounded, RemoveCircleRounded, SearchRounded } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
+import { CircularProgress, Typography, Card, CardMedia, CardContent, CardActions, Button, TextField, InputAdornment } from '@mui/material';
 import axios from 'axios';
 import React,{useState, useEffect} from 'react';
 import UseAuthContext from 'src/hooks/use-auth-context';
@@ -9,6 +10,8 @@ const Companies = () => {
     const {user} = UseAuthContext();
     const [companies, setCompanies] = useState([]);
     const [followedCompanies, setFollowedCompanies] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
 
     useEffect(()=>{
         const fetchCompanies = async() =>{
@@ -48,6 +51,7 @@ const Companies = () => {
 
     const handleFollowCompany = async(companyId) =>{
         try {
+            setLoading(true);
             const response = await axios.post(`http://localhost:5550/api/companies/follow/${companyId}`,
                                     JSON.stringify({userId: user.id}),{
                                         headers:{
@@ -65,11 +69,14 @@ const Companies = () => {
 
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false);
         }
     }
 
     const handleUnfollowCompany = async(companyId) => {
         try {
+            setLoading(true);
             const response = await axios.post(`http://localhost:5550/api/companies/unfollow/${companyId}`,
                                     JSON.stringify({ userId : user.id}),{
                                         headers:{
@@ -85,8 +92,20 @@ const Companies = () => {
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
+
+    // Functions to handle input change
+    const handleSearchInputChange = (event) =>{
+        setSearchInput(event.target.value);
+    }
+
+     // Filter the jobs based on the search input value
+    const filteredCompanies = companies?.filter(company => 
+        company.industry.toLowerCase().includes(searchInput.toLowerCase())
+    );
 
 
     // const isCompanyFollowed = (companyId) => {
@@ -98,13 +117,25 @@ const Companies = () => {
 
     return ( 
         <div>
-            <Typography variant='h4'>
-                Company list
-            </Typography>
+            <Typography variant="h4">Company list</Typography>
+                <TextField  
+                    label="Search by industry.."
+                    variant="filled"
+                    value={searchInput}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SearchRounded />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearchInputChange}
+                    style={{ marginBottom: '20px' }}
+                  />
             <div style={{ display: "flex", flexWrap: "wrap" }}>
                 { 
-                companies ? (
-                    companies.map((company)=>(
+                filteredCompanies ? (
+                    filteredCompanies.map((company)=>(
                         <div >
                             <Card
                                 key={company._id}
@@ -143,7 +174,8 @@ const Companies = () => {
                                 
                             </CardContent>
                             <CardActions>
-                                <Button variant='contained'
+                                <LoadingButton
+                                    variant='contained'
                                     startIcon={ isCompanyFollowed(company._id) ? <RemoveCircleRounded /> : <FavoriteRounded /> }
                                     style={{
                                         backgroundColor: isCompanyFollowed(company._id) ? '#f44336' : '#3f51b5', // Change button background color
@@ -155,8 +187,11 @@ const Companies = () => {
                                         bottom: '30px',
                                         right: '80px',
                                     }}
+                                    loading={loading}
                                     onClick={() => { handleFollowToggle(company._id) }}
-                                >{isCompanyFollowed(company._id) ? 'Following' : 'Follow'}</Button>
+                                >
+                                    {isCompanyFollowed(company._id) ? 'Following' : 'Follow'}
+                                </LoadingButton>
                             </CardActions>
             
                         </Card>

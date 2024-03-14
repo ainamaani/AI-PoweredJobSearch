@@ -449,7 +449,7 @@ const Register = () => {
                     >
                         Register
                     </LoadingButton>
-                    <div className="alread-with-account">
+                    <div className="already-with-account">
                         <span style={{ 
                           color: 'blue'
                         }}>Already have an account? <Link to='/login'>Login</Link> </span> 
