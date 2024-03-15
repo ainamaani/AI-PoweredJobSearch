@@ -4,6 +4,7 @@ import axios from "axios";
 import UseAuthContext from "src/hooks/use-auth-context";
 import { MoreVertRounded } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import {format} from "date-fns"; 
 
 
 const LearningRoadmaps = () => {
@@ -79,7 +80,7 @@ const LearningRoadmaps = () => {
                                                         </IconButton>
                                                     }
                                                     title={roadmap.role}
-                                                    subheader="September 14, 2016"
+                                                    subheader={format(new Date(roadmap.createdAt), 'do MMMM yyyy')}
                                                 />
                                                 <CardMedia 
                                                     component="img"
