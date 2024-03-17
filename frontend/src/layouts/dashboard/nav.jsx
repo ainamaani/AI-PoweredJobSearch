@@ -183,7 +183,6 @@ function NavItem({ item, onClick }) {
   const pathname = usePathname();
   const active = item.path === pathname;
 
-  console.log('Debugging:', 'pathname:', pathname, 'item.path:', item.path, 'active:', active);
 
   return (
     <ListItemButton

@@ -5,6 +5,6 @@ import RequireAuth from "../middleware/RequireAuth";
 const router : Router = express.Router();
 const {handleJobsRecommendations} = recommendationsController;
 
-router.post('/', handleJobsRecommendations);
+router.get('/:sector', handleJobsRecommendations);
 
 export default router;

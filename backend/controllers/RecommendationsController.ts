@@ -6,17 +6,17 @@ import Job from '../models/Job';
 
 const handleJobsRecommendations = async (req: Request, res: Response) => {
     try {
-        const {userInput} = req.body;
+        const {sector} = req.params;
 
         // Check if userInput exists
-        if (!userInput) {
+        if (!sector) {
             return res.status(400).json({ error: 'User input is required' });
         }
 
         const jobPostings = await Job.find({});
 
          // Expand user input with synonyms or related terms
-         const expandedUserInput = expandUserInput(userInput);
+         const expandedUserInput = expandUserInput(sector);
 
          // Filter job postings based on relevance to user input
          const relevantJobPostings = jobPostings.filter(job => {
@@ -51,7 +51,7 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
 
         // Tokenize and stem user input
         const userTokenizer = new natural.WordTokenizer();
-        const userTokens = userTokenizer.tokenize(userInput);
+        const userTokens = userTokenizer.tokenize(sector);
         // Check if userInput exists
         if (!userTokens) {
             return res.status(400).json({ error: 'User tokens equired' });
@@ -73,9 +73,9 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
         similarities.sort((a, b) => b.similarity - a.similarity);
 
         // Get top 5 job recommendations
-        const recommendedJobs = similarities.slice(0, 3).map(sim => relevantJobPostings[sim.index].title);
+        const recommendedJobs = similarities.slice(0, 3).map(sim => relevantJobPostings[sim.index]);
 
-        res.json({ recommendedJobs });
+        return res.status(200).json( recommendedJobs );
         
     } catch (error) {
         console.error(error);

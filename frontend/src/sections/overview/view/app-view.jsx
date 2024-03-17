@@ -1,6 +1,17 @@
 import { faker } from '@faker-js/faker';
-import { CircularProgress } from '@mui/material';
-import { AssignmentRounded, HandshakeRounded, WorkRounded } from '@mui/icons-material';
+import { Avatar, CircularProgress, IconButton, Tooltip, Dialog, DialogActions, 
+  DialogContent, Button,
+  DialogTitle, 
+  InputAdornment, 
+  TextField } from '@mui/material';
+import { Link } from 'react-router-dom';
+import {format} from 'date-fns';
+import { AssignmentRounded, HandshakeRounded, MoreVertRounded, VisibilityRounded, 
+  WorkRounded, AccessTimeRounded, BookmarkAddRounded, BuildRounded, CalendarMonthRounded, 
+  CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, EmailRounded, 
+  HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, 
+  SearchRounded, 
+  Title, TitleRounded } from '@mui/icons-material';
 import React, {useState, useEffect} from 'react';
 import axios, { all } from 'axios';
 
@@ -33,7 +44,10 @@ export default function AppView() {
   const [allJobs, setAllJobs] = useState([]);
   const [allUserApplications, setAllUserApplications] = useState([])
   const [allUserInterviews, setAllUserInterviews] = useState([]);
+  const [recommendedJobs, setRecommendedJobs] = useState([]);
   // const [userProfessionJobs, setAllUserProfessionJobs] = useState([]);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [jobToView, setJobToView] = useState(null);
 
 
   useEffect(()=>{
@@ -49,6 +63,7 @@ export default function AppView() {
         const handleFetchUserApplications = async() =>{
           const userAppications = await axios.get(`http://localhost:5550/api/applications/${user.id}`);
           if(userAppications.status === 200){
+            console.log(userAppications);
             setAllUserApplications(userAppications.data);
           }
         }
@@ -57,6 +72,14 @@ export default function AppView() {
           const userInterviews = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
           if(userInterviews.status === 200){
             setAllUserInterviews(userInterviews.data);
+          }
+        }
+
+        const handleFetchRecommendedJobs = async() =>{
+          const recommended = await axios.get(`http://localhost:5550/api/recommendations/${user.sector}`);
+          if(recommended.status === 200){
+            console.log(recommended.data);
+            setRecommendedJobs(recommended.data);
           }
         }
 
@@ -71,13 +94,26 @@ export default function AppView() {
       handleFetchRecentJobs();
       handleFetchUserApplications();
       handleFetchUserInterviews();
+      if(user?.sector){
+        handleFetchRecommendedJobs();
+      }
       // handleFetchUserProfessionJobs();
 
     } catch (error) {
       console.log(error);
     }
-  },[user.id]);
+  },[user.id, user.sector]);
 
+   // function to handle opening of the view dialog
+   const handleOpenViewDialog = (job) =>{
+    setJobToView(job);
+    setIsViewDialogOpen(true)
+  }
+
+  const handleCloseViewDialog = () =>{
+    setJobToView(null);
+    setIsViewDialogOpen(false)
+  }
   
   return (
     <Container maxWidth="xl">
@@ -247,6 +283,74 @@ export default function AppView() {
           ) }
         </Grid>
 
+        {/* <div>
+          { recommendedJobs ? (
+            recommendedJobs?.map(recjob => (
+              <h5>{recjob.title}</h5>
+            ))
+          ):(
+            <h5>Loading....</h5>
+          ) }
+        </div> */}
+
+        {/* <div style={{ display:"flex", gap:"6px" }}>
+          { recommendedJobs ? (
+            recommendedJobs.map(job => (
+              <div className="recommended-card"
+            style={{ 
+              background: "#fff",
+              padding: "10px",
+              borderRadius: "8px",
+              display: "grid",
+              gridTemplateColumns: "1fr 3fr",
+              maxWidth: "150px"
+             }}
+          > 
+                <div>
+                  <div className="recommended-left">
+                  <Avatar alt="company-pic" 
+                    src='https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y29tcGFueXxlbnwwfHwwfHx8MA%3D%3D'
+                  />
+                </div>
+                <div className="recommended-right">
+                  <Typography variant='h5'>Accountant</Typography>
+                  <Typography variant='subtitle2'>Hiring company is Pahappa</Typography>
+                  <Tooltip title="View">
+                    <IconButton color='primary'
+                      handleOpenViewDialog={() => handleOpenViewDialog(job)}
+                    >
+                      <VisibilityRounded />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </div>
+               
+            
+          </div>
+            ))
+          ):(
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+                <CircularProgress />
+            </div>
+          ) }
+          
+        </div> */}
+
+
+        <Grid xs={12} md={6} lg={8}>
+          { recommendedJobs ? (
+            <AppNewsUpdate
+              title="Recommended for you"
+              list={recommendedJobs}
+            />
+          ):(
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+                <CircularProgress />
+            </div>
+          ) }
+        </Grid>
+
+
         {/* <Grid xs={12} md={6} lg={4}>
           <AppOrderTimeline
             title="Order Timeline"
@@ -306,6 +410,157 @@ export default function AppView() {
           />
         </Grid> */}
       </Grid>
+      <Dialog
+          open={isViewDialogOpen}
+          onClose={handleCloseViewDialog}
+          PaperProps={{
+            style:{
+              width: '1400px'
+            }
+          }}
+        >
+          <DialogTitle>Job details</DialogTitle>
+          <DialogContent>
+            {
+              
+              jobToView && (
+                <>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <TitleRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong>Job title</strong> <br />
+                      {jobToView.title}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <DescriptionRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong >Job description</strong> <br />
+                      {jobToView.description}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CategoryRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Job category</strong> <br />
+                      {jobToView.category}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <WorkRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Hiring company</strong> <br />
+                      {jobToView.company}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <EmailRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Hiring company email</strong> <br />
+                      {jobToView.companyEmail}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <PhoneRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Hiring company contact</strong> <br />
+                      {jobToView.companyContact}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <LocationOnRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Location</strong> <br />
+                      {jobToView.location}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <ConstructionRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Skills</strong> <br />
+                      {jobToView.skills}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <SchoolRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Qualifications</strong> <br />
+                      {jobToView.qualifications}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <HourglassBottomRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong >Experience</strong> <br />
+                      {jobToView.experience}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <LocalAtmRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Salary range</strong> <br />
+                      {jobToView.salaryRange}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <AccessTimeRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Job type</strong> <br />
+                      {jobToView.jobType}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CardGiftcardRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Additional job benefits</strong> <br />
+                      {jobToView.additionalBenefits}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CalendarMonthRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong >Application deadline</strong> <br />
+                      {jobToView.applicationDeadline ? (
+                        format(new Date(jobToView.applicationDeadline), 'do MMMM yyyy')
+                      ) : '' }
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <BookmarkAddRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >How to apply</strong> <br />
+                      {jobToView.applicationInstructions}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CommentRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Additional information</strong> <br />
+                      {jobToView?.additionalComments}
+                    </div>
+                  </Typography>
+                </>
+              )
+            }
+          </DialogContent>
+          <DialogActions>
+              <Button onClick={handleCloseViewDialog}  
+              color='secondary' 
+              size='medium' 
+              variant='outlined'>
+                Close
+              </Button>
+              {jobToView?.status === "open" && jobToView?.applyFromWithinApp === "yes" && (
+                <Link 
+                  className='applyLink' 
+                  to={`/dashboard/dashboard/apply/${jobToView?._id}`}
+                >
+                  Apply
+                </Link>
+              )}
+          </DialogActions>
+
+        </Dialog>
     </Container>
   );
 }

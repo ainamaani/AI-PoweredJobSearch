@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+import { useNavigate } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
@@ -17,13 +19,18 @@ import Scrollbar from 'src/components/scrollbar';
 // ----------------------------------------------------------------------
 
 export default function AppNewsUpdate({ title, subheader, list, ...other }) {
+  const navigate = useNavigate();
+  const handleViewAllClick = () =>{
+    navigate('/dashboard/dashboard/jobs');
+  }
+
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
 
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
-          {list.map((job) => (
+          {list?.map((job) => (
             <JobItem key={job._id} job={job} />
           ))}
         </Stack>
@@ -36,6 +43,7 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
           size="small"
           color="inherit"
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
+          onClick={handleViewAllClick}
         >
           View all
         </Button>
