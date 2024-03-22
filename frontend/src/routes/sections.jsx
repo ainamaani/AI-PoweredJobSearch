@@ -26,6 +26,7 @@ export const ProfilesCategoryPage = lazy(() => import('src/pages/profiles-catego
 export const JobApplicationPage = lazy(() => import('src/pages/job-application'));
 export const AddLearningRoadMapPage = lazy(() => import('src/pages/add-roadmap'));
 export const SingleLearningRoadMapPage = lazy(() => import('src/pages/single-roadmap'));
+export const ChangePasswordPage = lazy(() => import('src/pages/change-user-details'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 
@@ -68,10 +69,12 @@ export default function Router() {
         { path: 'dashboard/newprofile', element:  user ? <CreateProfilePage /> : <Navigate to="/login" /> },
         { path: 'dashboard/myprofile', element:  user ? <MyProfilePage/> : <Navigate to="/login" /> },
         { path: 'dashboard/allprofiles', element:  user ? <AllProfilesPage /> : <Navigate to="/login" /> },
+        { path: 'dashboard/changepassword', element:  user ? <ChangePasswordPage /> : <Navigate to="/login" /> },
         { path: 'dashboard/updateprofile/:id', element:  user ? <UpdateProfilePage /> : <Navigate to="/login" /> },
         { path: 'dashboard/profiles/:category', element:  user ? <ProfilesCategoryPage /> : <Navigate to="/login" /> },
         { path: 'dashboard/apply/:_id', element:  user ? <JobApplicationPage /> : <Navigate to="/login" /> },
         { path: 'dashboard/roadmap/:id', element:  user ? <SingleLearningRoadMapPage /> : <Navigate to="/login" /> },
+        
       ],
     },
     {

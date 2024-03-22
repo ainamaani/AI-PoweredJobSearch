@@ -15,7 +15,7 @@ const registerUser = async(req: Request, res: Response) =>{
             companyLogo = (req.files as { [fieldname: string]: Express.Multer.File[] })['companyLogo'][0].path;
         }
         
-        const { firstname, lastname, email, userCategory, company, 
+        const { firstname, lastname, email, userCategory, sector, company, 
             companyEmail,companyDescription, industry, location,companyWebsiteUrl, password, passwordConfirm } = req.body;
 
         // check passwords if they match
@@ -35,7 +35,7 @@ const registerUser = async(req: Request, res: Response) =>{
 
         //register the user in the database
         const newUser = await User.create({
-            firstname,lastname,email,userCategory,password:hashedPassword
+            firstname,lastname,email,sector,userCategory,password:hashedPassword
         })
 
         if (newUser.userCategory === "Recruiter"){
@@ -190,8 +190,9 @@ const handleChangePassword = async(req: Request, res: Response) =>{
             return res.status(400).json({ error: "The user trying to change password does not exist" })
         }
         const currentStoredPassword = userchanging.password;
+        console.log(currentPassword);
         // check if the supplied password is the correct current password
-        const matches = await bcrypt.compare(currentStoredPassword, currentPassword);
+        const matches = await bcrypt.compare(currentPassword, currentStoredPassword);
         if(!matches){
             return res.status(400).json({ error: "Please provide the correct current password" })
         }

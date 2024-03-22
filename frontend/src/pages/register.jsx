@@ -248,13 +248,30 @@ const Register = () => {
                             <span style={{color:'red', textAlign:"left"}}>{errors.sector}</span>
                     )}
 
-                    <StyledRadioGroup value={userCategory} onChange={(e)=> {setUserCategory(e.target.value)}} >
-                        <FormControlLabel value="Job seeker" control={<Radio />} label="Job seeker" />
-                        <FormControlLabel value="Recruiter" control={<Radio />} label="Recruiter" />
-                    </StyledRadioGroup>
+                    <FormControl fullWidth style={{
+                      marginTop: "18px"
+                    }} >
+                        <InputLabel id="user category">Select user category</InputLabel>
+                        <Select
+                        value={userCategory}
+                        fullWidth
+                        id="user category"
+                        label="Select a user category"
+                        sx={{ 
+                          width: 600
+                        }}
+                        onChange={(e) => setUserCategory(e.target.value)}
+                        >
+                            <MenuItem value="" disabled>Select a user category</MenuItem>
+                            <MenuItem value="Job seeker">Job seeker</MenuItem>
+                            <MenuItem value="Recruiter">Recruiter</MenuItem>
+                            
+                        </Select>
+                    </FormControl>
                     { errors.userCategory && (
                             <span style={{color:'red', textAlign:"left"}}>{errors.userCategory}</span>
-                        )}
+                    )}
+
                     { userCategory === "Recruiter" && (
                         <>
                             <StyledTextField
@@ -262,13 +279,6 @@ const Register = () => {
                                 variant="outlined"
                                 required fullWidth
                                 sx={{ width: 600 }}
-                                InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position='start'>
-                                        <BusinessRounded />
-                                      </InputAdornment>
-                                    )
-                                  }}
                                 error={errors.company}
                                 value={company}
                                 onChange={(e)=> {setCompany(e.target.value)}}   

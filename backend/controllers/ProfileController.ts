@@ -155,7 +155,7 @@ const getUserProfile = async(req: Request, res: Response) =>{
         if(profile){
             return res.status(200).json(profile);
         }else{
-            return res.status(400).json({ error: "Failed to fetch the wanted project" });
+            return res.status(404).json({ error: "Profile not found" });
         }
     } catch (error: any) {
         return res.status(400).json({ error: error.message })
