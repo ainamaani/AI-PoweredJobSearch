@@ -1,14 +1,15 @@
-import { Avatar, Card, CardContent, CardHeader, CardMedia, CircularProgress, IconButton, Typography } from "@mui/material";
+import { Avatar, Card, CardContent, CardHeader, CardMedia, CircularProgress, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import UseAuthContext from "src/hooks/use-auth-context";
-import { MoreVertRounded } from "@mui/icons-material";
+import { MoreVertRounded, SearchRounded } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import {format} from "date-fns"; 
 
 
 const LearningRoadmaps = () => {
     const [learningRoadmaps, setLearningRoadmaps] = useState([]);
+    const [searchInput, setSearchInput] = useState('');
     const {user} = UseAuthContext();
 
     useEffect(()=>{
@@ -29,6 +30,16 @@ const LearningRoadmaps = () => {
     useEffect(() => {
         console.log("The state", learningRoadmaps);
     },[learningRoadmaps]);
+
+    // Functions to handle input change
+    const handleSearchInputChange = (event) =>{
+        setSearchInput(event.target.value);
+    }
+
+     // Filter the jobs based on the search input value
+    const filteredRoadMaps = learningRoadmaps?.filter(roadmap => 
+        roadmap.role.toLowerCase().includes(searchInput.toLowerCase())
+    );
     return ( 
         <div>
             <div className="head" style={{ display: "grid", gridTemplateColumns: "2fr 2fr" }}>
@@ -55,17 +66,30 @@ const LearningRoadmaps = () => {
             </Typography>
             <div className="roadmaps-content">
                 <div className="filter-section">
-                    <Typography variant="h5">Filter by role</Typography>
+                    <TextField  
+                        label="Search by role.."
+                        variant="filled"
+                        value={searchInput}
+                        InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <SearchRounded />
+                            </InputAdornment>
+                        )
+                        }}
+                        onChange={handleSearchInputChange}
+                        style={{ marginBottom: '20px' }}
+                    />
                 </div>
                     {
-                        learningRoadmaps ? (
+                        filteredRoadMaps ? (
                             <div className="card-content" style={{ display:"flex", 
                                                                     alignItems:"center",
                                                                     flexWrap:"wrap",
                                                                     gap:"15px"
                                                                     }}>
                                 {
-                                    learningRoadmaps.map(roadmap => (
+                                    filteredRoadMaps.map(roadmap => (
                                         <Link to={`/dashboard/dashboard/roadmap/${roadmap._id}`}>
                                             <Card sx={{ maxWidth: 300 }}>
                                                 <CardHeader 

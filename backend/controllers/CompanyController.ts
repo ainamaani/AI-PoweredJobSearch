@@ -1,5 +1,6 @@
 import { Response, Request } from "express"
 import Company from "../models/Company";
+import Job from "../models/Job";
 
 const fetchCompanies = async(req: Request, res: Response) =>{
     try {
@@ -52,8 +53,43 @@ const unfollowCompany = async(req: Request,res: Response) => {
     }
 }
 
+
+const fetchCompanyJobs : any = async(req: Request, res: Response) => {
+    try {
+        const { userId } = req.body; // Assuming the user ID is sent in the request body
+
+        // Step 1: Fetch all companies
+        const companies = await Company.find({});
+
+        // Step 2: Initialize an empty array to store followed company names
+        const followedCompanies: string[] = [];
+
+        // Step 3: Check if the user is among the followers of each company
+        for (const company of companies) {
+            if (company.followers.includes(userId)) { // Assuming userId is a string
+                followedCompanies.push(company.company); // Add company name to the list
+            }
+        }
+
+        console.log(followedCompanies);
+
+        // Step 4: Fetch jobs posted by followed companies
+        const jobs = await Job.find({ company: { $in: followedCompanies } });
+
+        // Step 5: Send the jobs to the frontend
+        if (jobs.length > 0) {
+            return res.status(200).json(jobs);
+        } else {
+            return res.status(404).json({ message: "No jobs found for followed companies" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+};
+
 export default {
     fetchCompanies,
     followCompany,
-    unfollowCompany
+    unfollowCompany,
+    fetchCompanyJobs
 }

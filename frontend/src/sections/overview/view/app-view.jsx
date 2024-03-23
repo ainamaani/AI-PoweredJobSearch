@@ -45,6 +45,7 @@ export default function AppView() {
   const [allUserApplications, setAllUserApplications] = useState([])
   const [allUserInterviews, setAllUserInterviews] = useState([]);
   const [recommendedJobs, setRecommendedJobs] = useState([]);
+  const [followedCompanyJobs, setFollowedCompanyJobs] = useState([]);
   // const [userProfessionJobs, setAllUserProfessionJobs] = useState([]);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [jobToView, setJobToView] = useState(null);
@@ -83,14 +84,26 @@ export default function AppView() {
           }
         }
 
+        const handleFetchFollowedCompanyJobs = async() => {
+          const response = await axios.post('http://localhost:5550/api/companies/company/jobs',
+                                  JSON.stringify({ userId : user.id }),{
+                                    headers:{
+                                      'Content-Type':'application/json'
+                                    }
+                                  }
+          );
+          if(response.status === 200){
+            setFollowedCompanyJobs(response.data);
+          }
+        }
+
       
       handleFetchRecentJobs();
       handleFetchUserApplications();
       handleFetchUserInterviews();
-      if(user?.sector){
-        handleFetchRecommendedJobs();
-      }
-      // handleFetchUserProfessionJobs();
+      handleFetchRecommendedJobs();
+      handleFetchFollowedCompanyJobs();
+      
 
     } catch (error) {
       console.log(error);
@@ -176,6 +189,19 @@ export default function AppView() {
           ):(
             <div>
                 <Typography variant='h4'>No job recommendations</Typography>
+            </div>
+          ) }
+        </Grid>
+
+        <Grid xs={12} md={6} lg={8}>
+          { followedCompanyJobs ? (
+            <AppNewsUpdate
+              title="From the companies you follow"
+              list={followedCompanyJobs}
+            />
+          ):(
+            <div>
+                <Typography variant='h4'>No jobs from the companies you follow</Typography>
             </div>
           ) }
         </Grid>
