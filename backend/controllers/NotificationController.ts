@@ -3,9 +3,9 @@ import { Request,Response } from "express";
 
 const createNewNotification = async(req: Request,res: Response) =>{
     try {
-        const { user, subject, message, type } = req.body;
+        const { user, subject, message } = req.body;
         const notification = await Notification.create({
-            user, subject, message, type
+            user, subject, message, isUnread : true
         })
         if(notification){
             return res.status(200).json(notification);
@@ -20,7 +20,7 @@ const createNewNotification = async(req: Request,res: Response) =>{
 const getMemberNotifications = async(req: Request,res: Response) =>{
     try {
         const {id} = req.params;
-        const membernotifications = await Notification.find({ user: id });
+        const membernotifications = await Notification.find({ user: id }).populate('user');
         if(membernotifications){
             return res.status(200).json(membernotifications);
         }else{
@@ -33,7 +33,7 @@ const getMemberNotifications = async(req: Request,res: Response) =>{
 
 const getAllNotifications = async(req: Request,res: Response) =>{
     try {
-        const notifications = await Notification.find({});
+        const notifications = await Notification.find({}).populate('user');
         if(notifications){
             return res.status(200).json(notifications);
         }else{
@@ -46,12 +46,13 @@ const getAllNotifications = async(req: Request,res: Response) =>{
 
 const changeNotificationStatus = async(req: Request, res: Response) =>{
     try {
-        const {id} = req.params;
-        const notification = await Notification.findById(id);
-        if(notification){
-            notification.isUnread = false;
-            await notification.save({ validateBeforeSave: false });
-            return res.status(200).json(notification);
+        const notifications = await Notification.find({});
+        if(notifications.length > 0){
+            for(const notification of notifications){
+                notification.isUnread = false;
+                await notification.save({ validateBeforeSave: false });
+            }
+            return res.status(200).json({ message: "The read status has been changed" });
         }else{
             return res.status(400).json({ error: "Failed to fetch the notification to change status" })
         }

@@ -26,13 +26,9 @@ const NotificationsSchema = new mongoose.Schema({
         required: [true, "The notification notifications"]
     },
     isUnread:{
-        type:Boolean,
-        default: true
+        type:Boolean
     },
-    type:{
-        type:String,
-        required: [true, "The notification type is required"]
-    }
+    
     
 },{timestamps:true})
 

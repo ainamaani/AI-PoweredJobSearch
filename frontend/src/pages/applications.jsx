@@ -13,6 +13,7 @@ import { saveAs } from "file-saver";
 import {format} from "date-fns"
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import handleCreateNotification from "../functions/CreateNotification";
 
 
 // Define a styled TextField component
@@ -36,7 +37,7 @@ const JobApplications = () => {
     const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
     const [applicationToView, setApplicationToView] = useState(null);
     const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
-    const [interviewToSchedule, setInterviewToSchedule] = useState(false);
+    const [interviewToSchedule, setInterviewToSchedule] = useState(null);
 
     const [isDeclineDialogOpen, setIsDeclineDialogOpen] = useState(false);
     const [applicationToDecline, setApplicationToDecline] = useState(null);
@@ -114,6 +115,7 @@ const JobApplications = () => {
     }
 
     const handleOpenScheduleDialog = (application) =>{
+        console.log("Interview to schedule",application);
         setInterviewToSchedule(application);
         setIsScheduleDialogOpen(true);
     }
@@ -139,6 +141,12 @@ const JobApplications = () => {
             const response = await axios.get(`http://localhost:5550/api/applications/decline/${applicationToDecline._id}`)
             if(response.status === 200){
                 console.log("Rejected successfully", response.data);
+                handleCreateNotification(
+                    applicationToDecline.applicant._id,
+                    "Application declined", 
+                    "Application for the job you applied for has been declined.Check your email for details"
+                    
+                );
                 handleCloseDeclineDialog();
                 // Refresh the page
                 window.location.reload();
@@ -174,24 +182,16 @@ const JobApplications = () => {
             )
             if(response.status === 200){
                 console.log(response.data);
+                handleCreateNotification(
+                    interviewToSchedule.applicant._id,
+                    "Interview scheduled", 
+                    "Interview for the job you applied for has been scheduled.Check your email for details"
+                    
+                );
                 handleCloseScheduleDialog();
+                
                 navigate('/dashboard/dashboard/interviews');
-                // const user = applicationToView.applicant;
-                // const subject = 'Interview scheduled';
-                // const message = 'Interview for the job applied scheduled for tomorrow';
-                // const type = 'interview'
-                // const notificationData = {user,subject,message,type };
-                // const notification = await axios.post("http://localhost:5550/api/notifications/create",
-                //                                 JSON.stringify(notificationData),{
-                //                                     headers:{
-                //                                         'Content-Type':'application/json'
-                //                                     }
-                //                                 }
-                // )
-                // if(notification.status === 200){
-                //     console.log('Notification created successfully', notification.data);
-                // }
-                // console.log(response.data);
+               
             }
         } catch (errorr) {
             if(errorr.response && errorr.response.data && errorr.response.data.errors){
@@ -205,6 +205,8 @@ const JobApplications = () => {
             });
         }
     }
+
+    
 
     const handleResumeDownload = async(applicationId,applicantFirstName,applicantLastName,jobAppliedFor) =>{
         try {
@@ -326,14 +328,6 @@ const JobApplications = () => {
                                                         application.applicant?.lastname,
                                                         application.job?.title
                                                         )} 
-
-                                                    //     onClick={() =>
-                                                    //         handleDownloadProfileResume(
-                                                    //         profile._id,
-                                                    //         profile.firstname,
-                                                    //         profile.lastname
-                                                    //         )
-                                                    // }
                                                     >
                                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-around' }}>
                                                             <Typography variant="subtitle2" >Download Application letter</Typography>

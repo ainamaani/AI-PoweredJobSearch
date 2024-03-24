@@ -13,6 +13,6 @@ router.get('/', getAllNotifications);
 
 router.get('/user/:id', getMemberNotifications);
 
-router.get('/read/:id', changeNotificationStatus);
+router.get('/read', changeNotificationStatus);
 
 export default router;
