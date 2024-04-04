@@ -3,6 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import { Request, Response } from 'express';
 import Job from '../models/Job';
+import tfidfVectorizerParams from '../algorithm/tfidf_vectorizer.json';
+import tfidfMatrixJson from '../algorithm/tfidf_matrix.json';
+import cosineSim from '../algorithm/cosine_similarity_matrix.json';
+
+
 
 const handleJobsRecommendations = async (req: Request, res: Response) => {
     try {
@@ -26,14 +31,24 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
          });
 
         // Get the absolute paths of the files using 'path.join'
-        const tfidfVectorizerPath = path.join('C:/Users/USER/Desktop/JOBS ALGORITHM TRIAL/tfidf_vectorizer.json');
-        const tfidfMatrixPath = path.join('C:/Users/USER/Desktop/JOBS ALGORITHM TRIAL/tfidf_matrix.json');
-        const cosineSimPath = path.join('C:/Users/USER/Desktop/JOBS ALGORITHM TRIAL/cosine_similarity_matrix.json');
+        // const tfidfVectorizerPath = path.join('backend\\files\\tfidf_vectorizer.json');
+        // const tfidfMatrixPath = path.join('backend\\files\\tfidf_matrix.json');
+        // const cosineSimPath = path.join('backend\\files\\cosine_similarity_matrix.json');
+
+        // const tfidfVectorizerPath = path.join(__dirname, 'algorithm', 'tfidf_vectorizer.json');
+        // const tfidfMatrixPath = path.join('C:\\Users\\USER\\Desktop\\AI-PoweredJobSearch\\backend\\files\\tfidf_matrix.json');
+        // const cosineSimPath = path.join('C:\\Users\\USER\\Desktop\\AI-PoweredJobSearch\\backend\\files\\cosine_similarity_matrix.json');
+
+        // console.log(tfidfVectorizerPath);
+
 
         // Load data in Node.js
-        const tfidfVectorizerParams = JSON.parse(fs.readFileSync(tfidfVectorizerPath, 'utf-8'));
-        const tfidfMatrix = JSON.parse(fs.readFileSync(tfidfMatrixPath, 'utf-8'));
-        const cosineSim = JSON.parse(fs.readFileSync(cosineSimPath, 'utf-8'));
+        // const tfidfVectorizerParams = JSON.parse(fs.readFileSync(tfidfVectorizerPath, 'utf-8'));
+        // const tfidfMatrix = JSON.parse(fs.readFileSync(tfidfMatrixPath, 'utf-8'));
+        // const cosineSim = JSON.parse(fs.readFileSync(cosineSimPath, 'utf-8'));
+
+        const tfidfMatrix : any = tfidfMatrixJson;
+
         
         // Preprocess job postings from the database to create a corpus
         const jobTitles = relevantJobPostings.map(job => job.title);
@@ -64,7 +79,7 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
 
         // Calculate cosine similarity between user input and each job posting
         const similarities = jobTitles.map((title, index) => {
-            const jobTfidf = tfidfMatrix[index];
+            const jobTfidf  = tfidfMatrix[index];
             const similarity = calculateCosineSimilarity(userTfidf, jobTfidf);
             return { index, similarity };
         });
