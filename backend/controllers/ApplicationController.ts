@@ -1,14 +1,16 @@
 import Application from "../models/Application";
+import Job from "../models/Job";
 import { Request, Response } from "express";
 import path from "path";
 import Profile from "../models/Profile";
 import sendEmail from "../functions/SendEmail";
+const mongoose = require('mongoose');
 import { error } from "console";
 
 const newJobApplication = async(req: Request, res: Response) =>{
     try {
         // destructure other properties off the request object
-        const { applicant, job } = req.body;
+        const { applicant, job, applicantSkills } = req.body;
 
         // first check if the user has already applied
         const existingApplication = await Application.findOne({ applicant:applicant, job:job });
@@ -22,7 +24,7 @@ const newJobApplication = async(req: Request, res: Response) =>{
         // create a new Application object and save it in the database
         const application = await Application.create({
             applicant, job,resume:resumePath,applicationLetter:applicationLetterPath,
-            applicationDate:new Date()
+            applicantSkills, applicationDate:new Date()
         })
         if(application){
             console.log(application);
@@ -164,6 +166,62 @@ const fetchUserApplications = async(req: Request, res: Response) =>{
     }
 }
 
+
+const selectBestApplicants = async (req :Request, res :Response) => {
+    const {id} = req.params;
+    try {
+        console.log(id);
+       
+      // Get the job details
+      const job = await Job.findById(id);
+      console.log(job);
+  
+      if (!job) {
+        return res.status(400).json({ error: "Couldn't find the job" })
+      }
+  
+      // Get all applications for the job
+      const applications = await Application.find({ job: id }).populate('applicant');
+  
+      // Calculate similarity scores for each applicant's skills
+      const rankedApplicants = applications.map(application => {
+        const applicantSkills = application?.applicantSkills.split(',').map(skill => skill.trim());
+        const jobRequiredSkills = job?.skills.split(',').map(skill => skill.trim());
+  
+        // Calculate Jaccard similarity coefficient
+        const intersection = applicantSkills.filter(skill => jobRequiredSkills.includes(skill));
+        const union = [...new Set([...applicantSkills, ...jobRequiredSkills])];
+        const similarityScore = intersection.length / union.length;
+  
+        return {
+          applicant: application.applicant,
+          applicant_firstname: application.applicant.firstname,
+          similarityScore: similarityScore,
+          similarityPercentage: similarityScore * 100
+        };
+      });
+  
+      // Sort applicants by similarity score in descending order
+      const sortedApplicants = rankedApplicants.sort((a, b) => b.similarityScore - a.similarityScore);
+      return res.status(200).json(sortedApplicants);
+
+    } catch (error : any) {
+      return res.status(400).json({ error : error.message });
+    }
+  };
+  
+  // Example usage:
+  // Replace 'jobId' with the actual ObjectId of the job you want to select applicants for
+    //   const jobId = 'your_job_id_here';
+    //   selectBestApplicants(jobId)
+    //     .then((sortedApplicants) => {
+    //       console.log('Sorted Applicants:', sortedApplicants);
+    //     })
+    //     .catch((error) => {
+    //       console.error('Error:', error.message);
+    //     });
+  
+
 export default {
     newJobApplication,
     jobApplications,
@@ -171,5 +229,6 @@ export default {
     downloadApplicationLetter,
     deleteApplication,
     rejectApplication,
-    fetchUserApplications
+    fetchUserApplications,
+    selectBestApplicants
 };

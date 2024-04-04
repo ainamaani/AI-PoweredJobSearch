@@ -8,6 +8,7 @@ interface ApplicationI extends Document {
     applicationDate: Date;
     resume: string,
     applicationLetter: string,
+    applicantSkills: string,
     applicationStatus: string
 }
 
@@ -33,6 +34,10 @@ const ApplicationSchema = new mongoose.Schema<ApplicationI>({
     applicationLetter:{
         type:String,
         required: [true, "The application letter of the applicant is required"]
+    },
+    applicantSkills:{
+        type:String,
+        required: [true, "The applicant skills are required"]
     },
     applicationStatus:{
         type:String,

@@ -7,7 +7,7 @@ import RequireAuth from "../middleware/RequireAuth";
 
 const { newJobApplication, jobApplications, downloadResume, 
     downloadApplicationLetter, deleteApplication, rejectApplication,
-    fetchUserApplications
+    fetchUserApplications, selectBestApplicants
     } = applicationsController;
 
 // require auth for all application routes.
@@ -26,6 +26,8 @@ router.get('/downloadapplicationletter/:id', downloadApplicationLetter);
 router.delete('/delete/:id', deleteApplication);
 
 router.get('/decline/:id', rejectApplication);
+
+router.get('/bestapplicants/:id', selectBestApplicants);
 
 export default router;
 
