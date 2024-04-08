@@ -19,6 +19,7 @@ export interface JobI extends Document{
     applicationInstructions:string;
     applyFromWithinApp:string;
     additionalComments:string;
+    numberOfApplicants:number;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -127,6 +128,10 @@ const JobSchema = new mongoose.Schema<JobI>({
         type:String,
         required:[true, "Addional comments required, if none, type None."],
         default: "None"
+    },
+    numberOfApplicants:{
+        type:Number,
+        required:[true, "The number of applicants is required"]
     }
     
 },{timestamps:true});

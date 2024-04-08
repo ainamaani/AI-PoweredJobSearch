@@ -10,7 +10,7 @@ const addNewJob = async(req: Request,res: Response) =>{
     try {
         const newJob = await Job.create({ title,company,companyEmail,companyContact,description,category,skills,experience,
             qualifications,location,salaryRange,jobType,additionalBenefits,applyFromWithinApp,additionalComments,
-            applicationDeadline,applicationInstructions })
+            applicationDeadline,applicationInstructions,numberOfApplicants : 0 });
 
         if(newJob){
             return res.status(200).json(newJob);

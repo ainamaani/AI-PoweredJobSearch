@@ -27,8 +27,14 @@ const newJobApplication = async(req: Request, res: Response) =>{
             applicantSkills, applicationDate:new Date()
         })
         if(application){
-            console.log(application);
-            return res.status(200).json(application);
+            const jobAppliedFor = await Job.findOne({ _id: job });
+            if(jobAppliedFor){
+                // update the number of applicants of the job
+                jobAppliedFor.numberOfApplicants += 1;
+                await jobAppliedFor.save({ validateBeforeSave : false });
+                return res.status(200).json(application);
+            }
+            
         }else{
             return res.status(400).json({ error: "Failed to add the new application" });
         }

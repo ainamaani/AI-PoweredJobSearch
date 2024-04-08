@@ -3,7 +3,9 @@ import { Avatar, CircularProgress, IconButton, Tooltip, Dialog, DialogActions,
   DialogContent, Button,
   DialogTitle, 
   InputAdornment, 
-  TextField } from '@mui/material';
+  TextField, 
+  Card,
+  CardContent} from '@mui/material';
 import { Link } from 'react-router-dom';
 import {format} from 'date-fns';
 import { AssignmentRounded, HandshakeRounded, MoreVertRounded, VisibilityRounded, 
@@ -49,6 +51,9 @@ export default function AppView() {
   // const [userProfessionJobs, setAllUserProfessionJobs] = useState([]);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [jobToView, setJobToView] = useState(null);
+  const [bestApplicants, setBestApplicants] = useState([]);
+  const [isViewBestApplicantsDialog, setIsViewBestApplicantsDialog] = useState(false);
+  const [jobToFetchBestApplicants, setJobToFetchBestApplicants] = useState(null);
 
 
   useEffect(()=>{
@@ -97,18 +102,30 @@ export default function AppView() {
           }
         }
 
+        const handleFetchBestApplicants = async() =>{
+          try {
+            const response = await axios.get(`http://localhost:5550/api/applications/bestapplicants/${jobToFetchBestApplicants}`);
+            if(response.status === 200){
+              setBestApplicants(response.data);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
       
       handleFetchRecentJobs();
       handleFetchUserApplications();
       handleFetchUserInterviews();
       handleFetchRecommendedJobs();
       handleFetchFollowedCompanyJobs();
+      handleFetchBestApplicants();
       
 
     } catch (error) {
       console.log(error);
     }
-  },[user.id, user.sector]);
+  },[user.id, user.sector, jobToFetchBestApplicants]);
 
    // function to handle opening of the view dialog
    const handleOpenViewDialog = (job) =>{
@@ -119,6 +136,16 @@ export default function AppView() {
   const handleCloseViewDialog = () =>{
     setJobToView(null);
     setIsViewDialogOpen(false)
+  }
+
+  const handleOpenViewBestApplicantsDialog = (job) =>{
+    setJobToFetchBestApplicants(job?._id);
+    setIsViewBestApplicantsDialog(true);
+  }
+
+  const handleCloseViewBestApplicantsDialog = () =>{
+    setJobToFetchBestApplicants(null);
+    setIsViewBestApplicantsDialog(false);
   }
   
   return (
@@ -193,6 +220,49 @@ export default function AppView() {
           ) }
         </Grid>
 
+        <div style={{
+          display: "flex",
+          flexWrap: "wrap"
+        }}>
+          { allJobs ? (
+            allJobs.map(job=>(
+              <Card sx={{
+                maxWidth: 400,
+                margin: '10px'
+              }}>
+                <CardContent>
+                  <Typography variant='h5' component='div'>
+                    { job.title }
+                  </Typography>
+                  <Typography variant='subtitle'>
+                    Posted on: { job.createdAt }
+                  </Typography>
+                  <Typography variant='subtitle'>
+                    Application deadline: { job.applicationDeadline }
+                  </Typography>
+                  <Typography variant='subtitle'>
+                    Job posting status: { job.status }
+                  </Typography>
+                  <Typography variant='subtitle'>
+                    Number of applicants: { job.numberOfApplicants }
+                  </Typography>
+                </CardContent>
+                <div className="actions"
+                  
+                >
+                  <Button 
+                    onClick={() => handleOpenViewBestApplicantsDialog(job)}
+                    variant='contained'> 
+                    View best applicants
+                  </Button>
+                </div>
+              </Card>
+            ))
+          ):(
+            <p>Loading....</p>
+          ) }
+        </div>
+
         <Grid xs={12} md={6} lg={8}>
           { followedCompanyJobs ? (
             <AppNewsUpdate
@@ -207,6 +277,32 @@ export default function AppView() {
         </Grid>
 
       </Grid>
+      <Dialog
+          open={isViewBestApplicantsDialog}
+          onClose={handleCloseViewBestApplicantsDialog}
+          PaperProps={{
+            style:{
+              width: '1400px'
+            }
+          }}
+        >
+          <DialogTitle>Best applicants</DialogTitle>
+          <DialogContent>
+            {
+              
+              bestApplicants ? (
+                bestApplicants.map(applicant=>(
+                  <div>
+                    <h4>{applicant.applicant_firstname}</h4>
+                    <p>{applicant.similarityPercentage }</p>
+                  </div>
+                ))
+              ):(
+                <p>Loading content...</p>
+              )
+            }
+          </DialogContent>
+        </Dialog>
       <Dialog
           open={isViewDialogOpen}
           onClose={handleCloseViewDialog}
