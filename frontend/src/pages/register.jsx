@@ -140,6 +140,14 @@ const Register = () => {
         <div className="register">  
             <StyledPageContent className="content">
                 <form onSubmit={handleRegister}>
+                  <div className="app-logo" style={{
+                    position:"relative",
+                    right: "2%"
+                  }}>
+                    <img
+                      src={`${process.env.PUBLIC_URL}/assets/images/landing/app logo.png`} alt="logo" 
+                    />
+                  </div>
                     <Typography variant="h4"  className="register-head">
                         Register for CareerConnect.
                     </Typography>

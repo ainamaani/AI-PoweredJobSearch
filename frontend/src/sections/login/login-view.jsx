@@ -93,6 +93,7 @@ export default function LoginView() {
   const renderForm = (
     <>
       <Stack spacing={3}>
+        
         <TextField 
           name="email" 
           label="Email address" 
@@ -169,6 +170,14 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
+          <div className="app-logo" style={{
+            position:"relative",
+            left: "10%"
+          }}>
+            <img
+              src={`${process.env.PUBLIC_URL}/assets/images/landing/app logo.png`} alt="logo" 
+            />
+          </div>
           <Typography variant="h4">Sign in to CareerConnect</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
