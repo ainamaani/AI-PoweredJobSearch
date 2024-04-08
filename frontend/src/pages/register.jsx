@@ -145,7 +145,7 @@ const Register = () => {
                     right: "2%"
                   }}>
                     <img
-                      src={`${process.env.PUBLIC_URL}/assets/images/landing/app logo.png`} alt="logo" 
+                      src={`${process.env.PUBLIC_URL}/assets/images/landing/applogo2.png`} alt="logo" 
                     />
                   </div>
                     <Typography variant="h4"  className="register-head">

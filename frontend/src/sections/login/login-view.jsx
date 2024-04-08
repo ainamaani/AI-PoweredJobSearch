@@ -172,10 +172,10 @@ export default function LoginView() {
         >
           <div className="app-logo" style={{
             position:"relative",
-            left: "10%"
+            left: "14%"
           }}>
             <img
-              src={`${process.env.PUBLIC_URL}/assets/images/landing/app logo.png`} alt="logo" 
+              src={`${process.env.PUBLIC_URL}/assets/images/landing/applogo2.png`} alt="logo" 
             />
           </div>
           <Typography variant="h4">Sign in to CareerConnect</Typography>

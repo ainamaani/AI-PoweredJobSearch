@@ -116,6 +116,14 @@ const AddJobPosting = () => {
                         <div className="heading-title" style={{
                             marginTop: "45px"
                         }}>
+                        <div className="app-logo" style={{
+                            position:"relative",
+                            left:"40%"
+                        }}>
+                            <img
+                            src={`${process.env.PUBLIC_URL}/assets/images/landing/applogo2.png`} alt="logo" 
+                            />
+                        </div>
                             <Typography variant="h4" className="add-job-head">
                                 Add job posting 
                             </Typography>

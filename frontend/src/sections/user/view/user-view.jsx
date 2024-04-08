@@ -7,8 +7,9 @@ import { CircularProgress, Dialog, DialogActions, DialogContent,
   DialogTitle, 
   InputAdornment, 
   TextField} from '@mui/material';
-import { AccessTimeRounded, BookmarkAddRounded, BuildRounded, CalendarMonthRounded, 
-  CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, EmailRounded, 
+import { AccessTimeRounded, BookmarkAddRounded, BuildRounded, BusinessRounded, CalendarMonthRounded, 
+  CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, DoorFrontRounded, EmailRounded, 
+  HandymanRounded, 
   HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, 
   SearchRounded, 
   Title, TitleRounded, VisibilityRounded, WorkRounded } from '@mui/icons-material';
@@ -234,12 +235,12 @@ export default function UserPage() {
                   onRequestSort={handleSort}
                   // onSelectAllClick={handleSelectAllClick}
                   headLabel={[
-                    { id: 'title', label: 'Title' },
-                    { id: 'company', label: 'Company' },
-                    { id: 'location', label: 'Location' },
-                    { id: 'datePosted', label: 'Date posted', align: 'center' },
-                    { id: 'status', label: 'Status' },
-                    { id: 'actions', label: 'Actions' },
+                    { id: 'title', label: 'Title', icon: <TitleRounded /> },
+                    { id: 'company', label: 'Company', icon: <BusinessRounded /> },
+                    { id: 'location', label: 'Location', icon: <LocationOnRounded /> },
+                    { id: 'datePosted', label: 'Date posted', align: 'center', icon: <CalendarMonthRounded /> },
+                    { id: 'status', label: 'Status', icon: <DoorFrontRounded /> },
+                    { id: 'actions', label: 'Actions', icon: <HandymanRounded /> },
                     { id: '' },
                   ]}
                 />
