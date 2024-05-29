@@ -1,302 +1,3 @@
-/* scrollbar */
-@import 'simplebar-react/dist/simplebar.min.css';
-
-
-.container-landing {
-    background: #f1f1f1;
-    height: 900px;
-}
-
-.nav {
-    background: #fff;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    padding: 10px;
-}
-
-.nav, .left {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.links ul, .right ul{
-    display: flex;
-    gap: 25px;
-}
-.links ul li, .right ul li{
-    list-style: none;
-}
-.links ul li a, .right ul li a{
-    text-decoration: none;
-    color: black;
-    font-size: 1.2em;
-}
-
-.links ul li a:hover, .right ul li a:hover{
-    background: #cce0ff;
-    padding: 8px;
-    border-radius: 6px;
-    
-}
-.profile-links {
-    color: #000;
-    font-weight: 600;
-    font-size: 1.2em;
-}
-.profile-links:hover {
-    background: #f1f1f1;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-radius: 4px;
-}
-
-.landing-body{
-    display: grid;
-    grid-template-columns: 2fr 2fr;
-    background-color: #fff;
-    border-radius: 8px;
-    padding-left: 10px;
-}
-.guidelines{
-    display: flex;
-    position: relative;
-    left: 100px;
-}
-.card{
-    background: #fff !important;
-    border-radius: 8px;
-    width: 380px;
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    margin: 5px;
-    text-align: left !important;
-    padding: 5px;
-}
-.card .number{
-    background: #cce0ff;
-    border-radius: 8px;
-    position: relative;
-    top: 32px;
-    width: 60px;
-    height: 60px;
-}
-.card .number h1{
-    text-align: center;
-    position: relative;
-    bottom: 13px;
-}
-
-/* elements */
-.name span{
-    font-size: 1.8em;
-    color: #4d94ff;
-    border-bottom: 7px solid #4d94ff;
-}
-.register-link{
-    background:  #cce0ff ;
-    padding: 8px;
-    border-radius: 6px;
-}
-.register-link:hover {
-    background: #a7c8f9 !important;
-}
-.welcome{
-    font-size: 40px;
-}
-.wel-title{
-    color: #4d94ff;
-    font-size: 1.2em;
-    font-style: italic;
-}
-.get-started{
-    position: relative;
-    left: 550px;
-}
-
-/* footer */
-.footer{
-    text-align: center;
-    position: relative;
-    top: 30px;
-}
-
-.footer h3{
-    font-size: 1.6em;
-}
-/* popular categories */
-.popular-section{
-    position: relative;
-    top: 20px;
-}
-.popular{
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
-.category{
-    background: #fff;
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-radius: 5px;
-    text-align: center;
-    line-height: 6px;
-}
-.category .icon{
-    color: #4d94ff;
-}
-.popular-head{
-    text-align: center;
-    font-size: 1.6em;
-}
-
-/* REGISTER FORMS */
-.register{
-    background: #f1f1f1;
-
-}
-.content form{
-    background: #fff;
-    padding: 45px;
-    border-radius: 8px;
-    width: 700px;
-    position: relative;
-    left: 23%;
-    
-}
-.register-head{
-    text-align: center;
-    color: #000;
-}
-.fields{
-    position: relative;
-    left: 13%;
-}
-.head-border-bottom{
-    background: #000;
-    position: relative;
-    left: 42%;
-    bottom: 5px !important;
-    width: 80px;
-    height: 7px;
-    border-radius: 16px;
-    color: #fff;
-    margin-bottom: 60px;  
-}
-.register-button{
-    position: relative;
-    left: 40%;
-}
-.alread-with-account{
-    text-align: end !important;
-}
-.alread-with-account a{
-    color: #4d94ff !important;
-}
-
-/* ADD JOB FORM */
-.add-job{
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 6px;
-}
-.add-job form{
-    position: relative;
-    left: 15%;
-}
-.add-job-head{
-    text-align: center;
-}
-.content .reset{
-    margin-top: 50px;
-}
-
-/* LOGIN FORM */
-.get-started-link{
-    color: #4d94ff;
-    margin-left: 10px;
-}
-
-/* JOBS PAGE */
-.applyLink {
-    background: #4d94ff;
-    margin-left: 5px;
-    padding: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
-    border-radius: 6px;
-    color: #fff;
-}
-a{
-    text-decoration: none !important;
-}
-.applyLink a{
-    text-decoration: none;
-}
-.applyLink:hover{
-    background: #4b80d0;
-}
-
-/* PROFILE */
-.profile-category {
-    background: red;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    padding-left: 15px;
-    padding-right: 15px;
-    border-radius: 8px;
-    width: 230px;
-    
-}
-.profile-category a{
-    color: #000;
-    font-size: 1.2em;
-    text-align: center;
-}
-
-.card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    background-size: cover;
-    background-position: center;
-    width: 300px !important;
-}
-.content{
-    text-align: center;
-    color: #fff; 
-}
-/* .content a{
-    font-weight: 700;
-    font-size: 20px;
-    color: #6d6b6b;
-}
-.content a:hover{
-    background: #edecec;
-    padding: 16px;
-    border-radius: 8px;
-} */
-.category-img{
-    border-radius: 10px;
-}
-
-.app-logo img{
-    height: 150px;
-    width: 180px;
-    border-radius: 50%;
-}
-
-
-
-
-
-/* WELCOME PAGE */
-
 
 :root {
 
@@ -305,7 +6,7 @@ a{
      */
   
     --maximum-yellow-red: hsl(37, 100%, 68%);
-    --royal-blue-dark: hsl(#4d94ff);
+    --royal-blue-dark: hsl(231, 61%, 22%);
     --silver-chalice: hsl(0, 0%, 70%);
     --oxford-blue: hsl(231, 100%, 8%);
     --bittersweet: hsl(2, 100%, 69%);
@@ -351,34 +52,34 @@ a{
    * #RESET
   \*-----------------------------------*/
   
-  /* *, *::before, *::after {
+  *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  } */
+  }
   
-  .welcome li { list-style: none; }
+  li { list-style: none; }
   
-  .welcome a { text-decoration: none; }
+  a { text-decoration: none; }
   
-  .welcome a,
-  .welcome img,
-  .welcome button,
-  .welcome span,
-  .welcome ion-icon,
-  .welcome label,
-  .welcome input,
-  .welcome textarea { display: block; }
+  a,
+  img,
+  button,
+  span,
+  ion-icon,
+  label,
+  input,
+  textarea { display: block; }
   
-  .welcome button {
+  button {
     font: inherit;
     background: none;
     border: none;
     cursor: pointer;
   }
   
-  .welcome textarea,
-  .welcome input {
+  textarea,
+  input {
     font: inherit;
     background: none;
     border: none;
@@ -389,12 +90,12 @@ a{
   
   :focus { outline-offset: 4px; }
   
-  .welcome html {
+  html {
     font-family: var(--ff-poppins);
     scroll-behavior: smooth;
   }
   
-  .welcome body {
+  body {
     background: var(--white);
     overflow-x: hidden;
   }
@@ -431,7 +132,7 @@ a{
   .h2 { font-size: var(--fs-2); }
   
   .h3 {
-    color: #4d94ff;
+    color: hsl(231deg 70.47% 44.89%);
     font-size: var(--fs-3);
   }
   
@@ -451,12 +152,12 @@ a{
   }
   
   .btn-primary {
-    background: #4d94ff;
+    background: hsl(235.86deg 80.42% 30.19%);
     border-color: hsl(2deg 89.11% 13.82%);
     color: var(--white);
   }
   
-  .btn-primary:is(:hover, :focus) { --bittersweet: #4d94ff }
+  .btn-primary:is(:hover, :focus) { --bittersweet: hsl(251, 90%, 65%); }
   
   .btn-secondary:is(:hover, :focus) { background: hsla(0, 0%, 100%, 0.1); }
   
@@ -468,24 +169,24 @@ a{
    * #HEADER
   \*-----------------------------------*/
   
-  .welcome header {
+  header {
     position: relative;
     padding: 35px 0;
     z-index: 2;
   }
   
-  .welcome header .container {
+  header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
-  .welcome .navbar-menu-btn {
+  .navbar-menu-btn {
     font-size: 30px;
     padding: 5px;
   }
   
-  .welcome .navbar {
+  .navbar {
     position: absolute;
     top: calc(100% - 15px);
     left: 15px;
@@ -499,17 +200,17 @@ a{
     overflow: hidden;
   }
   
-  .welcome .navbar.active {
+  .navbar.active {
     visibility: visible;
     pointer-events: all;
     max-height: 280px;
   }
   
-  .welcome .navbar-list { padding: 10px; }
+  .navbar-list { padding: 10px; }
   
   .nav-item:not(:last-child) { border-bottom: 1px solid hsla(0, 0%, 100%, 0.2); }
   
-  .welcome .nav-link {
+  .nav-link {
     font-size: var(--fs-6);
     color: var(--royal-blue-dark);
     font-weight: var(--fw-600);
@@ -574,7 +275,7 @@ a{
   .about {
     position: relative;
     z-index: 1;
-    background: url("../public/assets/images/landing/bg.png") no-repeat;
+    background: url("../images/bg.png") no-repeat;
     background-position: center;
     background-size: cover;
     padding: 120px 0;
@@ -606,7 +307,7 @@ a{
     box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.1);
   }
   
-  .welcome .card-icon {
+  .card-icon {
     color: var(--bittersweet);
     font-size: 45px;
     width: max-content;
@@ -707,22 +408,22 @@ a{
   
   .input-wrapper { margin-bottom: 30px; }
   
-  .welcome .input-label {
+  .input-label {
     color: var(--oxford-blue);
     font-size: var(--fs-6);
     font-weight: var(--fw-600);
     margin-bottom: 10px;
   }
   
-  .welcome .input-field {
+  .input-field {
     border-bottom: 1px solid var(--platinum);
     padding: 7px 0;
     font-size: var(--fs-6);
   }
   
-  .welcome .input-field::placeholder { color: var(--silver-chalice); }
+  .input-field::placeholder { color: var(--silver-chalice); }
   
-  .welcome textarea {
+  textarea {
     max-height: 300px;
     min-height: 100px;
     height: 100px;
@@ -810,7 +511,7 @@ a{
      * HEADER 
      */
   
-     .welcome .navbar {
+    .navbar {
       left: auto;
       width: 300px;
     }
@@ -1024,7 +725,7 @@ a{
   
     .navbar-menu-btn { display: none; }
   
-    .welcome .navbar {
+    .navbar {
       max-height: unset;
       visibility: visible;
       position: static;
@@ -1035,14 +736,14 @@ a{
       display: flex;
     }
   
-    .welcome .navbar-list {
+    .navbar-list {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-right: 20px;
     }
   
-    .welcome .nav-link {
+    .nav-link {
       opacity: 1;
       padding: 0 15px;
     }
@@ -1065,7 +766,7 @@ a{
       transform: translateY(-50%);
       width: 500px;
       padding-top: 500px;
-      background: url("../public/assets/images/landing/hero-banner.png") no-repeat;
+      background: url("../images/hero-banner.png") no-repeat;
       background-size: contain;
     }
   
@@ -1191,7 +892,3 @@ a{
     .features :is(.section-title, .section-text) { max-width: 850px; }
   
   }
-
-
-
-

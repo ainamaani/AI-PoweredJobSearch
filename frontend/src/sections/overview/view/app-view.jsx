@@ -12,8 +12,11 @@ import { AssignmentRounded, HandshakeRounded, MoreVertRounded, VisibilityRounded
   WorkRounded, AccessTimeRounded, BookmarkAddRounded, BuildRounded, CalendarMonthRounded, 
   CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, EmailRounded, 
   HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, 
-  SearchRounded, 
-  Title, TitleRounded } from '@mui/icons-material';
+  SearchRounded,
+  Title, TitleRounded, 
+  InfoRounded,
+  PersonRounded,
+  ErrorOutlineRounded} from '@mui/icons-material';
 import React, {useState, useEffect} from 'react';
 import axios, { all } from 'axios';
 
@@ -55,9 +58,14 @@ export default function AppView() {
   const [isViewBestApplicantsDialog, setIsViewBestApplicantsDialog] = useState(false);
   const [jobToFetchBestApplicants, setJobToFetchBestApplicants] = useState(null);
 
+  const [followsCompanies, setFollowsCompanies] = useState(false);
+
+  const [openBestApplicantsDialog, setOpenBestApplicantsDialog] = useState(false);
+
 
   useEffect(()=>{
-    try {
+    const fetchData = async() => {
+      try {
         const handleFetchRecentJobs = async() =>{
           const recentJobsData = await axios.get("http://localhost:5550/api/jobs/");
           if(recentJobsData.status === 200){
@@ -89,6 +97,23 @@ export default function AppView() {
           }
         }
 
+        const handleFollowsCompaniesCheck = async() =>{
+          const response = await axios.post('http://localhost:5550/api/companies/checkfollow',
+                                  JSON.stringify({ userId : user.id }),{
+                                    headers:{
+                                      'Content-Type':'application/json'
+                                    }
+                                  }
+          );
+          console.log(followsCompanies);
+          if(response.status === 200){
+            setFollowsCompanies(true);
+            console.log(followsCompanies);
+          }else{
+            setFollowsCompanies(false);
+          }
+        }
+
         const handleFetchFollowedCompanyJobs = async() => {
           const response = await axios.post('http://localhost:5550/api/companies/company/jobs',
                                   JSON.stringify({ userId : user.id }),{
@@ -102,30 +127,26 @@ export default function AppView() {
           }
         }
 
-        const handleFetchBestApplicants = async() =>{
-          try {
-            const response = await axios.get(`http://localhost:5550/api/applications/bestapplicants/${jobToFetchBestApplicants}`);
-            if(response.status === 200){
-              setBestApplicants(response.data);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        }
 
       
       handleFetchRecentJobs();
       handleFetchUserApplications();
       handleFetchUserInterviews();
-      handleFetchRecommendedJobs();
-      handleFetchFollowedCompanyJobs();
-      handleFetchBestApplicants();
-      
-
+      if(user.sector){
+        handleFetchRecommendedJobs();
+      }
+      await handleFollowsCompaniesCheck();
+  
+      if(followsCompanies === true){
+        await handleFetchFollowedCompanyJobs();
+      }
     } catch (error) {
       console.log(error);
     }
-  },[user.id, user.sector, jobToFetchBestApplicants]);
+    }
+
+    fetchData();
+  },[user.id, user.sector, user.isFollowingCompany, jobToFetchBestApplicants, followsCompanies]);
 
    // function to handle opening of the view dialog
    const handleOpenViewDialog = (job) =>{
@@ -146,6 +167,22 @@ export default function AppView() {
   const handleCloseViewBestApplicantsDialog = () =>{
     setJobToFetchBestApplicants(null);
     setIsViewBestApplicantsDialog(false);
+  }
+
+  const handleCloseBestApplicantsDialog = () =>{
+    setOpenBestApplicantsDialog(false);
+  }
+
+  const handleFetchBestApplicants = async(jobId) =>{
+    try {
+      const response = await axios.get(`http://localhost:5550/api/applications/bestapplicants/${jobId}`);
+      if(response.status === 200){
+        setBestApplicants(response.data);
+        setOpenBestApplicantsDialog(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   
   return (
@@ -220,6 +257,40 @@ export default function AppView() {
           ) }
         </Grid>
 
+        <Grid xs={12} md={6} lg={8}>
+        {followedCompanyJobs.length > 0 ? (
+          <AppNewsUpdate
+            title="From the companies you follow"
+            list={followedCompanyJobs}
+          />
+        ) : (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '200px',
+            backgroundColor: '#fff',
+            borderRadius: '10px',
+            padding: '20px',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+          }}>
+            <InfoRounded style={{
+              fontSize: '50px',
+              color: '#3f51b5',
+              marginBottom: '10px'
+            }} />
+            
+            <Typography variant='h4' style={{
+              textAlign: 'center',
+              color: '#333'
+            }}>
+              No jobs from the companies you follow
+            </Typography>
+          </div>
+        )}
+        </Grid>
+
         <div style={{
           display: "flex",
           flexWrap: "wrap"
@@ -227,32 +298,46 @@ export default function AppView() {
           { allJobs ? (
             allJobs.map(job=>(
               <Card sx={{
-                maxWidth: 400,
-                margin: '10px'
+                width: 400,
+                margin: '5px',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                padding: '8px',
+                backgroundColor: '#fff'
               }}>
                 <CardContent>
-                  <Typography variant='h5' component='div'>
+                  <Typography variant='subtitle1' component='div' sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
                     { job.title }
                   </Typography>
-                  <Typography variant='subtitle'>
-                    Posted on: { job.createdAt }
+                  <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
+                    <strong>Posted on:</strong> { format(new Date(job.createdAt), 'do MMMM yyyy')}
                   </Typography>
-                  <Typography variant='subtitle'>
-                    Application deadline: { job.applicationDeadline }
+                  <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
+                    <strong>Application deadline:</strong> { format(new Date(job.applicationDeadline), 'do MMMM yyyy')}
                   </Typography>
-                  <Typography variant='subtitle'>
-                    Job posting status: { job.status }
+                  <Typography variant='subtitle2' sx={{ marginBottom: '4px' }}>
+                    <strong>Job posting status:</strong>{' '}
+                    <span style={{ 
+                      color: job.status === 'open' ? 'green' : 'red',
+                      backgroundColor: job.status === 'closed' ? '#FFCCCC' : '#CCFFCC',
+                      padding: '4px 6px',
+                      borderRadius: '4px'
+                      
+                      }}>
+                      {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                    </span>
                   </Typography>
-                  <Typography variant='subtitle'>
-                    Number of applicants: { job.numberOfApplicants }
+                  <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
+                    <strong>Number of applicants:</strong> { job.numberOfApplicants }
                   </Typography>
                 </CardContent>
-                <div className="actions"
-                  
-                >
+                <div className="actions" style={{ textAlign: 'right', padding: '8px' }}>
                   <Button 
-                    onClick={() => handleOpenViewBestApplicantsDialog(job)}
-                    variant='contained'> 
+                    onClick={() => handleFetchBestApplicants(job._id)}
+                    variant='contained' 
+                    sx={{ backgroundColor: '#1976d2', color: '#fff' }}
+                  > 
                     View best applicants
                   </Button>
                 </div>
@@ -262,47 +347,42 @@ export default function AppView() {
             <p>Loading....</p>
           ) }
         </div>
-
-        <Grid xs={12} md={6} lg={8}>
-          { followedCompanyJobs ? (
-            <AppNewsUpdate
-              title="From the companies you follow"
-              list={followedCompanyJobs}
-            />
-          ):(
-            <div>
-                <Typography variant='h4'>No jobs from the companies you follow</Typography>
-            </div>
-          ) }
-        </Grid>
+        
 
       </Grid>
-      <Dialog
-          open={isViewBestApplicantsDialog}
-          onClose={handleCloseViewBestApplicantsDialog}
+      {/* View Best Applicants dialog */}
+        <Dialog 
+          open={openBestApplicantsDialog} 
+          onClose={handleCloseBestApplicantsDialog}
           PaperProps={{
             style:{
-              width: '1400px'
+              width: '900px'
             }
           }}
-        >
-          <DialogTitle>Best applicants</DialogTitle>
-          <DialogContent>
-            {
-              
-              bestApplicants ? (
-                bestApplicants.map(applicant=>(
-                  <div>
-                    <h4>{applicant.applicant_firstname}</h4>
-                    <p>{applicant.similarityPercentage }</p>
+          >
+          <DialogTitle>Best Applicants</DialogTitle>
+            <DialogContent>
+              {bestApplicants.length > 0 ? (
+                bestApplicants.map((applicant, index) => (
+                  <div key={index} style={{ marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      
+                      <PersonRounded style={{ marginRight: '10px', color: '#1976d2' }} />
+                      <h5 style={{ margin: '0' }}>{applicant.applicant_firstname} {applicant.applicant_lastname}</h5>
+                    </div>
+                    <p style={{ margin: '5px 0 0 0' }}>{applicant.email}</p>
+                    <p style={{ margin: '5px 0 0 0', fontWeight: 'bold' }}>{applicant.similarityPercentage.toFixed(2)}%</p>
                   </div>
                 ))
-              ):(
-                <p>Loading content...</p>
-              )
-            }
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <ErrorOutlineRounded style={{ marginRight: '10px', color: 'red' }} />
+                  <p style={{ margin: 0 }}>No best applicants found.</p>
+                </div>
+              )}
           </DialogContent>
         </Dialog>
+
       <Dialog
           open={isViewDialogOpen}
           onClose={handleCloseViewDialog}

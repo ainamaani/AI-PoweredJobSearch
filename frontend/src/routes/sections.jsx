@@ -6,6 +6,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const LandingPage = lazy(() => import('src/pages/landing'));
+export const WelcomePage = lazy(() => import('src/pages/welcome-page'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
@@ -40,6 +41,14 @@ export default function Router() {
       element: (
         <Suspense fallback={<div>Loading...</div>}>
           <LandingPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: '/welcome',
+      element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <WelcomePage />
         </Suspense>
       ),
     },

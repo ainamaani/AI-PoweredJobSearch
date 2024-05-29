@@ -71,7 +71,10 @@ const fetchCompanyJobs : any = async(req: Request, res: Response) => {
             }
         }
 
-        console.log(followedCompanies);
+        // Step 4: If there are no followed companies, return an empty array
+        if (followedCompanies.length === 0) {
+            return res.status(404).json({ message: "User is not following any companies" });
+        }
 
         // Step 4: Fetch jobs posted by followed companies
         const jobs = await Job.find({ company: { $in: followedCompanies } });
@@ -87,9 +90,30 @@ const fetchCompanyJobs : any = async(req: Request, res: Response) => {
     }
 };
 
+const handleFollowsCompanyCheck = async(req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    try {
+        // Check if the user is following any company
+        const companies = await Company.find({ followers: userId });
+
+        console.log(companies);
+
+        // Determine if user is following any company
+        const isFollowingCompany = companies.length > 0;
+
+        // return the token to indicate authentication and other credentials neccessary.
+        return res.status(200).json({"message":"User follows companies"});
+
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
 export default {
     fetchCompanies,
     followCompany,
     unfollowCompany,
-    fetchCompanyJobs
+    fetchCompanyJobs,
+    handleFollowsCompanyCheck
 }

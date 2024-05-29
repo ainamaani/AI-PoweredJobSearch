@@ -180,7 +180,6 @@ const selectBestApplicants = async (req :Request, res :Response) => {
        
       // Get the job details
       const job = await Job.findById(id);
-      console.log(job);
   
       if (!job) {
         return res.status(400).json({ error: "Couldn't find the job" })
@@ -198,10 +197,16 @@ const selectBestApplicants = async (req :Request, res :Response) => {
         const intersection = applicantSkills.filter(skill => jobRequiredSkills.includes(skill));
         const union = [...new Set([...applicantSkills, ...jobRequiredSkills])];
         const similarityScore = intersection.length / union.length;
+
+        
+        console.log(application.applicant);
+        
   
         return {
           applicant: application.applicant,
           applicant_firstname: application.applicant.firstname,
+          applicant_lastname: application.applicant.lastname,
+          appliant_email: application.applicant.email,
           similarityScore: similarityScore,
           similarityPercentage: similarityScore * 100
         };

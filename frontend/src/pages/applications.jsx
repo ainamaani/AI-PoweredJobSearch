@@ -95,14 +95,16 @@ const JobApplications = () => {
 
     
     // pagination code
-    const handlePageChange = (newPage) =>{
+    const handlePageChange = (event, newPage) =>{
         setPage(newPage);
     }
 
-    const handleChangeRowsPage = (e) =>{
-        setRowsPerPage(parseInt(e.target.value, 10));
+    const handleChangeRowsPage = (event) =>{
         setPage(0); // Reset to the first page when changing rows per page
+        setRowsPerPage(parseInt(event.target.value, 10));
+        
     }
+
 
     const handleOpenViewDialog = (application) =>{
         setApplicationToView(application);

@@ -120,6 +120,14 @@ const AddRoadMap = () => {
 
     return ( 
         <div className="add-job">
+            <div className="app-logo" style={{
+                        position:"relative",
+                        left: "42%"
+                    }}>
+                        <img
+                        src={`${process.env.PUBLIC_URL}/assets/images/landing/applogo2.png`} alt="logo" 
+                        />
+            </div>
             <Typography variant="h4" className="add-job-head">
                 Add roadmap
             </Typography>

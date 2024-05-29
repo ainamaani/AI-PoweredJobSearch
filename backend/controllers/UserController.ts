@@ -151,8 +151,14 @@ const loginUser = async(req: Request, res: Response) =>{
             const sector = user.sector;
             const id = user._id;
 
+            // Check if the user is following any company
+            const companies = await Company.find({ followers: user._id });
+
+            // Determine if user is following any company
+            const isFollowingCompany = companies.length > 0;
+
             // return the token to indicate authentication and other credentials neccessary.
-            return res.status(200).json({ token, email, id, firstname, lastname, sector });
+            return res.status(200).json({ token, email, id, firstname, lastname, sector, isFollowingCompany });
 
         }else{
             return res.status(400).json({ error: "Invalid credentials" });

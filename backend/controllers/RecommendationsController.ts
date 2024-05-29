@@ -60,7 +60,7 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
         if (!stemmedJobCorpus || stemmedJobCorpus.length === 0) {
             // Handle the case where stemmedJobCorpus is null or empty
             console.error('Stemmed job corpus is null or empty');
-            // return res.status(400).json({ error: 'No job recommendations' });
+            return res.status(400).json({ error: 'No job recommendations' });
         }
         const jobCorpusStemmed = stemmedJobCorpus?.join(' ');
 
