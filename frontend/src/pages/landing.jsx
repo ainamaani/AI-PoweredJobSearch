@@ -20,9 +20,13 @@ const LandingPage = () => {
             <div className="container-landing" >
                 <div className="nav">
                     <div className="left">
-                        <div className="name">
+                        <div className="name" style={{
+                            alignItems: 'center'
+                        }}>
                             <span><strong>Career</strong></span>
                             <span>Connect</span>
+
+
                         </div>
                         <div className="links">
                             <ul>
@@ -59,7 +63,7 @@ const LandingPage = () => {
                         <img src={`${process.env.PUBLIC_URL}/assets/images/landing/manwithphone.png`} alt="Body" />
                     </div>
                 </div>
-                <div className="popular-section">
+                {/* <div className="popular-section">
                     <h3 className='popular-head'>Popular categories</h3>
                     <div className="popular">
                         <div className="category">
@@ -93,7 +97,7 @@ const LandingPage = () => {
                             <p>109 positions</p>
                         </div>
                         </div>
-                </div>
+                </div> */}
                 <div className="footer">
                     {/* <h3>How it works</h3>
                     <p>Explore the following steps to help you find a job easily</p>
