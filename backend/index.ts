@@ -1,3 +1,4 @@
+import express, { Request, Response, NextFunction } from "express";
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -31,7 +32,7 @@ app.get('/' , (req, res) => {
 })
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
 });
