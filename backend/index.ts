@@ -8,7 +8,7 @@ const app = express()
 
 //middleware
 app.use(cors({
-    origin: "https://ai-powered-job-search-frontend.vercel.app",
+    origin: "https://ai-powered-job-search-frontend.vercel.app/",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
