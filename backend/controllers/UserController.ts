@@ -128,7 +128,7 @@ const createToken = (_id : mongoose.Types.ObjectId) =>{
     return jwt.sign({_id}, secret, {expiresIn: '3d'})
 }
 
-const loginUser = async (req, res) => {
+const loginUser = async (req : Request, res : Response) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -172,7 +172,7 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
-    } catch (error) {
+    } catch (error : any) {
         return res.status(400).json({ error: error.message });
     }
 };

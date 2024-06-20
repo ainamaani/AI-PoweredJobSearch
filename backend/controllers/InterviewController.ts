@@ -99,7 +99,7 @@ const fetchCompanyInterviews = async(req: Request, res: Response) =>{
         } else {
             return res.status(404).json({ error: "No interviews found for the company" });
         }
-    } catch (error) {
+    } catch (error:any) {
         return res.status(400).json({ error: error.message });
     }
 }

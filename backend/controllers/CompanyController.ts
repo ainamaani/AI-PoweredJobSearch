@@ -105,7 +105,7 @@ const handleFollowsCompanyCheck = async(req: Request, res: Response) => {
         // return the token to indicate authentication and other credentials neccessary.
         return res.status(200).json({"message":"User follows companies"});
 
-    } catch (error) {
+    } catch (error : any) {
         return res.status(400).json({ error: error.message });
     }
 }
