@@ -15,7 +15,7 @@ const LearningRoadmaps = () => {
     useEffect(()=>{
         const handleFetchLearningRoadMaps = async() => {
             try {
-                const roadmaps = await axios.get(`http://localhost:5550/api/roadmaps/`);
+                const roadmaps = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/roadmaps/`);
                 if(roadmaps.status === 200){
                     console.log(roadmaps.data);
                     setLearningRoadmaps(roadmaps.data);
@@ -95,7 +95,7 @@ const LearningRoadmaps = () => {
                                                 <CardHeader 
                                                     avatar={
                                                         <Avatar alt="front pic" 
-                                                            src={`http://localhost:5550/${roadmap.roleFrontImage}`}
+                                                            src={`${process.env.REACT_APP_API_BASE_URL}/${roadmap.roleFrontImage}`}
                                                         />
                                                     }
                                                     action={
@@ -109,7 +109,7 @@ const LearningRoadmaps = () => {
                                                 <CardMedia 
                                                     component="img"
                                                     height="194"
-                                                    image={`http://localhost:5550/${roadmap.roleBackgroundImage}`}
+                                                    image={`${process.env.REACT_APP_API_BASE_URL}/${roadmap.roleBackgroundImage}`}
                                                     alt="background-img"
                                                 />
                                                 <CardContent>

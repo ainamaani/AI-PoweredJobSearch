@@ -35,11 +35,11 @@ const InterviewsScheduled = () => {
             try {
                 let response;
                 if (user.userCategory === 'Admin') {
-                    response = await axios.get('http://localhost:5550/api/interviews/');
+                    response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/`);
                 } else if (user.userCategory === 'Job seeker') {
-                    response = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
+                    response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/user/${user.id}`);
                 } else if (user.userCategory === 'Recruiter') {
-                    response = await axios.get(`http://localhost:5550/api/interviews/company/${user.company}`);
+                    response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/company/${user.company}`);
                 }
 
                 if (response.status === 200) {
@@ -77,7 +77,7 @@ const InterviewsScheduled = () => {
     // function to handle cancel interview
     const handleCancelInterview = async() =>{
         try {
-            const response = await axios.get(`http://localhost:5550/api/interviews/cancel/${interviewToCancel._id}`)
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/cancel/${interviewToCancel._id}`)
             if(response.status === 200){
                 handleCloseRejectInterviewDialog();
                 // reload the page to capture changes
@@ -103,7 +103,7 @@ const InterviewsScheduled = () => {
     // function to handle done interview
     const handleDoneInterview = async() => {
         try {
-            const response = await axios.get(`http://localhost:5550/api/interviews/done/${interviewDone._id}`)
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/done/${interviewDone._id}`)
             if(response.status === 200){
                 handleCloseInterviewDoneDialog();
                 window.location.reload();
@@ -119,7 +119,7 @@ const InterviewsScheduled = () => {
         setIsRescheduleInterviewDialog(true);
 
         try {
-            const response = await axios.get(`http://localhost:5550/api/interviews/${interview._id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/${interview._id}`);
             if(response.status === 200){
                 setInitialInterviewDetails(response.data);
                 setNewInterviewDate(response.data.interviewDate);
@@ -148,7 +148,7 @@ const InterviewsScheduled = () => {
             changedFields.interviewTime = newInterviewTime;
         }
         try {
-            const response = await axios.patch(`http://localhost:5550/api/interviews/reschedule/${interviewToReschedule._id}`,
+            const response = await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/reschedule/${interviewToReschedule._id}`,
                                     JSON.stringify(changedFields),{
                                         headers:{
                                             'Content-Type':'application/json'

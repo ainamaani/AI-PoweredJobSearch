@@ -89,7 +89,7 @@ const Register = () => {
         try {
             setLoading(true);
 
-            const registeruser = await axios.post('http://localhost:5550/api/user/register',
+            const registeruser = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/user/register`,
                                                 formData,{
                                                     headers:{
                                                         'Content-Type':'multipart/form-data'

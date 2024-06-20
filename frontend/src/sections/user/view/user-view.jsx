@@ -71,7 +71,7 @@ export default function UserPage() {
   useEffect(()=>{
     const fetchJobs = async() =>{
       try {
-        const jobList = await axios.get('http://localhost:5550/api/jobs/')
+        const jobList = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/jobs/`)
         if(jobList.status === 200){
           setJobs(jobList.data);
         }

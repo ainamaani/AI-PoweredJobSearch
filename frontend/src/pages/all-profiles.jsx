@@ -34,7 +34,7 @@ const Allprofiles = () => {
     useEffect(()=>{
         const fetchAllProfiles = async() =>{
             try {
-                const allprofiles = await axios.get('http://localhost:5550/api/profiles/');
+                const allprofiles = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/profiles/`);
                 if(allprofiles.status === 200){
                     setProfiles(allprofiles.data)
                 }
@@ -76,7 +76,7 @@ const Allprofiles = () => {
 
     const handleDownloadProfileResume = async(profileId, firstname, lastname) =>{
         try {
-            const downloadresume = await axios.get(`http://localhost:5550/api/profiles/downloadresume/${profileId}`, {responseType: 'blob'});
+            const downloadresume = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/profiles/downloadresume/${profileId}`, {responseType: 'blob'});
             if(downloadresume.status === 200){
                 const blob = new Blob([downloadresume.data], {type: 'application/pdf'})
                 saveAs(blob, `${firstname} ${lastname} resume.pdf` )
@@ -111,7 +111,7 @@ const Allprofiles = () => {
                                 alt={profile.firstname}
                                 height="100"
                                 width="100"
-                                image={`http://localhost:5550/${profile.profilePic}`}
+                                image={`${process.env.REACT_APP_API_BASE_URL}/${profile.profilePic}`}
                                 style={{ objectFit: "cover", 
                                 borderRadius: '50%', 
                                 width: '100px', 

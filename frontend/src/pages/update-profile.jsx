@@ -69,7 +69,7 @@ const UpdateProfile = () => {
     useEffect(()=>{
       const fetchInitialDetails = async() =>{
         try {
-          const initialdata = await axios.get(`http://localhost:5550/api/profiles/profile/${id}`);
+          const initialdata = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/profiles/profile/${id}`);
           if(initialdata.status === 200){
             const userdata = initialdata.data;
             setInitialProfileDetails(userdata);
@@ -134,7 +134,7 @@ const UpdateProfile = () => {
         try {
             setLoading(false);
 
-            const updatedProfile = await axios.patch(`http://localhost:5550/api/profiles/updateprofile/${user.id}`,
+            const updatedProfile = await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/api/profiles/updateprofile/${user.id}`,
                                                    formData,{
                                                     headers:{
                                                       'Content-Type':'multipart/form-data'

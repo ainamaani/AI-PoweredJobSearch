@@ -15,7 +15,7 @@ const SingleRoadMap = () => {
     useEffect(()=>{
         const fetchSingleRoadMap = async() => {
             try {
-                const response = await axios.get(`http://localhost:5550/api/roadmaps/roadmap/${id}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/roadmaps/roadmap/${id}`);
                 if(response.status === 200){
                     setSingleRoadMap(response.data);
                 }
@@ -48,7 +48,7 @@ const SingleRoadMap = () => {
                         <Avatar alt="front-image" style={{
                             marginBottom:"20px"
                         }}
-                            src={`http://localhost:5550/${singleRoadMap.roleFrontImage}`}
+                            src={`${process.env.REACT_APP_API_BASE_URL}/${singleRoadMap.roleFrontImage}`}
                         />
                         <Typography variant="h5">
                             {singleRoadMap.role}

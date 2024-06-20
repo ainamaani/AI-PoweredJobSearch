@@ -12,7 +12,7 @@ const ProfileCategories = () => {
     useEffect(()=>{
         const fetchProfileCategories = async () =>{
             try {
-                const response = await axios.get('http://localhost:5550/api/profiles/categories')
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/profiles/categories`)
                 if(response.status === 200){
                     setCategories(response.data)
                 }

@@ -69,7 +69,7 @@ const JobApplication = () => {
 
         try {
             setLoading(true);
-            const jobapplication = await axios.post('http://localhost:5550/api/applications/apply',
+            const jobapplication = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/applications/apply`,
                                             formData,{
                                                 headers:{
                                                    'Content-Type':'multipart/form-data' 

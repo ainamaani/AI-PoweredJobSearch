@@ -16,7 +16,7 @@ const Companies = () => {
     useEffect(()=>{
         const fetchCompanies = async() =>{
             try {
-                const response = await axios.get('http://localhost:5550/api/companies/');
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/companies/`);
                 if(response.status === 200){
                     setCompanies(response.data);
                 }
@@ -52,7 +52,7 @@ const Companies = () => {
     const handleFollowCompany = async(companyId) =>{
         try {
             setLoading(true);
-            const response = await axios.post(`http://localhost:5550/api/companies/follow/${companyId}`,
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/companies/follow/${companyId}`,
                                     JSON.stringify({userId: user.id}),{
                                         headers:{
                                             'Content-Type':'application/json'
@@ -77,7 +77,7 @@ const Companies = () => {
     const handleUnfollowCompany = async(companyId) => {
         try {
             setLoading(true);
-            const response = await axios.post(`http://localhost:5550/api/companies/unfollow/${companyId}`,
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/companies/unfollow/${companyId}`,
                                     JSON.stringify({ userId : user.id}),{
                                         headers:{
                                             'Content-Type':'application/json'
@@ -156,7 +156,7 @@ const Companies = () => {
                                 alt={company.company}
                                 height="100"
                                 width="100"
-                                image={`http://localhost:5550/${company.companyLogo}`}
+                                image={`${process.env.REACT_APP_API_BASE_URL}/${company.companyLogo}`}
                                 style={{ objectFit: "cover", 
                                 borderRadius: '50%', 
                                 width: '100px', 

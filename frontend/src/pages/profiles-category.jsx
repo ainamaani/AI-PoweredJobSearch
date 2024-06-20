@@ -34,7 +34,7 @@ const ProfilesCategory = () => {
     useEffect(()=>{
         const fetchCategoryProfiles = async() =>{
             try {
-                const categoryprofilesfetched = await axios.get(`http://localhost:5550/api/profiles/${category}`)
+                const categoryprofilesfetched = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/profiles/${category}`)
                 if(categoryprofilesfetched.status === 200){
                     setCategoryProfiles(categoryprofilesfetched.data);
                 }
@@ -75,7 +75,7 @@ const ProfilesCategory = () => {
 
     const handleDownloadProfileResume = async(profileId, firstname, lastname) =>{
         try {
-            const downloadresume = await axios.get(`http://localhost:5550/api/profiles/downloadresume/${profileId}`, {responseType: 'blob'});
+            const downloadresume = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/profiles/downloadresume/${profileId}`, {responseType: 'blob'});
             if(downloadresume.status === 200){
                 const blob = new Blob([downloadresume.data], {type: 'application/pdf'})
                 saveAs(blob, `${firstname}  ${lastname} resume.pdf` )
@@ -110,7 +110,7 @@ const ProfilesCategory = () => {
                                 alt={profile.firstname}
                                 height="100"
                                 width="100"
-                                image={`http://localhost:5550/${profile.profilePic}`}
+                                image={`${process.env.REACT_APP_API_BASE_URL}/${profile.profilePic}`}
                                 style={{ objectFit: "cover", 
                                 borderRadius: '50%', 
                                 width: '100px', 

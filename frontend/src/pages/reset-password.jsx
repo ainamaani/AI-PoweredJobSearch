@@ -27,7 +27,7 @@ const ResetPassword = () => {
         setEmailError('');
         try {
             setEmailLoading(true);
-            const confirmEmail = await axios.post('http://localhost:5550/api/reset/code',
+            const confirmEmail = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/reset/code`,
                                                 JSON.stringify({ email }),{
                                                     headers:{
                                                         'Content-Type':'application/json'
@@ -60,7 +60,7 @@ const ResetPassword = () => {
         e.preventDefault();
         try {
             setResetLoading(true);
-            const resetpword = await axios.post('http://localhost:5550/api/reset/forgotpassword',
+            const resetpword = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/reset/forgotpassword`,
                                         JSON.stringify({ email, passwordResetCode, newPassword }),{
                                             headers:{
                                                'Content-Type':'application/json' 

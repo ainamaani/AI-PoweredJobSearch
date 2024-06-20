@@ -74,11 +74,11 @@ const JobApplications = () => {
             try {
                 let response;
                 if (user.userCategory === 'Admin') {
-                    response = await axios.get('http://localhost:5550/api/applications/');
+                    response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/`);
                 } else if (user.userCategory === 'Job seeker') {
-                    response = await axios.get(`http://localhost:5550/api/applications/user/${user.id}`);
+                    response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/user/${user.id}`);
                 } else if (user.userCategory === 'Recruiter') {
-                    response = await axios.get(`http://localhost:5550/api/applications/company/${user.company}`);
+                    response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/company/${user.company}`);
                 }
 
                 if (response.status === 200) {
@@ -159,7 +159,7 @@ const JobApplications = () => {
 
     const handleDeclineApplication = async() =>{
         try {
-            const response = await axios.get(`http://localhost:5550/api/applications/decline/${applicationToDecline._id}`)
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/decline/${applicationToDecline._id}`)
             if(response.status === 200){
                 console.log("Rejected successfully", response.data);
                 handleCreateNotification(
@@ -194,7 +194,7 @@ const JobApplications = () => {
         try {
             setErrors({});
             setError('');
-            const response = await axios.post("http://localhost:5550/api/interviews/schedule",
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/schedule`,
                                     JSON.stringify(interviewScheduleDetails),{
                                         headers:{
                                             'Content-Type':'application/json'
@@ -231,7 +231,7 @@ const JobApplications = () => {
 
     const handleResumeDownload = async(applicationId,applicantFirstName,applicantLastName,jobAppliedFor) =>{
         try {
-            const downloadresume = await axios.get(`http://localhost:5550/api/applications/downloadresume/${applicationId}`,{responseType: 'blob'})
+            const downloadresume = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/downloadresume/${applicationId}`,{responseType: 'blob'})
             if(downloadresume.status === 200){
                 const blob = new Blob([downloadresume.data],{type: 'application.pdf'});
                 saveAs(blob, `${applicantFirstName} ${applicantLastName} applicant for ${jobAppliedFor} resume.pdf`)
@@ -243,7 +243,7 @@ const JobApplications = () => {
 
     const handleApplicationLetterDownload = async(applicationId,applicantFirstName,applicantLastName,jobAppliedFor) =>{
         try {
-            const downloadapplicationletter = await axios.get(`http://localhost:5550/api/applications/downloadapplicationletter/${applicationId}`,{responseType: 'blob'})
+            const downloadapplicationletter = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/downloadapplicationletter/${applicationId}`,{responseType: 'blob'})
             if(downloadapplicationletter.status === 200){
                 const blob = new Blob([downloadapplicationletter.data],{type: 'application.pdf'});
                 saveAs(blob, `${applicantFirstName} ${applicantLastName} ${jobAppliedFor} application letter.pdf`)

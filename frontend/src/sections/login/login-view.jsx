@@ -56,7 +56,7 @@ export default function LoginView() {
 
       const loginData = { email,password }
 
-      const loginuser = await axios.post('http://localhost:5550/api/user/login',
+      const loginuser = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/user/login`,
                               JSON.stringify(loginData),{
                                 headers:{
                                   'Content-Type':'application/json'

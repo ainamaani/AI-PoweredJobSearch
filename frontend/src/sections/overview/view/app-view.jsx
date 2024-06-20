@@ -72,11 +72,11 @@ export default function AppView() {
           try {
             let response;
             if (user.userCategory === 'Admin') {
-                response = await axios.get('http://localhost:5550/api/jobs/');
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/jobs/`);
             } else if (user.userCategory === 'Job seeker') {
-                response = await axios.get(`http://localhost:5550/api/jobs/`);
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/jobs/`);
             } else if (user.userCategory === 'Recruiter') {
-                response = await axios.get(`http://localhost:5550/api/jobs/company/${user.company}`);
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/jobs/company/${user.company}`);
             }
 
             if (response.status === 200) {
@@ -86,22 +86,18 @@ export default function AppView() {
         } catch (fetcherror) {
             console.error(fetcherror);
         }
-          // const recentJobsData = await axios.get("http://localhost:5550/api/jobs/");
-          // if(recentJobsData.status === 200){
-          //   setAllJobs(recentJobsData.data);
-          //   setRecentJobs(recentJobsData.data.slice(0, 5));
-          // }
+         
         }
 
         const handleFetchUserApplications = async() =>{
           try {
             let response;
             if (user.userCategory === 'Admin') {
-                response = await axios.get('http://localhost:5550/api/applications/');
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/`);
             } else if (user.userCategory === 'Job seeker') {
-                response = await axios.get(`http://localhost:5550/api/applications/user/${user.id}`);
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/user/${user.id}`);
             } else if (user.userCategory === 'Recruiter') {
-                response = await axios.get(`http://localhost:5550/api/applications/company/${user.company}`);
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/company/${user.company}`);
             }
 
             if (response.status === 200) {
@@ -110,22 +106,18 @@ export default function AppView() {
         } catch (fetcherrorr) {
             console.error(fetcherrorr);
         }
-          // const userAppications = await axios.get(`http://localhost:5550/api/applications/user/${user.id}`);
-          // if(userAppications.status === 200){
-          //   console.log(userAppications);
-          //   setAllUserApplications(userAppications.data);
-          // }
+        
         }
 
         const handleFetchUserInterviews = async() =>{
           try {
             let response;
             if (user.userCategory === 'Admin') {
-                response = await axios.get('http://localhost:5550/api/interviews/');
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/`);
             } else if (user.userCategory === 'Job seeker') {
-                response = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/user/${user.id}`);
             } else if (user.userCategory === 'Recruiter') {
-                response = await axios.get(`http://localhost:5550/api/interviews/company/${user.company}`);
+                response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/interviews/company/${user.company}`);
             }
 
             if (response.status === 200) {
@@ -135,15 +127,11 @@ export default function AppView() {
             console.error(fetcherrorrr);
         }
 
-          // const userInterviews = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
-          // if(userInterviews.status === 200){
-          //   setAllUserInterviews(userInterviews.data);
-          // }
         }
 
         const handleFetchRecommendedJobs = async() =>{
           try {
-            const recommended = await axios.get(`http://localhost:5550/api/recommendations/${user.sector}`);
+            const recommended = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/recommendations/${user.sector}`);
             if(recommended.status === 200){
               console.log(recommended.data);
               setRecommendedJobs(recommended.data);
@@ -155,7 +143,7 @@ export default function AppView() {
 
         const handleFollowsCompaniesCheck = async() =>{
           try {
-            const response = await axios.post('http://localhost:5550/api/companies/checkfollow',
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/companies/checkfollow`,
               JSON.stringify({ userId : user.id }),{
                 headers:{
                   'Content-Type':'application/json'
@@ -176,7 +164,7 @@ export default function AppView() {
 
         const handleFetchFollowedCompanyJobs = async() => {
           try {
-            const response = await axios.post('http://localhost:5550/api/companies/company/jobs',
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/companies/company/jobs`,
               JSON.stringify({ userId : user.id }),{
                 headers:{
                   'Content-Type':'application/json'
@@ -193,7 +181,7 @@ export default function AppView() {
 
         const handleFetchCompanyJobs = async() => {
           try {
-            const response = await axios.get(`http://localhost:5550/api/jobs/company/${user.company}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/jobs/company/${user.company}`);
             if(response.status === 200){
               setCompanyJobs(response.data);
             }else{
@@ -262,7 +250,7 @@ export default function AppView() {
 
   const handleFetchBestApplicants = async(jobId) =>{
     try {
-      const response = await axios.get(`http://localhost:5550/api/applications/bestapplicants/${jobId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/bestapplicants/${jobId}`);
       if(response.status === 200){
         setBestApplicants(response.data);
         setOpenBestApplicantsDialog(true);

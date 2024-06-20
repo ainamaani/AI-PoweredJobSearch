@@ -21,7 +21,7 @@ const ChangeUserDetails = () => {
         event.preventDefault();
         try {
             setLoading(true);
-            const response = await axios.post(`http://localhost:5550/api/user/changepassword/${user.id}`,
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/user/changepassword/${user.id}`,
                                     JSON.stringify({ currentPassword, newPassword }),{
                                         headers:{
                                             'Content-Type':'application/json'
