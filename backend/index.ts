@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import path from "path";
-import { loginUser } from "./controllers/UserController";
+import loginUser from "./controllers/UserController";
 
 import database from "./config/database";
 import apiRoutes from "./routes/api";
