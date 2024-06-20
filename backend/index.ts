@@ -15,8 +15,13 @@ app.use((req, res, next) => {
     next()
 });
 
+
 //configure routes
 apiRoutes(app);
 
 // configure database and run the server 
 database(app);
+
+app.get('/' , (req, res) => {
+    res.json("Successfully deployed");
+})
