@@ -61,7 +61,7 @@ const fetchSingleJob = async(req: Request, res: Response) =>{
     }
 }
 
-const fetchCompanyJobs = async(req: Request, res: Response){
+const fetchCompanyJobs = async(req: Request, res: Response) =>{
     const { company } = req.params;
     console.log(company);
 

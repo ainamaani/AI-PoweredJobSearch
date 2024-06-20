@@ -91,7 +91,7 @@ const expandUserInput = (input: string) => {
         "Management": ["manager", "supervisor", "administrator"],
         "Analysis": ["analyst", "analytics", "researcher"],
         "Design": ["designer", "graphic", "creative"],
-        "Marketing": ["advertising","sales" "promotion", "branding"],
+        "Marketing": ["advertising","sales", "promotion", "branding"],
         "Sales": ["selling", "business development", "account executive"],
         "Consulting": ["consultant", "advisor", "adviser"],
         "Finance": ["financial", "investment", "banking"],
@@ -129,7 +129,7 @@ const expandUserInput = (input: string) => {
         "Accounting": ["accountant", "bookkeeping", "auditor", "finance", "financial reporting", "taxation", "CPA"],
         "Monitoring and Evaluation": ["M&E officer","monitoring and evaluation officer", "evaluation", "impact assessment", "program evaluation", "project monitoring"],
         "Statistics": ["statistical analyst", "data analyst", "quantitative analyst", "biostatistician", "econometrician", "statistician"],
-        "Machine Learning": ["ML engineer","machine learning engineer", "ML" "machine intelligence", "supervised learning", "unsupervised learning", "reinforcement learning", "deep learning", "neural networks"],
+        "Machine Learning": ["ML engineer","machine learning engineer", "ML" ,"machine intelligence", "supervised learning", "unsupervised learning", "reinforcement learning", "deep learning", "neural networks"],
         "Artificial Intelligence": [ "AI", "intelligent systems", "machine intelligence", "deep learning", "neural networks", "robotics", "natural language processing"]
     };
 
