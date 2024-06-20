@@ -30,22 +30,6 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
              return expandedUserInput.some((keyword : any) => jobTitleKeywords.includes(keyword));
          });
 
-        // Get the absolute paths of the files using 'path.join'
-        // const tfidfVectorizerPath = path.join('backend\\files\\tfidf_vectorizer.json');
-        // const tfidfMatrixPath = path.join('backend\\files\\tfidf_matrix.json');
-        // const cosineSimPath = path.join('backend\\files\\cosine_similarity_matrix.json');
-
-        // const tfidfVectorizerPath = path.join(__dirname, 'algorithm', 'tfidf_vectorizer.json');
-        // const tfidfMatrixPath = path.join('C:\\Users\\USER\\Desktop\\AI-PoweredJobSearch\\backend\\files\\tfidf_matrix.json');
-        // const cosineSimPath = path.join('C:\\Users\\USER\\Desktop\\AI-PoweredJobSearch\\backend\\files\\cosine_similarity_matrix.json');
-
-        // console.log(tfidfVectorizerPath);
-
-
-        // Load data in Node.js
-        // const tfidfVectorizerParams = JSON.parse(fs.readFileSync(tfidfVectorizerPath, 'utf-8'));
-        // const tfidfMatrix = JSON.parse(fs.readFileSync(tfidfMatrixPath, 'utf-8'));
-        // const cosineSim = JSON.parse(fs.readFileSync(cosineSimPath, 'utf-8'));
 
         const tfidfMatrix : any = tfidfMatrixJson;
 
@@ -60,7 +44,7 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
         if (!stemmedJobCorpus || stemmedJobCorpus.length === 0) {
             // Handle the case where stemmedJobCorpus is null or empty
             console.error('Stemmed job corpus is null or empty');
-            return res.status(400).json({ error: 'No job recommendations' });
+            return res.status(200).json([]);
         }
         const jobCorpusStemmed = stemmedJobCorpus?.join(' ');
 
@@ -101,12 +85,52 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
 
 // Function to expand user input with synonyms or related terms
 const expandUserInput = (input: string) => {
-    // Your implementation to expand the input using synonyms or related terms
-    // You can use external APIs, databases, or libraries for synonym lookup
-    // For demonstration purposes, let's say you have a simple mapping of terms
     const synonymMapping: { [key: string]: string[] } = {
-        "development": ["developer", "software", "engineering"],
-        // Add more mappings as needed
+        "Software Development": ["developer", "software", "programming", "coding"],
+        "Engineering": ["engineer", "engineered", "technician"],
+        "Management": ["manager", "supervisor", "administrator"],
+        "Analysis": ["analyst", "analytics", "researcher"],
+        "Design": ["designer", "graphic", "creative"],
+        "Marketing": ["advertising","sales" "promotion", "branding"],
+        "Sales": ["selling", "business development", "account executive"],
+        "Consulting": ["consultant", "advisor", "adviser"],
+        "Finance": ["financial", "investment", "banking"],
+        "Healthcare": ["health", "medical", "nursing", "nurse", "doctor", "medicine"],
+        "Education": ["teaching", "instructor", "training"],
+        "Support": ["assistance", "help", "customer service"],
+        "Analytics": ["data", "big data", "database"],
+        "Networking": ["network", "infrastructure", "system"],
+        "Cybersecurity": ["security", "protection", "safety"],
+        "Operations": ["operation", "logistics", "supply chain"],
+        "Law": ["legal", "attorney", "paralegal"],
+        "Human Resource": ["human resources","hr", "recruitment", "talent acquisition"],
+        "Product Management": ["product", "product development", "product marketing"],
+        "Project Management": ["project", "project planning", "project coordination"],
+        "Research": ["researcher", "scientist", "investigator"],
+        "Writing": ["writer", "copywriter", "author"],
+        "Content Creation": ["content", "content development", "content management"],
+        "Journalism": ["multimedia", "broadcasting", "media"],
+        "Administration": ["administrative", "admin", "office management"],
+        "Executive": ["executive officer", "executive director", "chief"],
+        "Quality Assuarance": ["quality", "quality control", "QA"],
+        "Construction Management": ["builder", "contractor", "construction"],
+        "Manufacturing": ["production", "assembly", "fabrication"],
+        "Transportation": ["logistics", "driver", "distribution", "supply chain"],
+        "Strategic Planning": ["strategy", "business strategy", "corporate strategy"],
+        "Art": ["creative", "design", "innovation"],
+        "Public Relations": ["social media", "community management", "social media"],
+        "Training": ["learning", "development", "education"],
+        "Information Technology": ["IT", "tech", "software","network", "infrastructure", "system","networking"],
+        "Innovation": ["creativity", "new ideas", "invention"],
+        "Leadership": ["leading", "guiding", "direction"],
+        "Business": ["enterprise", "corporate", "commercial"],
+        "NGO": ["charity", "non-profit", "non-governmental organization"],
+        "Tourism": ["travel", "hospitality", "tour guide", "tour operator", "tourist", "vacation", "leisure", "recreation"],
+        "Accounting": ["accountant", "bookkeeping", "auditor", "finance", "financial reporting", "taxation", "CPA"],
+        "Monitoring and Evaluation": ["M&E officer","monitoring and evaluation officer", "evaluation", "impact assessment", "program evaluation", "project monitoring"],
+        "Statistics": ["statistical analyst", "data analyst", "quantitative analyst", "biostatistician", "econometrician", "statistician"],
+        "Machine Learning": ["ML engineer","machine learning engineer", "ML" "machine intelligence", "supervised learning", "unsupervised learning", "reinforcement learning", "deep learning", "neural networks"],
+        "Artificial Intelligence": [ "AI", "intelligent systems", "machine intelligence", "deep learning", "neural networks", "robotics", "natural language processing"]
     };
 
     const expandedTerms = input.split(' ').flatMap(term => {
@@ -130,7 +154,6 @@ const calculateTfidfVector = (input: string, tfidfVectorizerParams: any) => {
     const tokenizer = new natural.WordTokenizer();
     const tokens = tokenizer.tokenize(input);
 
-    // Check if userInput exists
    
 
     // Stem tokens using Porter Stemmer

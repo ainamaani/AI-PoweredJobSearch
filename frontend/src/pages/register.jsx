@@ -229,27 +229,58 @@ const Register = () => {
                         >
                             <MenuItem value="" disabled>Select a sector</MenuItem>
                             <MenuItem value="Accounting">Accounting</MenuItem>
+                            <MenuItem value="Administration">Administration</MenuItem>
                             <MenuItem value="Agriculture">Agriculture</MenuItem>
-                            <MenuItem value="Architecture">Architecture</MenuItem>
-                            <MenuItem value="Arts and Entertainment">Arts and Entertainment</MenuItem>
-                            <MenuItem value="Business and Management">Business and Management</MenuItem>
+                            <MenuItem value="Analysis">Analysis</MenuItem>
+                            <MenuItem value="Analytics">Analytics</MenuItem>
+                            <MenuItem value="Art">Art</MenuItem>
+                            <MenuItem value="Artificial Intelligence">Artificial Intelligence</MenuItem>
+                            <MenuItem value="Business">Business</MenuItem>
                             <MenuItem value="Construction">Construction</MenuItem>
+                            <MenuItem value="Consulting">Consulting</MenuItem>
+                            <MenuItem value="Content Creation">Content Creation</MenuItem>
+                            <MenuItem value="Cybersecurity">Cybersecurity</MenuItem>
+                            <MenuItem value="Design">Design</MenuItem>
                             <MenuItem value="Education">Education</MenuItem>
                             <MenuItem value="Engineering">Engineering</MenuItem>
+                            <MenuItem value="Executive">Executive</MenuItem>
                             <MenuItem value="Finance">Finance</MenuItem>
                             <MenuItem value="Healthcare">Healthcare</MenuItem>
+                            <MenuItem value="Human Resource">Human Resource</MenuItem>
                             <MenuItem value="Information Technology">Information Technology</MenuItem>
-                            <MenuItem value="Software Development">Software Development</MenuItem>
+                            <MenuItem value="Innovation">Innovation</MenuItem>
+                            <MenuItem value="Journalism">Journalism</MenuItem>
+                            <MenuItem value="Law">Law</MenuItem>
+                            <MenuItem value="Leadership">Leadership</MenuItem>
                             <MenuItem value="Legal">Legal</MenuItem>
+                            <MenuItem value="Logistics">Logistics</MenuItem>
+                            <MenuItem value="Machine Learning">Machine Learning</MenuItem>
+                            <MenuItem value="Management">Management</MenuItem>
                             <MenuItem value="Manufacturing">Manufacturing</MenuItem>
-                            <MenuItem value="Marketing and Sales">Marketing and Sales</MenuItem>
-                            <MenuItem value="Media and Communications">Media and Communications</MenuItem>
+                            <MenuItem value="Marketing">Marketing</MenuItem>
+                            <MenuItem value="Monitoring and Evaluation">Monitoring and Evaluation</MenuItem>
+                            <MenuItem value="Networking">Networking</MenuItem>
+                            <MenuItem value="NGO">NGO</MenuItem>
                             <MenuItem value="Nonprofit">Nonprofit</MenuItem>
+                            <MenuItem value="Operations">Operations</MenuItem>
+                            <MenuItem value="Product Management">Product Management</MenuItem>
+                            <MenuItem value="Project Management">Project Management</MenuItem>
+                            <MenuItem value="Public Relations">Public Relations</MenuItem>
+                            <MenuItem value="Quality Assurance">Quality Assurance</MenuItem>
                             <MenuItem value="Real Estate">Real Estate</MenuItem>
+                            <MenuItem value="Research">Research</MenuItem>
+                            <MenuItem value="Sales">Sales</MenuItem>
                             <MenuItem value="Science">Science</MenuItem>
                             <MenuItem value="Social Services">Social Services</MenuItem>
-                            <MenuItem value="Transportation">Transportation</MenuItem>
+                            <MenuItem value="Software Development">Software Development</MenuItem>
+                            <MenuItem value="Statistics">Statistics</MenuItem>
+                            <MenuItem value="Strategic Planning">Strategic Planning</MenuItem>
+                            <MenuItem value="Support">Support</MenuItem>
+                            <MenuItem value="Information Technology">Information Technology</MenuItem>
                             <MenuItem value="Tourism">Tourism</MenuItem>
+                            <MenuItem value="Transportation">Transportation</MenuItem>
+                            <MenuItem value="Writing">Writing</MenuItem>
+
                         </Select>
                     </FormControl>
                     { errors.sector && (
@@ -375,7 +406,7 @@ const Register = () => {
                                 variant="outlined"
                                 required fullWidth
                                 InputLabelProps={{ shrink: true }}
-                                inputProps={{ accept: ".jpeg,.jgp,.png" }}
+                                inputProps={{ accept: ".jpeg,.jpg,.png" }}
                                 sx={{ width: 600 }}
                                 type="file"
                                 onChange={(e)=> {setCompanyLogo(e.target.files[0])}}   

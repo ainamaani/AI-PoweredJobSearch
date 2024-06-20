@@ -30,7 +30,6 @@ const ProfileSchema = new mongoose.Schema<ProfileI>({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:User,
-        required:[true, "The user for the profile is required"]
     },
     firstname:{
         type:String,

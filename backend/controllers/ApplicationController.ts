@@ -161,14 +161,38 @@ const fetchUserApplications = async(req: Request, res: Response) =>{
     const {id} = req.params;
 
     try {
-        const userApplications = await Application.find({ applicant:id });
+        const userApplications = await Application.find({ applicant:id }).populate('applicant').populate('job');
         if(userApplications){
             return res.status(200).json(userApplications);
         }else{
             return res.status(400).json({ error: "Failed to retrieve the documents" });
         }
     } catch (error: any) {
-        return res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+const fetchCompanyApplications = async(req: Request, res: Response) =>{
+    const {company} = req.params;
+    console.log(company);
+    try {
+        const applications = await Application.find({})
+            .populate({
+                path: 'job',
+                match: { company: company } // Filter jobs by company
+            })
+            .populate('applicant');
+
+        // Filter applications to include only those with matching jobs
+        const filteredApplications = applications.filter(app => app.job !== null);
+
+        if (filteredApplications.length > 0) {
+            return res.status(200).json(filteredApplications);
+        } else {
+            return res.status(404).json({ error: "No applications found for the company" });
+        }
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
     }
 }
 
@@ -241,5 +265,6 @@ export default {
     deleteApplication,
     rejectApplication,
     fetchUserApplications,
-    selectBestApplicants
+    selectBestApplicants,
+    fetchCompanyApplications
 };

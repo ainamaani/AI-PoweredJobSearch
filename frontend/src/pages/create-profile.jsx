@@ -278,7 +278,7 @@ const CreateProfile = () => {
                         variant="outlined"
                         type="file"
                         InputLabelProps={{ shrink: true }}
-                        inputProps={{ accept: ".jpeg,.jgp,.png" }}
+                        inputProps={{ accept: ".jpeg,.jpg,.png" }}
                         required fullWidth
                         sx={{ width: 800 }}
                         onChange={(e)=> { setProfilePic(e.target.files[0]) }}   

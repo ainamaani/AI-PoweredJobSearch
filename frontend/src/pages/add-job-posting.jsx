@@ -1,3 +1,4 @@
+import UseAuthContext from "src/hooks/use-auth-context";
 import { Typography,TextField,Button,RadioGroup,Radio,FormControlLabel, InputAdornment, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import React,{useState,useEffect} from 'react';
 import { styled } from "@mui/system";
@@ -5,7 +6,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
-import { AddCircleRounded, BookmarkAddRounded, BusinessRounded, CalendarMonthRounded, CardGiftcardOutlined, CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, TitleRounded, WorkRounded } from "@mui/icons-material";
+import { AddCircleRounded, BookmarkAddRounded, BusinessRounded, CalendarMonthRounded, 
+    CardGiftcardOutlined, CardGiftcardRounded, CategoryRounded, CommentRounded, 
+    ConstructionRounded, DescriptionRounded, EmailRounded, HourglassBottomRounded, 
+    InfoOutlined, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, 
+    TitleRounded, WorkRounded, InfoRounded } from "@mui/icons-material";
 
 
 // Define a styled TextField component
@@ -34,8 +39,10 @@ const StyledPageContent = styled('div')({
 
 
 const AddJobPosting = () => {
+    const {user} = UseAuthContext();
+
     const [title, setTitle] = useState('');
-    const [company, setCompany] = useState('');
+    const [company, setCompany] = useState(user.company);
     const [companyEmail, setCompanyEmail] = useState('');
     const [companyContact, setCompanyContact] = useState('');
     const [description, setDescription] = useState('');
@@ -110,7 +117,8 @@ const AddJobPosting = () => {
 
     return ( 
         <div>
-            <StyledPageContent>
+            { user.userCategory !== "Job seeker" ? (
+                <StyledPageContent>
                 <div className="add-job">
                     <div className="head">
                         <div className="heading-title" style={{
@@ -156,7 +164,8 @@ const AddJobPosting = () => {
                             label="Hiring company"
                             variant="outlined"
                             required fullWidth
-                            value={company}
+                            disabled
+                            value={user.company}
                             sx={{ width: 700 }}
                             InputProps={{
                                 startAdornment: (
@@ -459,6 +468,33 @@ const AddJobPosting = () => {
                     </form>
                 </div>
             </StyledPageContent>
+            ):(
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '200px',
+                    backgroundColor: '#fff',
+                    borderRadius: '10px',
+                    padding: '20px',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+                  }}>
+                    <InfoRounded style={{
+                      fontSize: '50px',
+                      color: '#ff1a1a',
+                      marginBottom: '10px'
+                    }} />
+                    
+                    <Typography variant='h4' style={{
+                      textAlign: 'center',
+                      color: '#333'
+                    }}>
+                      Ooops!! Register as a recruiter to be able to add job postings. Thank you!
+                    </Typography>
+                  </div>
+                  
+            ) }
         </div>
      );
 }

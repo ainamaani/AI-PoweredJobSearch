@@ -6,7 +6,7 @@ import UserRoutes from "./UserRoutes";
 import ResetRoutes from "./ResetRoutes";
 import NotificationRoutes from "./NotificationRoutes";
 import CompanyRoutes from "./CompanyRoutes";
-import RecommendationRoutes from "./RecommendationRoutes"
+import RecommendationRoutes from "./RecommendationRoutes";
 import LearningRoadMapRoutes from "./LearningRoadMapRoutes";
 
 import { Router } from "express";

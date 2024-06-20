@@ -92,13 +92,13 @@ export default function Header({ onOpenNav }) {
 
       
 
-      <Searchbar />
+      {/* <Searchbar /> */}
 
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" alignItems="center" spacing={1}>
         {/* <NotificationsPopover /> */}
-        { user && (
+        {/* { user && (
             <div style={{ display: "flex"}}>
                 <Tooltip title="View notifications">
                     <IconButton color="primary" 
@@ -110,7 +110,7 @@ export default function Header({ onOpenNav }) {
                     </IconButton>
                 </Tooltip>
             </div>
-        )}
+        )} */}
         <AccountPopover />
       </Stack>
       {/* Display Notifications */}

@@ -73,7 +73,7 @@ const fetchCompanyJobs : any = async(req: Request, res: Response) => {
 
         // Step 4: If there are no followed companies, return an empty array
         if (followedCompanies.length === 0) {
-            return res.status(404).json({ message: "User is not following any companies" });
+            return res.status(404).json([]);
         }
 
         // Step 4: Fetch jobs posted by followed companies

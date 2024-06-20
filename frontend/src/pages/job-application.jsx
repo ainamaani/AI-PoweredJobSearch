@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { LoadingButton } from "@mui/lab";
 import UseAuthContext from "src/hooks/use-auth-context";
-import { ArticleRounded, DescriptionRounded } from "@mui/icons-material";
+import { ArticleRounded, DescriptionRounded, Handyman } from "@mui/icons-material";
 
 
 // Define a styled TextField component
@@ -32,10 +32,10 @@ const JobApplication = () => {
 
     const { user } = UseAuthContext();
 
-    console.log(user);
 
     const [resume, setResume] = useState(null);
     const [applicationLetter, setApplicationLetter] = useState(null);
+    const [applicantSkills, setApplicantSkills] = useState('');
     const [jobBeingAppliedFor, setJobBeingAppliedFor] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -65,6 +65,7 @@ const JobApplication = () => {
         formData.append('job', _id)
         formData.append('resume', resume);
         formData.append('applicationLetter', applicationLetter);
+        formData.append('applicantSkills', applicantSkills);
 
         try {
             setLoading(true);
@@ -150,6 +151,21 @@ const JobApplication = () => {
                         { errors.applicationLetter && (
                                 <span style={{color:'red', textAlign:"left"}}>{errors.applicationLetter}</span>
                             )}
+
+                        <StyledTextField
+                            label="Your skills that makes you suitable for the job"
+                            variant="outlined"
+                            required fullWidth
+                            sx={{ width: 500 }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position='start'>
+                                    <Handyman />
+                                    </InputAdornment>
+                                )
+                            }}
+                            onChange={(e)=> {setApplicantSkills(e.target.value)}}   
+                        />
                         <LoadingButton
                             variant="contained"
                             type="submit"

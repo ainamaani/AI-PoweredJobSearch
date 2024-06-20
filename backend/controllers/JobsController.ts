@@ -61,6 +61,23 @@ const fetchSingleJob = async(req: Request, res: Response) =>{
     }
 }
 
+const fetchCompanyJobs = async(req: Request, res: Response){
+    const { company } = req.params;
+    console.log(company);
+
+    try {
+        const companyJobs = await Job.find({ company:company });
+        console.log("Company jobs: ", companyJobs);
+
+        if(companyJobs){
+            return res.status(200).json(companyJobs);
+        }else{
+            return res.status(400).json({ error : "Failed to fetch company jobs" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message })
+    }
+}
 export default {
-    addNewJob,fetchJobs,fetchSingleJob
+    addNewJob,fetchJobs,fetchSingleJob,fetchCompanyJobs
 }

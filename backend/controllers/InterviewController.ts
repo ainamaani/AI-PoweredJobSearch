@@ -65,6 +65,45 @@ const getInterviews = async(req: Request, res: Response) =>{
     }
 }
 
+const getUserInterviews = async(req: Request, res: Response) => {
+    try {
+        const {userId} = req.params;
+
+        const userInterviews = await Interview.find({ applicant : userId });
+        if(userInterviews){
+            return res.status(200).json(userInterviews);
+        }else{
+            return res.status(400).json({ error: "Failed to fetch user interviews" });
+        }
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+const fetchCompanyInterviews = async(req: Request, res: Response) =>{
+    const {company} = req.params;
+    console.log(company);
+    try {
+        const interviews = await Interview.find({})
+            .populate({
+                path: 'job',
+                match: { company: company } // Filter jobs by company
+            })
+            .populate('applicant');
+
+        // Filter interviews to include only those with matching jobs
+        const filteredInterviews = interviews.filter(app => app.job !== null);
+
+        if (filteredInterviews.length > 0) {
+            return res.status(200).json(filteredInterviews);
+        } else {
+            return res.status(404).json({ error: "No interviews found for the company" });
+        }
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
 const getSingleInterview = async(req: Request, res: Response) =>{
     try {
         const {id} = req.params;
@@ -145,5 +184,5 @@ const fetchUserInterviews = async(req: Request, res: Response) =>{
 
 export default {
     scheduleInterview, getInterviews, cancelInterview, doneInterview, getSingleInterview,
-    rescheduleInterview, fetchUserInterviews
+    rescheduleInterview, fetchUserInterviews, fetchCompanyInterviews
 }

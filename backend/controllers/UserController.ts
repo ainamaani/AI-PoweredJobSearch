@@ -128,46 +128,55 @@ const createToken = (_id : mongoose.Types.ObjectId) =>{
     return jwt.sign({_id}, secret, {expiresIn: '3d'})
 }
 
-const loginUser = async(req: Request, res: Response) =>{
+const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if(!email || !password){
+        if (!email || !password) {
             return res.status(400).json({ error: "Both the email and password are required" });
         }
         const user = await User.findOne({ email });
-        if(!user){
+        if (!user) {
             return res.status(404).json({ error: "Invalid credentials" });
         }
 
         const storedPassword = user.password;
 
-        // compare the provided passord and the already stored hashed passwords
         const match = await bcrypt.compare(password, storedPassword);
-        if(match){
+        if (match) {
+            let company;
+            if (user.userCategory === 'Recruiter') {
+                company = await Company.findOne({ member: email });
+            }
+
             const token = createToken(user._id);
-            const email = user.email;
-            const firstname = user.firstname;
-            const lastname = user.lastname;
-            const sector = user.sector;
-            const id = user._id;
+            const userData = {
+                token,
+                email: user.email,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                sector: user.sector,
+                id: user._id,
+                userCategory: user.userCategory,
+                company: user.userCategory === 'Recruiter' ? company?.company : null,
+                isFollowingCompany: false // Adjust based on your logic
+            };
 
             // Check if the user is following any company
-            const companies = await Company.find({ followers: user._id });
+            if (user.userCategory === 'Job seeker') {
+                const companies = await Company.find({ followers: user._id });
+                userData.isFollowingCompany = companies.length > 0;
+            }
 
-            // Determine if user is following any company
-            const isFollowingCompany = companies.length > 0;
-
-            // return the token to indicate authentication and other credentials neccessary.
-            return res.status(200).json({ token, email, id, firstname, lastname, sector, isFollowingCompany });
-
-        }else{
+            return res.status(200).json(userData);
+        } else {
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
-    } catch (error: any) {
+    } catch (error) {
         return res.status(400).json({ error: error.message });
     }
-}
+};
+
 
 const fetchUsers = async(req: Request, res: Response) =>{
     try {

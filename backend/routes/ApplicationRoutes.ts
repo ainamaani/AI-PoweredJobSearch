@@ -7,7 +7,7 @@ import RequireAuth from "../middleware/RequireAuth";
 
 const { newJobApplication, jobApplications, downloadResume, 
     downloadApplicationLetter, deleteApplication, rejectApplication,
-    fetchUserApplications, selectBestApplicants
+    fetchUserApplications, selectBestApplicants, fetchCompanyApplications
     } = applicationsController;
 
 // require auth for all application routes.
@@ -17,7 +17,9 @@ router.post('/apply', upload.fields([{name: 'resume', maxCount: 1},{name: 'appli
 
 router.get('/', jobApplications);
 
-router.get('/:id', fetchUserApplications);
+router.get('/user/:id', fetchUserApplications);
+
+router.get('/company/:company', fetchCompanyApplications);
 
 router.get('/downloadresume/:id', downloadResume);
 

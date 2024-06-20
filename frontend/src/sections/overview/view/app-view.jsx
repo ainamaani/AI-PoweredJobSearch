@@ -62,68 +62,145 @@ export default function AppView() {
 
   const [openBestApplicantsDialog, setOpenBestApplicantsDialog] = useState(false);
 
+  const [companyJobs, setCompanyJobs] = useState([]);
+
 
   useEffect(()=>{
     const fetchData = async() => {
       try {
         const handleFetchRecentJobs = async() =>{
-          const recentJobsData = await axios.get("http://localhost:5550/api/jobs/");
-          if(recentJobsData.status === 200){
-            setAllJobs(recentJobsData.data);
-            setRecentJobs(recentJobsData.data.slice(0, 5));
-          }
+          try {
+            let response;
+            if (user.userCategory === 'Admin') {
+                response = await axios.get('http://localhost:5550/api/jobs/');
+            } else if (user.userCategory === 'Job seeker') {
+                response = await axios.get(`http://localhost:5550/api/jobs/`);
+            } else if (user.userCategory === 'Recruiter') {
+                response = await axios.get(`http://localhost:5550/api/jobs/company/${user.company}`);
+            }
+
+            if (response.status === 200) {
+                setAllJobs(response.data);
+                setRecentJobs(response.data.slice(0, 5));
+            }
+        } catch (fetcherror) {
+            console.error(fetcherror);
+        }
+          // const recentJobsData = await axios.get("http://localhost:5550/api/jobs/");
+          // if(recentJobsData.status === 200){
+          //   setAllJobs(recentJobsData.data);
+          //   setRecentJobs(recentJobsData.data.slice(0, 5));
+          // }
         }
 
         const handleFetchUserApplications = async() =>{
-          const userAppications = await axios.get(`http://localhost:5550/api/applications/${user.id}`);
-          if(userAppications.status === 200){
-            console.log(userAppications);
-            setAllUserApplications(userAppications.data);
-          }
+          try {
+            let response;
+            if (user.userCategory === 'Admin') {
+                response = await axios.get('http://localhost:5550/api/applications/');
+            } else if (user.userCategory === 'Job seeker') {
+                response = await axios.get(`http://localhost:5550/api/applications/user/${user.id}`);
+            } else if (user.userCategory === 'Recruiter') {
+                response = await axios.get(`http://localhost:5550/api/applications/company/${user.company}`);
+            }
+
+            if (response.status === 200) {
+                setAllUserApplications(response.data);
+            }
+        } catch (fetcherrorr) {
+            console.error(fetcherrorr);
+        }
+          // const userAppications = await axios.get(`http://localhost:5550/api/applications/user/${user.id}`);
+          // if(userAppications.status === 200){
+          //   console.log(userAppications);
+          //   setAllUserApplications(userAppications.data);
+          // }
         }
 
         const handleFetchUserInterviews = async() =>{
-          const userInterviews = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
-          if(userInterviews.status === 200){
-            setAllUserInterviews(userInterviews.data);
-          }
+          try {
+            let response;
+            if (user.userCategory === 'Admin') {
+                response = await axios.get('http://localhost:5550/api/interviews/');
+            } else if (user.userCategory === 'Job seeker') {
+                response = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
+            } else if (user.userCategory === 'Recruiter') {
+                response = await axios.get(`http://localhost:5550/api/interviews/company/${user.company}`);
+            }
+
+            if (response.status === 200) {
+                setAllUserInterviews(response.data);
+            }
+        } catch (fetcherrorrr) {
+            console.error(fetcherrorrr);
+        }
+
+          // const userInterviews = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
+          // if(userInterviews.status === 200){
+          //   setAllUserInterviews(userInterviews.data);
+          // }
         }
 
         const handleFetchRecommendedJobs = async() =>{
-          const recommended = await axios.get(`http://localhost:5550/api/recommendations/${user.sector}`);
-          if(recommended.status === 200){
-            console.log(recommended.data);
-            setRecommendedJobs(recommended.data);
+          try {
+            const recommended = await axios.get(`http://localhost:5550/api/recommendations/${user.sector}`);
+            if(recommended.status === 200){
+              console.log(recommended.data);
+              setRecommendedJobs(recommended.data);
+            }
+          } catch (error1) {
+            console.log(error1);
           }
         }
 
         const handleFollowsCompaniesCheck = async() =>{
-          const response = await axios.post('http://localhost:5550/api/companies/checkfollow',
-                                  JSON.stringify({ userId : user.id }),{
-                                    headers:{
-                                      'Content-Type':'application/json'
-                                    }
-                                  }
-          );
-          console.log(followsCompanies);
-          if(response.status === 200){
+          try {
+            const response = await axios.post('http://localhost:5550/api/companies/checkfollow',
+              JSON.stringify({ userId : user.id }),{
+                headers:{
+                  'Content-Type':'application/json'
+                }
+              }
+            );
+            console.log(followsCompanies);
+            if(response.status === 200){
             setFollowsCompanies(true);
             console.log(followsCompanies);
-          }else{
+            }else{
             setFollowsCompanies(false);
+            }
+          } catch (error2) {
+            console.log(error2);
           }
         }
 
         const handleFetchFollowedCompanyJobs = async() => {
-          const response = await axios.post('http://localhost:5550/api/companies/company/jobs',
-                                  JSON.stringify({ userId : user.id }),{
-                                    headers:{
-                                      'Content-Type':'application/json'
-                                    }
-                                  }
-          );
-          if(response.status === 200){
+          try {
+            const response = await axios.post('http://localhost:5550/api/companies/company/jobs',
+              JSON.stringify({ userId : user.id }),{
+                headers:{
+                  'Content-Type':'application/json'
+                }
+              }
+            );
+            if(response.status === 200){
             setFollowedCompanyJobs(response.data);
+            }
+          } catch (error3) {
+            console.log(error3)
+          }
+        }
+
+        const handleFetchCompanyJobs = async() => {
+          try {
+            const response = await axios.get(`http://localhost:5550/api/jobs/company/${user.company}`);
+            if(response.status === 200){
+              setCompanyJobs(response.data);
+            }else{
+              console.log(response.error);
+            }
+          } catch (error4) {
+            console.log(error4);
           }
         }
 
@@ -140,13 +217,23 @@ export default function AppView() {
       if(followsCompanies === true){
         await handleFetchFollowedCompanyJobs();
       }
+
+      if(user.userCategory === "Recruiter"){
+        handleFetchCompanyJobs()
+      }
     } catch (error) {
       console.log(error);
     }
     }
 
     fetchData();
-  },[user.id, user.sector, user.isFollowingCompany, jobToFetchBestApplicants, followsCompanies]);
+  },[user.id, user.sector, user.isFollowingCompany, jobToFetchBestApplicants,user.company, user.userCategory, followsCompanies]);
+
+
+  useEffect(()=>{
+    console.log("Recommended Jobs",recommendedJobs);
+    console.log("Followed company jobs",followedCompanyJobs);
+  },[recommendedJobs, followedCompanyJobs]);
 
    // function to handle opening of the view dialog
    const handleOpenViewDialog = (job) =>{
@@ -201,7 +288,8 @@ export default function AppView() {
             />
           ) : (
             <Typography variant='subtitle2'>No jobs found.</Typography>
-          )}
+          )
+        }
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
@@ -228,6 +316,7 @@ export default function AppView() {
         )}
         </Grid>
 
+        
 
         <Grid xs={12} md={6} lg={8}>
           { recentJobs ? (
@@ -244,110 +333,148 @@ export default function AppView() {
 
 
 
-        <Grid xs={12} md={6} lg={8}>
-          { recommendedJobs ? (
-            <AppNewsUpdate
-              title="Recommended for you"
-              list={recommendedJobs}
-            />
-          ):(
-            <div>
-                <Typography variant='h4'>No job recommendations</Typography>
-            </div>
-          ) }
-        </Grid>
-
-        <Grid xs={12} md={6} lg={8}>
-        {followedCompanyJobs.length > 0 ? (
-          <AppNewsUpdate
-            title="From the companies you follow"
-            list={followedCompanyJobs}
-          />
-        ) : (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '200px',
-            backgroundColor: '#fff',
-            borderRadius: '10px',
-            padding: '20px',
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
-          }}>
-            <InfoRounded style={{
-              fontSize: '50px',
-              color: '#3f51b5',
-              marginBottom: '10px'
-            }} />
-            
-            <Typography variant='h4' style={{
-              textAlign: 'center',
-              color: '#333'
-            }}>
-              No jobs from the companies you follow
-            </Typography>
-          </div>
-        )}
-        </Grid>
-
-        <div style={{
-          display: "flex",
-          flexWrap: "wrap"
-        }}>
-          { allJobs ? (
-            allJobs.map(job=>(
-              <Card sx={{
-                width: 400,
-                margin: '5px',
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-                padding: '8px',
-                backgroundColor: '#fff'
-              }}>
-                <CardContent>
-                  <Typography variant='subtitle1' component='div' sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
-                    { job.title }
+        {
+          user.userCategory === "Job seeker" &&  (
+            <Grid xs={12} md={6} lg={8}>
+              { recommendedJobs.length > 0 ? (
+                <AppNewsUpdate
+                  title="Recommended for you"
+                  list={recommendedJobs}
+                />
+              ):(
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '200px',
+                  backgroundColor: '#fff',
+                  borderRadius: '10px',
+                  padding: '20px',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+                }}>
+                  <InfoRounded style={{
+                    fontSize: '50px',
+                    color: '#ff1a1a',
+                    marginBottom: '10px'
+                  }} />
+                  
+                  <Typography variant='h4' style={{
+                    textAlign: 'center',
+                    color: '#333'
+                  }}>
+                    No recommended jobs for you regarding your sector!
                   </Typography>
-                  <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
-                    <strong>Posted on:</strong> { format(new Date(job.createdAt), 'do MMMM yyyy')}
-                  </Typography>
-                  <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
-                    <strong>Application deadline:</strong> { format(new Date(job.applicationDeadline), 'do MMMM yyyy')}
-                  </Typography>
-                  <Typography variant='subtitle2' sx={{ marginBottom: '4px' }}>
-                    <strong>Job posting status:</strong>{' '}
-                    <span style={{ 
-                      color: job.status === 'open' ? 'green' : 'red',
-                      backgroundColor: job.status === 'closed' ? '#FFCCCC' : '#CCFFCC',
-                      padding: '4px 6px',
-                      borderRadius: '4px'
-                      
-                      }}>
-                      {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
-                    </span>
-                  </Typography>
-                  <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
-                    <strong>Number of applicants:</strong> { job.numberOfApplicants }
-                  </Typography>
-                </CardContent>
-                <div className="actions" style={{ textAlign: 'right', padding: '8px' }}>
-                  <Button 
-                    onClick={() => handleFetchBestApplicants(job._id)}
-                    variant='contained' 
-                    sx={{ backgroundColor: '#1976d2', color: '#fff' }}
-                  > 
-                    View best applicants
-                  </Button>
                 </div>
-              </Card>
-            ))
-          ):(
-            <p>Loading....</p>
-          ) }
-        </div>
+              ) }
+            </Grid>
+          )
+        }
+
         
+
+
+
+        {
+          user.userCategory === "Job seeker" && (
+            <Grid xs={12} md={6} lg={8}>
+              {followedCompanyJobs.length > 0 ? (
+                <AppNewsUpdate
+                  title="From the companies you follow"
+                  list={followedCompanyJobs}
+                />
+              ) : (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '200px',
+                  backgroundColor: '#fff',
+                  borderRadius: '10px',
+                  padding: '20px',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
+                }}>
+                  <InfoRounded style={{
+                    fontSize: '50px',
+                    color: '#ff1a1a',
+                    marginBottom: '10px'
+                  }} />
+                  
+                  <Typography variant='h4' style={{
+                    textAlign: 'center',
+                    color: '#333'
+                  }}>
+                    No jobs from particular companies.Follow companies to get job updates from them.
+                  </Typography>
+                </div>
+              )}
+              </Grid>
+          )
+        }
+
+
+        {
+          user.userCategory === "Recruiter" && (
+            <div style={{
+              display: "flex",
+              flexWrap: "wrap"
+            }}>
+              { companyJobs ? (
+                companyJobs.map(job=>(
+                  <Card sx={{
+                    width: 400,
+                    margin: '5px',
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                    padding: '8px',
+                    backgroundColor: '#fff'
+                  }}>
+                    <CardContent>
+                      <Typography variant='subtitle1' component='div' sx={{ fontWeight: 'bold', marginBottom: '8px' }}>
+                        { job.title }
+                      </Typography>
+                      <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
+                        <strong>Posted on:</strong> { format(new Date(job.createdAt), 'do MMMM yyyy')}
+                      </Typography>
+                      <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
+                        <strong>Application deadline:</strong> { format(new Date(job.applicationDeadline), 'do MMMM yyyy')}
+                      </Typography>
+                      <Typography variant='subtitle2' sx={{ marginBottom: '4px' }}>
+                        <strong>Job posting status:</strong>{' '}
+                        <span style={{ 
+                          color: job.status === 'open' ? 'green' : 'red',
+                          backgroundColor: job.status === 'closed' ? '#FFCCCC' : '#CCFFCC',
+                          padding: '4px 6px',
+                          borderRadius: '4px'
+                          
+                          }}>
+                          {job.status.charAt(0).toUpperCase() + job.status.slice(1)}
+                        </span>
+                      </Typography>
+                      <Typography variant='subtitle2' sx={{ color: '#888', marginBottom: '4px' }}>
+                        <strong>Number of applicants:</strong> { job.numberOfApplicants }
+                      </Typography>
+                    </CardContent>
+                    <div className="actions" style={{ textAlign: 'right', padding: '8px' }}>
+                      <Button 
+                        onClick={() => handleFetchBestApplicants(job._id)}
+                        variant='contained' 
+                        sx={{ backgroundColor: '#1976d2', color: '#fff' }}
+                      > 
+                        View best applicants
+                      </Button>
+                    </div>
+                  </Card>
+                ))
+              ):(
+                <p>Loading....</p>
+              ) }
+            </div>
+          )
+        }
+
 
       </Grid>
       {/* View Best Applicants dialog */}

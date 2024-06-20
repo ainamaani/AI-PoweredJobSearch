@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { CalendarMonthRounded, CancelRounded, CheckCircleRounded, EditCalendarRounded, PersonRounded, WorkRounded } from "@mui/icons-material";
-
+import UseAuthContext from "src/hooks/use-auth-context";
 
 
 const InterviewsScheduled = () => {
@@ -28,19 +28,29 @@ const InterviewsScheduled = () => {
     const [newInterviewTime, setNewInterviewTime] = useState();
     const [initialInterviewDetails, setInitialInterviewDetails] = useState({});
 
+    const {user} = UseAuthContext();
+
     useEffect(()=>{
         const fetchScheduledInterviews = async() =>{
             try {
-                const response = await axios.get('http://localhost:5550/api/interviews');
-                if(response.status === 200){
+                let response;
+                if (user.userCategory === 'Admin') {
+                    response = await axios.get('http://localhost:5550/api/interviews/');
+                } else if (user.userCategory === 'Job seeker') {
+                    response = await axios.get(`http://localhost:5550/api/interviews/user/${user.id}`);
+                } else if (user.userCategory === 'Recruiter') {
+                    response = await axios.get(`http://localhost:5550/api/interviews/company/${user.company}`);
+                }
+
+                if (response.status === 200) {
                     setInterviews(response.data);
                 }
-            } catch (error) {
-                console.log(error);
+            } catch (fetcherror) {
+                console.error(fetcherror);
             }
         }
         fetchScheduledInterviews()
-    },[])
+    },[user.company, user.id, user.userCategory]);
 
     // pagination code
     const handlePageChange = (event, newPage) =>{

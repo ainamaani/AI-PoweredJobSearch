@@ -13,7 +13,9 @@ import { saveAs } from "file-saver";
 import {format} from "date-fns"
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import UseAuthContext from "src/hooks/use-auth-context";
 import handleCreateNotification from "../functions/CreateNotification";
+
 
 
 // Define a styled TextField component
@@ -30,6 +32,10 @@ const StyledTextField = styled(TextField)({
 })
 
 const JobApplications = () => {
+
+    const {user} = UseAuthContext();
+
+    console.log("User logged in: ", user)
 
     const [applications, setApplications] = useState([]);
     const [page,setPage] = useState(0); // current page
@@ -53,25 +59,38 @@ const JobApplications = () => {
 
     const navigate = useNavigate();
 
+    const [userApplications, setUserApplications] = useState([]);
+
+    const [companyApplications, setCompanyApplications] = useState([]);
+
     const [anchorEl, setAnchorEl] = useState(Array(applications.length).fill(null));
 
     
 
    
     
-    useEffect(()=>{
-        const fetchJobApplications = async() =>{
+    useEffect(() => {
+        const fetchApplications = async () => {
             try {
-                const response = await axios.get('http://localhost:5550/api/applications/');
-                if(response.status === 200){
+                let response;
+                if (user.userCategory === 'Admin') {
+                    response = await axios.get('http://localhost:5550/api/applications/');
+                } else if (user.userCategory === 'Job seeker') {
+                    response = await axios.get(`http://localhost:5550/api/applications/user/${user.id}`);
+                } else if (user.userCategory === 'Recruiter') {
+                    response = await axios.get(`http://localhost:5550/api/applications/company/${user.company}`);
+                }
+
+                if (response.status === 200) {
                     setApplications(response.data);
                 }
-            } catch (errorrr) {
-                console.log(errorrr);
+            } catch (fetcherror) {
+                console.error(fetcherror);
             }
-        }
-        fetchJobApplications(); 
-    },[]);
+        };
+
+        fetchApplications();
+    }, [user]);
 
 
     // menu and pop over code

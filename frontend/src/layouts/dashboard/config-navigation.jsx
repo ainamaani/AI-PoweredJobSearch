@@ -1,3 +1,4 @@
+
 import SvgColor from 'src/components/svg-color';
 import { AccessTimeOutlined, AccountCircleRounded, AddCircleRounded, 
   AddRounded, AssignmentRounded, BusinessRounded, DashboardRounded, FormatListNumberedRounded, 
@@ -8,6 +9,7 @@ import { AccessTimeOutlined, AccountCircleRounded, AddCircleRounded,
 const icon = (name) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
+
 
 const navConfig = [
   {
