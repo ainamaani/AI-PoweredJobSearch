@@ -1,8 +1,16 @@
 import { Typography,TextField,Button,RadioGroup,Radio,
-    FormControlLabel,Select,MenuItem, FormControl, InputLabel } from "@mui/material";
+    FormControlLabel,Select,MenuItem, FormControl, InputLabel, InputAdornment } from "@mui/material";
 import React,{useState} from 'react';
 import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import UseAuthContext from "src/hooks/use-auth-context";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { LoadingButton } from "@mui/lab";
+import { CalendarMonthRounded, Category, CategoryRounded, ConstructionRounded, 
+    DescriptionRounded, EmailRounded, FacebookRounded, GitHub, HttpRounded, Instagram, 
+    LinkedIn, PersonRounded, PhoneRounded, PublicRounded, Twitter } from "@mui/icons-material";
 
 // Define a styled TextField component
 const StyledTextField = styled(TextField)({
@@ -29,6 +37,7 @@ const StyledPageContent = styled('div')({
 })
 
 const CreateProfile = () => {
+    const { user } = UseAuthContext();
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState(null);
@@ -48,10 +57,15 @@ const CreateProfile = () => {
     const [instagram, setInstagram] = useState('');
     const [resume, setResume] = useState(null);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
     
     const handleCreateProfile = async(e) =>{
         e.preventDefault()
+        const userId = user.id;
         const formData = new FormData();
+        formData.append('user', userId);
         formData.append('firstname', firstname);
         formData.append('lastname', lastname);
         formData.append('dateOfBirth', dateOfBirth);
@@ -73,6 +87,7 @@ const CreateProfile = () => {
 
         
         try {
+            setLoading(true);
             const profile = await axios.post('http://localhost:5550/api/profiles/newprofile',
                             formData,{
                                 headers:{
@@ -101,18 +116,36 @@ const CreateProfile = () => {
                 setTwitter('');
                 setInstagram('');
                 setResume(null);
+
+                navigate('/dashboard');
+                toast.success('Profile created successfully',{
+                    position: 'top-right'
+                })
             }
         } catch (error) {
             if(error.response && error.response.data && error.response.data.errors){
                 setErrors(error.response.data.errors);
             }
+            toast.error('Profile creation failed',{
+                position: 'top-right'
+            })
+        } finally {
+            setLoading(false);
         }
     }
 
     return ( 
-        <div>
+        <div className="add-job">
             <StyledPageContent>
-                <Typography variant="h3">
+                <div className="app-logo" style={{
+                        position:"relative",
+                        left: "40%"
+                    }}>
+                        <img
+                        src={`${process.env.PUBLIC_URL}/assets/images/landing/applogo2.png`} alt="logo" 
+                        />
+                </div>
+                <Typography variant="h4" className="add-job-head">
                     Create profile
                 </Typography>
                 <form onSubmit={handleCreateProfile}>
@@ -121,6 +154,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <PersonRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         value={firstname}
                         error={errors.firstname}
                         onChange={(e)=> {setFirstname(e.target.value)}}   
@@ -133,6 +173,14 @@ const CreateProfile = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                
+                                <InputAdornment position='start'>
+                                  <PersonRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         value={lastname}
                         error={errors.lastname}
                         onChange={(e)=> {setLastname(e.target.value)}}   
@@ -147,6 +195,13 @@ const CreateProfile = () => {
                         InputLabelProps={{ shrink: true }}
                         type="date"
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <CalendarMonthRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         value={dateOfBirth}
                         error={errors.dateOfBirth}
                         onChange={(e)=> {setDateOfBirth(e.target.value)}}   
@@ -166,6 +221,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <PublicRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         value={nationality}
                         error={errors.nationality}
                         onChange={(e)=> {setNationality(e.target.value)}}   
@@ -178,6 +240,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <EmailRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         error={errors.email}
                         value={email}
                         onChange={(e)=> {setEmail(e.target.value)}}   
@@ -190,6 +259,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <PhoneRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         value={phoneContact}
                         error={errors.phoneContact}
                         onChange={(e)=> {setPhoneContact(e.target.value)}}   
@@ -202,7 +278,7 @@ const CreateProfile = () => {
                         variant="outlined"
                         type="file"
                         InputLabelProps={{ shrink: true }}
-                        inputProps={{ accept: ".jpeg,.jgp,.png" }}
+                        inputProps={{ accept: ".jpeg,.jpg,.png" }}
                         required fullWidth
                         sx={{ width: 800 }}
                         onChange={(e)=> { setProfilePic(e.target.files[0]) }}   
@@ -212,13 +288,20 @@ const CreateProfile = () => {
                     )}
 
                     <FormControl fullWidth >
-                        <InputLabel id="category" >Select your profession category</InputLabel>
+                        <InputLabel id="category" >Select category</InputLabel>
                         <Select
                         value={category}
                         fullWidth
                         id="category"
                         label="Select a category"
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <CategoryRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         onChange={(e) => setCategory(e.target.value)}
                         >
                             <MenuItem value="" disabled>Select a Category</MenuItem>
@@ -242,6 +325,7 @@ const CreateProfile = () => {
                             <MenuItem value="Science">Science</MenuItem>
                             <MenuItem value="Social Services">Social Services</MenuItem>
                             <MenuItem value="Transportation">Transportation</MenuItem>
+                            <MenuItem value="Tourism">Tourism</MenuItem>
                             {/* Add more professions as needed */}
                         </Select>
                     </FormControl>
@@ -251,6 +335,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <ConstructionRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         error={errors.profession}
                         value={profession}
                         onChange={(e)=> {setProfession(e.target.value)}}   
@@ -263,6 +354,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         required fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <DescriptionRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         error={errors.personalDescription}
                         value={personalDescription}
                         onChange={(e)=> {setPersonalDescription(e.target.value)}}   
@@ -275,6 +373,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <HttpRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         error={errors.website}
                         value={website}
                         onChange={(e)=> {setWebsite(e.target.value)}}   
@@ -287,6 +392,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <GitHub />
+                                </InputAdornment>
+                              )
+                        }}
                         value={github}
                         error={errors.github}
                         onChange={(e)=> {setGithub(e.target.value)}}   
@@ -309,6 +421,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <LinkedIn />
+                                </InputAdornment>
+                              )
+                        }}
                         error={errors.linkedIn}
                         value={linkedIn}
                         onChange={(e)=> {setLinkedIn(e.target.value)}}   
@@ -321,6 +440,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <FacebookRounded />
+                                </InputAdornment>
+                              )
+                        }}
                         value={facebook}
                         error={errors.facebook}
                         onChange={(e)=> {setFacebook(e.target.value)}}   
@@ -333,6 +459,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <Twitter />
+                                </InputAdornment>
+                              )
+                        }}
                         error={errors.twitter}
                         value={twitter}
                         onChange={(e)=> {setTwitter(e.target.value)}}   
@@ -345,6 +478,13 @@ const CreateProfile = () => {
                         variant="outlined"
                         fullWidth
                         sx={{ width: 800 }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position='start'>
+                                  <Instagram />
+                                </InputAdornment>
+                              )
+                        }}
                         error={errors.instagram}
                         value={instagram}
                         onChange={(e)=> {setInstagram(e.target.value)}}   
@@ -352,7 +492,14 @@ const CreateProfile = () => {
                     { errors.instagram && (
                         <span style={{color:'red'}}>{errors.instagram}</span>
                     )}
-                    <StyledButton variant="contained" type="submit">Create profile</StyledButton>
+                    <LoadingButton
+                        variant="contained"
+                        type="submit"
+                        loading={loading}
+                        size="large"
+                    >
+                        Create profile
+                    </LoadingButton>
                 </form>
             </StyledPageContent>
         </div>

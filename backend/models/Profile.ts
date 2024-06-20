@@ -1,11 +1,36 @@
-import mongoose from "mongoose";
+import mongoose,{Document} from "mongoose";
+import User from "./User";
 
-const ProfileSchema = new mongoose.Schema({
-    // user:{
-    //     type:mongoose.Schema.Types.ObjectId,
-    //     ref:User,
-    //     required:[true, "The user for the profile is required"]
-    // },
+interface ProfileI extends Document{
+    user: mongoose.Schema.Types.ObjectId;
+    firstname: string;
+    lastname: string;
+    gender: string;
+    nationality: string;
+    dateOfBirth: Date;
+    email: string;
+    phoneContact: string;
+    profilePic: string;
+    category: string;
+    profession: string;
+    personalDescription: string;
+    website: string;
+    github: string;
+    socialmedia:{
+        linkedIn: string;
+        twitter: string;
+        facebook: string;
+        instagram: string;
+    }  
+    resume: string;
+
+}
+
+const ProfileSchema = new mongoose.Schema<ProfileI>({
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:User,
+    },
     firstname:{
         type:String,
         required: [true, "The first name is required"]
@@ -128,6 +153,6 @@ const ProfileSchema = new mongoose.Schema({
 },{timestamps:true})
 
 
-const Profile = mongoose.model('Profile',ProfileSchema);
+const Profile = mongoose.model<ProfileI>('Profile',ProfileSchema);
 
 export default Profile;

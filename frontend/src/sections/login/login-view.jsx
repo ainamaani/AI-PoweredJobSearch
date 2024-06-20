@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate,Link } from 'react-router-dom';
+import UseAuthContext from 'src/hooks/use-auth-context';
+import axios from 'axios';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -20,6 +22,11 @@ import { bgGradient } from 'src/theme/css';
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
 
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { EmailRounded, LockRounded, PasswordRounded } from '@mui/icons-material';
+
+
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
@@ -27,22 +34,90 @@ export default function LoginView() {
 
   const router = useRouter();
 
+  const navigate = useNavigate();
+
+  const { dispatch } = UseAuthContext();
+
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const [email, setEmail] = useState('');
+
+  const [password, setPassword] = useState('');
+
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState('');
+
+  const handleLogin = async(e) => {
+    try {
+      // set the loading action to true when the login action starts
+      setLoading(true);
+      setError('');
+
+      const loginData = { email,password }
+
+      const loginuser = await axios.post('http://localhost:5550/api/user/login',
+                              JSON.stringify(loginData),{
+                                headers:{
+                                  'Content-Type':'application/json'
+                                }
+                              }
+      );
+      if(loginuser.status === 200){
+        // save the user in local storage
+        localStorage.setItem('user', JSON.stringify(loginuser.data));
+        // update the auth api context.
+        dispatch({ type: 'LOGIN', payload: loginuser.data });
+        // navigate to the dashboard after login successfully.
+        navigate('/dashboard');
+        // display success toast
+        toast.success('Log in successful',{
+          position: 'top-right'
+        })
+      }
+    } catch (err) {
+      console.log(err);
+      if(err && err.response && err.response.data && err.response.data.error){
+        setError(err.response.data.error);
+      
+      }
+      toast.error('Login failed!',{
+        position: 'top-right'
+      })
+    }finally{
+      // set the loading back to false when the login action has completed.
+      setLoading(false); 
+    }
   };
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        
+        <TextField 
+          name="email" 
+          label="Email address" 
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <EmailRounded style={{ fontSize: "20px" }} />
+              </InputAdornment>
+            )
+          }}
+          value={email}
+          onChange={(e)=>{setEmail(e.target.value)}}
+        />
 
         <TextField
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <LockRounded />
+              </InputAdornment>
+            ),
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
@@ -51,13 +126,15 @@ export default function LoginView() {
               </InputAdornment>
             ),
           }}
+          value={password}
+          onChange={(e)=>{setPassword(e.target.value)}}
         />
       </Stack>
 
+      { error && <span style={{ color:"red", marginTop:"8px" }}>{error}</span> }
+
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
+        <Link className='get-started-link' to='/resetpassword'>Forgot password?</Link>
       </Stack>
 
       <LoadingButton
@@ -66,7 +143,8 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={handleLogin}
+        loading={loading}
       >
         Login
       </LoadingButton>
@@ -83,13 +161,6 @@ export default function LoginView() {
         height: 1,
       }}
     >
-      <Logo
-        sx={{
-          position: 'fixed',
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-        }}
-      />
 
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
@@ -99,52 +170,22 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Minimal</Typography>
+          <div className="app-logo" style={{
+            position:"relative",
+            left: "14%"
+          }}>
+            <img
+              src={`${process.env.PUBLIC_URL}/assets/images/landing/applogo2.png`} alt="logo" 
+            />
+          </div>
+          <Typography variant="h4">Sign in to CareerConnect</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
+            <Link to='/register' variant="subtitle2" sx={{ ml: 0.5 }} className='get-started-link'>
               Get started
             </Link>
           </Typography>
-
-          <Stack direction="row" spacing={2}>
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:google-fill" color="#DF3E30" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:facebook-fill" color="#1877F2" />
-            </Button>
-
-            <Button
-              fullWidth
-              size="large"
-              color="inherit"
-              variant="outlined"
-              sx={{ borderColor: alpha(theme.palette.grey[500], 0.16) }}
-            >
-              <Iconify icon="eva:twitter-fill" color="#1C9CEA" />
-            </Button>
-          </Stack>
-
-          <Divider sx={{ my: 3 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              OR
-            </Typography>
-          </Divider>
 
           {renderForm}
         </Card>

@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import UseAuthContext from 'src/hooks/use-auth-context';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -17,6 +20,7 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
+    
   },
   {
     label: 'Profile',
@@ -33,6 +37,12 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
 
+  const [hasProfile, setHasProfile] = useState(false);
+
+  const { dispatch, user } = UseAuthContext();
+
+  const navigate = useNavigate();
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -40,6 +50,28 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  const handleLogOut = () =>{
+    dispatch({ type: 'LOGOUT' });
+    navigate('/login');
+  }
+
+  useEffect(()=>{
+    
+    const handleCheckIfProfileExists = async() =>{
+      try {
+        const response = await axios.get(`http://localhost:5550/api/profiles/profile/${user.id}`);
+        if(response.status === 200){
+          setHasProfile(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    handleCheckIfProfileExists();
+
+  },[user.id]);
 
   return (
     <>
@@ -57,14 +89,14 @@ export default function AccountPopover() {
       >
         <Avatar
           src={account.photoURL}
-          alt={account.displayName}
+          alt={user?.firstname || ''}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {user?.firstname.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -85,31 +117,77 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+          {`${user?.firstname || ''} ${user?.lastname || ''}`}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user?.email}
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
-          </MenuItem>
-        ))}
-
-        <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
-
         <MenuItem
+          sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
           disableRipple
           disableTouchRipple
           onClick={handleClose}
+        > 
+              <Link style={{
+                color: "black"
+              }} to='/dashboard'>Home</Link>
+            
+        </MenuItem>
+
+        <MenuItem
+          sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+          disableRipple
+          disableTouchRipple
+          onClick={handleClose}
+        > 
+    
+              <Link style={{
+                color: "black"
+              }} to='/dashboard/dashboard/changepassword'>Change password</Link>
+        </MenuItem>
+
+        <MenuItem
+          sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+          disableRipple
+          disableTouchRipple
+          onClick={handleClose}
+        > 
+          {
+            hasProfile === "true" ? (
+              <Link style={{
+                color: "black"
+              }} to='/dashboard/dashboard/myprofile'>My profile</Link>
+            ):(
+              <Link style={{
+                color: "black"
+              }} to='/dashboard/dashboard/newprofile'>Create profile</Link>
+            )
+          }
+          
+        </MenuItem>
+        
+
+        {/* {MENU_OPTIONS.map((option) => (
+          <MenuItem key={option.label} onClick={handleClose}>
+            {option.label}
+          </MenuItem>
+        ))} */}
+
+        <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
+        
+        <MenuItem
+          disableRipple
+          disableTouchRipple
+          onClick={handleLogOut}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout
         </MenuItem>
+        
       </Popover>
     </>
   );

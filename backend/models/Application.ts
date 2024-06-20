@@ -1,12 +1,23 @@
-import mongoose from 'mongoose';
-import Job from './Job';
+import mongoose, { Document, PopulatedDoc } from 'mongoose';
+import Job,{JobI} from './Job';
+import User, {UserI} from './User';
 
-const ApplicationSchema = new mongoose.Schema({
-    // applicant:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: User,
-    //     required: [true, "The applicant is required"]
-    // },
+interface ApplicationI extends Document {
+    applicant: PopulatedDoc<UserI & Document>;
+    job: PopulatedDoc<JobI & Document>;
+    applicationDate: Date;
+    resume: string,
+    applicationLetter: string,
+    applicantSkills: string,
+    applicationStatus: string
+}
+
+const ApplicationSchema = new mongoose.Schema<ApplicationI>({
+    applicant:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User,
+        required: [true, "The applicant is required"]
+    },
     job:{
         type: mongoose.Schema.Types.ObjectId,
         ref: Job,
@@ -24,6 +35,10 @@ const ApplicationSchema = new mongoose.Schema({
         type:String,
         required: [true, "The application letter of the applicant is required"]
     },
+    applicantSkills:{
+        type:String,
+        required: [true, "The applicant skills are required"]
+    },
     applicationStatus:{
         type:String,
         default: "Pending",
@@ -34,6 +49,6 @@ const ApplicationSchema = new mongoose.Schema({
     }
 },{timestamps:true});
 
-const Application = mongoose.model('Application', ApplicationSchema);
+const Application = mongoose.model<ApplicationI>('Application', ApplicationSchema);
 
 export default Application;

@@ -13,15 +13,9 @@ const storage = multer.diskStorage({
   },
 });
 
-// Multer file filter to accept only images, PDFs, Word documents, and Excel files
+// Multer file filter to accept all file types
 const fileFilter = (req: Request, file: Express.Multer.File, cb: any) => {
-  const allowedFileTypes = ['.png', '.jpg', '.jpeg', '.pdf', '.doc', '.docx'];
-  const extname = path.extname(file.originalname).toLowerCase();
-  if (allowedFileTypes.includes(extname)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only images, PDFs and word documents are allowed.'));
-  }
+  cb(null, true);
 };
 
 // Multer upload instance

@@ -1,13 +1,24 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose, { Mongoose, Document } from "mongoose";
 import Application from "./Application";
 import Job from "./Job";
+import User from "./User";
 
-const InterviewSchema = new mongoose.Schema({
-    // applicant:{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: Application,
-    //     required: [true, "The applicant for the interview is required"]
-    // },
+interface InterviewI extends Document{
+    applicant: mongoose.Schema.Types.ObjectId;
+    job: mongoose.Schema.Types.ObjectId;
+    interviewStatus: string;
+    interviewDate: Date;
+    interviewTime: string;
+    location: string;
+    additionalNotes: string;
+}
+
+const InterviewSchema = new mongoose.Schema<InterviewI>({
+    applicant:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User,
+        required: [true, "The applicant for the interview is required"]
+    },
     job:{
         type: mongoose.Schema.Types.ObjectId,
         ref: Job,
@@ -17,8 +28,8 @@ const InterviewSchema = new mongoose.Schema({
         type: String,
         default: "Scheduled",
         enum: {
-            values: ["Scheduled","Cancelled","Completed"],
-            message: "The interview status must be one of 'Scheduled', 'Cancelled' or 'Completed'"
+            values: ["Scheduled","Cancelled","Completed","Due"],
+            message: "The interview status must be one of 'Scheduled', 'Cancelled', 'Due or 'Completed'"
         }
     },
     interviewDate:{
@@ -48,6 +59,6 @@ const InterviewSchema = new mongoose.Schema({
 
 },{timestamps:true});
 
-const Interview = mongoose.model('Interview', InterviewSchema);
+const Interview = mongoose.model<InterviewI>('Interview', InterviewSchema);
 
 export default Interview;

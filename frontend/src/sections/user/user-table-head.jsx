@@ -1,13 +1,9 @@
 import PropTypes from 'prop-types';
-
-import Box from '@mui/material/Box';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
-
-import { visuallyHidden } from './utils';
 
 // ----------------------------------------------------------------------
 
@@ -20,40 +16,38 @@ export default function UserTableHead({
   onRequestSort,
   onSelectAllClick,
 }) {
-  const onSort = (property) => (event) => {
+  const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* Uncomment below to enable select all checkbox */}
+        {/* <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
           />
-        </TableCell>
+        </TableCell> */}
 
         {headLabel.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.align || 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
           >
             <TableSortLabel
-              hideSortIcon
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={onSort(headCell.id)}
+              onClick={createSortHandler(headCell.id)}
             >
+              {/* Render Icon next to the label if icon prop is provided */}
+              {headCell.icon && (
+                <span style={{ marginRight: 4 }}>{headCell.icon}</span>
+              )}
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box sx={{ ...visuallyHidden }}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -63,11 +57,18 @@ export default function UserTableHead({
 }
 
 UserTableHead.propTypes = {
-  order: PropTypes.oneOf(['asc', 'desc']),
-  orderBy: PropTypes.string,
-  rowCount: PropTypes.number,
-  headLabel: PropTypes.array,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+  headLabel: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      align: PropTypes.oneOf(['left', 'center', 'right']),
+      icon: PropTypes.element, // Add prop type for icon
+    })
+  ).isRequired,
   numSelected: PropTypes.number,
-  onRequestSort: PropTypes.func,
-  onSelectAllClick: PropTypes.func,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func, // Optional prop
 };

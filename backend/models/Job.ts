@@ -1,6 +1,30 @@
-import mongoose from "mongoose";
+import mongoose,{ Document } from "mongoose";
 
-const JobSchema = new mongoose.Schema({
+export interface JobI extends Document{
+    title:string;
+    company:string;
+    companyEmail:string;
+    companyContact:string;
+    description:string;
+    category:string;
+    skills:string;
+    experience:string;
+    qualifications:string;
+    location:string;
+    salaryRange: string;
+    status:string;
+    jobType:string;
+    additionalBenefits:string;
+    applicationDeadline:Date;
+    applicationInstructions:string;
+    applyFromWithinApp:string;
+    additionalComments:string;
+    numberOfApplicants:number;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+const JobSchema = new mongoose.Schema<JobI>({
     title:{
         type:String,
         required:[true, "Job title is required"]
@@ -87,14 +111,32 @@ const JobSchema = new mongoose.Schema({
             message: "Enter a valid application deadline, it can't be a past date!!"
         }
     },
+    applyFromWithinApp:{
+        type:String,
+        required:[true, "Whether to apply from within the application or not is required"],
+        enum:{
+            values: ["yes","no"],
+            message: "The response must be one of the values 'yes' or 'no' ",
+            default: "yes"
+        }
+    },
     applicationInstructions:{
         type:String,
         required:[true, "The information on how to apply is required"]
+    },
+    additionalComments:{
+        type:String,
+        required:[true, "Addional comments required, if none, type None."],
+        default: "None"
+    },
+    numberOfApplicants:{
+        type:Number,
+        required:[true, "The number of applicants is required"]
     }
     
 },{timestamps:true});
 
 
-const Job = mongoose.model('Jobs',JobSchema);
+const Job = mongoose.model<JobI>('Jobs',JobSchema);
 
 export default Job;

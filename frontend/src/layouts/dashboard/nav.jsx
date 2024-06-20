@@ -1,5 +1,6 @@
 import React,{ useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import UseAuthContext from 'src/hooks/use-auth-context';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -29,9 +30,9 @@ export default function Nav({ openNav, onCloseNav }) {
   const [isJobsOpen, setIsJobsOpen] = useState(false);
   const [isProfilesOpen, setIsProfilesOpen] = useState(false);
 
-  const pathname = usePathname();
+  const { user } = UseAuthContext();
 
-  const name = "Ainamaani Isaac"
+  const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
 
@@ -68,7 +69,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar src={account.photoURL} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{name}</Typography>
+        <Typography variant="subtitle2">{`${user?.firstname || ''} ${user?.lastname || ''}`}</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {account.role}
@@ -112,34 +113,7 @@ export default function Nav({ openNav, onCloseNav }) {
     </Stack>
   );
 
-  const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-      <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-        <Box
-          component="img"
-          src="/assets/illustrations/illustration_avatar.png"
-          sx={{ width: 100, position: 'absolute', top: -50 }}
-        />
-
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">Get more?</Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            From only $69
-          </Typography>
-        </Box>
-
-        <Button
-          href="https://material-ui.com/store/items/minimal-dashboard/"
-          target="_blank"
-          variant="contained"
-          color="inherit"
-        >
-          Upgrade to Pro
-        </Button>
-      </Stack>
-    </Box>
-  );
+  
 
   const renderContent = (
     <Scrollbar
@@ -160,7 +134,6 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {renderUpgrade}
     </Scrollbar>
   );
 
@@ -209,6 +182,7 @@ Nav.propTypes = {
 function NavItem({ item, onClick }) {
   const pathname = usePathname();
   const active = item.path === pathname;
+
 
   return (
     <ListItemButton

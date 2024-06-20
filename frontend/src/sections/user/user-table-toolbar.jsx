@@ -15,7 +15,7 @@ export default function UserTableToolbar({ numSelected, filterTitle, onFilterTit
   return (
     <Toolbar
       sx={{
-        height: 96,
+        height: 40,
         display: 'flex',
         justifyContent: 'space-between',
         p: (theme) => theme.spacing(0, 1, 0, 3),
@@ -25,7 +25,7 @@ export default function UserTableToolbar({ numSelected, filterTitle, onFilterTit
         }),
       }}
     >
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
           {numSelected} selected
         </Typography>
@@ -43,9 +43,9 @@ export default function UserTableToolbar({ numSelected, filterTitle, onFilterTit
             </InputAdornment>
           }
         />
-      )}
+      )} */}
 
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <Iconify icon="eva:trash-2-fill" />
@@ -57,7 +57,7 @@ export default function UserTableToolbar({ numSelected, filterTitle, onFilterTit
             <Iconify icon="ic:round-filter-list" />
           </IconButton>
         </Tooltip>
-      )}
+      )} */}
     </Toolbar>
   );
 }

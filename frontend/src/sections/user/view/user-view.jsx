@@ -1,11 +1,18 @@
 import axios from 'axios';
 import { useState,useEffect } from 'react';
-import { formatDistanceToNow } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { formatDistanceToNow, format } from 'date-fns';
+import { Link, useNavigate } from 'react-router-dom';
 
-
-import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { VisibilityRounded } from '@mui/icons-material';
+import { CircularProgress, Dialog, DialogActions, DialogContent, 
+  DialogTitle, 
+  InputAdornment, 
+  TextField} from '@mui/material';
+import { AccessTimeRounded, BookmarkAddRounded, BuildRounded, BusinessRounded, CalendarMonthRounded, 
+  CardGiftcardRounded, CategoryRounded, CommentRounded, ConstructionRounded, DescriptionRounded, DoorFrontRounded, EmailRounded, 
+  HandymanRounded, 
+  HourglassBottomRounded, LocalAtmRounded, LocationOnRounded, PhoneRounded, SchoolRounded, 
+  SearchRounded, 
+  Title, TitleRounded, VisibilityRounded, WorkRounded } from '@mui/icons-material';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -52,7 +59,13 @@ export default function UserPage() {
 
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
-  const [jobToView, setJobToView] = useState(null)
+  const [jobToView, setJobToView] = useState(null);
+
+  const [searchInput, setSearchInput] = useState('');
+
+  const [searchLocationInput, setSearchLocationInput] = useState('');
+
+  const navigate = useNavigate();
 
 
   useEffect(()=>{
@@ -69,9 +82,28 @@ export default function UserPage() {
     fetchJobs()
   },[])
 
-  useEffect(()=>{
-    console.log(jobs);
-  })
+
+  const handleAddNewJob = () =>{
+    navigate('/dashboard/dashboard/newjob');
+  }
+
+  // Functions to handle input change
+  const handleSearchInputChange = (event) =>{
+    setSearchInput(event.target.value);
+  }
+
+  const handleSearchLocationInputChange = (event) =>{
+    setSearchLocationInput(event.target.value);
+  }
+
+  // Filter the jobs based on the search input value
+  const filteredJobs = jobs?.filter(job => 
+    job.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
+  const filteredJobsByLocation = jobs?.filter(job => 
+    job.location.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -133,9 +165,7 @@ export default function UserPage() {
     setIsViewDialogOpen(false)
   }
 
-  const handleApplyForJob = () =>{
 
-  }
 
   const dataFiltered = jobs
   ? applyFilter({
@@ -153,42 +183,71 @@ export default function UserPage() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Job postings</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}
+          onClick={handleAddNewJob}
+        >
           New job
         </Button>
       </Stack>
 
       <Card>
         <UserTableToolbar
-          numSelected={selected.length}
+          // numSelected={selected.length}
           filterName={filterName}
           onFilterName={handleFilterByName}
+          searchInput={searchInput}
+          onSearchInputChange={handleSearchInputChange}
         />
 
         <Scrollbar>
           { jobs ? (
-            <TableContainer sx={{ overflow: 'unset' }}>
+            <TableContainer sx={{ overflow: 'unset' }} style={{
+              paddingLeft:'5px'
+            }}>
+                  <TextField
+                    label="Search by title.."
+                    variant="filled"
+                    value={searchInput}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <SearchRounded />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearchInputChange}
+                    style={{ marginBottom: '20px' }}
+                  />
+                  {/* <TextField
+                    label="Search by location.."
+                    variant="outlined"
+                    value={searchLocationInput}
+                    onChange={handleSearchLocationInputChange}
+                    style={{ marginBottom: '20px' }}
+                  /> */}
               <Table sx={{ minWidth: 800 }}>
+          
                 <UserTableHead
                   order={order}
                   orderBy={orderBy}
                   rowCount={jobs.length}
-                  numSelected={selected.length}
+                  // numSelected={selected.length}
                   onRequestSort={handleSort}
-                  onSelectAllClick={handleSelectAllClick}
+                  // onSelectAllClick={handleSelectAllClick}
                   headLabel={[
-                    { id: 'title', label: 'Title' },
-                    { id: 'company', label: 'Company' },
-                    { id: 'location', label: 'Location' },
-                    { id: 'datePosted', label: 'Date posted', align: 'center' },
-                    { id: 'status', label: 'Status' },
-                    { id: 'actions', label: 'Actions' },
+                    { id: 'title', label: 'Title', icon: <TitleRounded /> },
+                    { id: 'company', label: 'Company', icon: <BusinessRounded /> },
+                    { id: 'location', label: 'Location', icon: <LocationOnRounded /> },
+                    { id: 'datePosted', label: 'Date posted', align: 'center', icon: <CalendarMonthRounded /> },
+                    { id: 'status', label: 'Status', icon: <DoorFrontRounded /> },
+                    { id: 'actions', label: 'Actions', icon: <HandymanRounded /> },
                     { id: '' },
                   ]}
                 />
+                
                 <TableBody>
-                {dataFiltered && dataFiltered.length > 0 ? (
-                  dataFiltered
+                {filteredJobs && filteredJobs.length > 0 ? (
+                  filteredJobs
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((job) => (
                       <UserTableRow
@@ -197,7 +256,8 @@ export default function UserPage() {
                         company={job.company}
                         location={job.location}
                         datePosted={formatDistanceToNow( new Date(job.createdAt),{addSuffix:true , includeSeconds:true} )}
-                        selected={selected.indexOf(job.title) !== -1}
+                        status={job.status}
+                        // selected={selected.indexOf(job.title) !== -1}
                         handleClick={(event) => handleClick(event, job.title)}
                         handleOpenViewDialog={() => handleOpenViewDialog(job)}
                       />
@@ -209,8 +269,6 @@ export default function UserPage() {
                   />
                 )}
                     
-
-
                   {notFound && <TableNoData query={filterName} />}
                 </TableBody>
               </Table>
@@ -226,51 +284,149 @@ export default function UserPage() {
           onClose={handleCloseViewDialog}
           PaperProps={{
             style:{
-              width: '800px'
+              width: '1400px'
             }
           }}
         >
           <DialogTitle>Job details</DialogTitle>
           <DialogContent>
             {
+              
               jobToView && (
                 <>
-                  <Typography variant="body1">
-                  <strong>Job title:</strong> {jobToView.title}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <TitleRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong>Job title</strong> <br />
+                      {jobToView.title}
+                    </div>
                   </Typography>
-                  <Typography variant="body1">
-                  <strong>Job description:</strong> {jobToView.description}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <DescriptionRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong >Job description</strong> <br />
+                      {jobToView.description}
+                    </div>
                   </Typography>
-                  <Typography variant="body1">
-                  <strong>Hiring company:</strong> {jobToView.company}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CategoryRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Job category</strong> <br />
+                      {jobToView.category}
+                    </div>
                   </Typography>
-                  <Typography variant="body1">
-                  <strong>Location:</strong> {jobToView.location}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <WorkRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Hiring company</strong> <br />
+                      {jobToView.company}
+                    </div>
                   </Typography>
-                  <Typography variant="body1">
-                  <strong>Skills:</strong> {jobToView.skills}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <EmailRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Hiring company email</strong> <br />
+                      {jobToView.companyEmail}
+                    </div>
                   </Typography>
-                  <Typography variant="body1">
-                  <strong>Qualifications:</strong> {jobToView.qualifications}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <PhoneRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Hiring company contact</strong> <br />
+                      {jobToView.companyContact}
+                    </div>
                   </Typography>
-                  <Typography variant="body1">
-                  <strong>Experience:</strong> {jobToView.experience}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <LocationOnRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Location</strong> <br />
+                      {jobToView.location}
+                    </div>
                   </Typography>
-                  <Typography variant="body1">
-                  <strong>Salary range:</strong> {jobToView.salaryRange}
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <ConstructionRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Skills</strong> <br />
+                      {jobToView.skills}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <SchoolRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Qualifications</strong> <br />
+                      {jobToView.qualifications}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <HourglassBottomRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong >Experience</strong> <br />
+                      {jobToView.experience}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <LocalAtmRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Salary range</strong> <br />
+                      {jobToView.salaryRange}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <AccessTimeRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Job type</strong> <br />
+                      {jobToView.jobType}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CardGiftcardRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Additional job benefits</strong> <br />
+                      {jobToView.additionalBenefits}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CalendarMonthRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong >Application deadline</strong> <br />
+                      {jobToView.applicationDeadline ? (
+                        format(new Date(jobToView.applicationDeadline), 'do MMMM yyyy')
+                      ) : '' }
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <BookmarkAddRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >How to apply</strong> <br />
+                      {jobToView.applicationInstructions}
+                    </div>
+                  </Typography>
+                  <Typography variant="body1" style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <CommentRounded />
+                    <div style={{ marginLeft: '8px' }}>
+                      <strong  >Additional information</strong> <br />
+                      {jobToView?.additionalComments}
+                    </div>
                   </Typography>
                 </>
               )
             }
           </DialogContent>
           <DialogActions>
-              <Button onClick={handleCloseViewDialog} color='primary' variant='contained'>
+              <Button onClick={handleCloseViewDialog}  
+              color='secondary' 
+              size='medium' 
+              variant='outlined'>
                 Close
               </Button>
-              <Button onClick={handleApplyForJob} color='secondary' variant='contained'>
-                Apply
-              </Button>
-              <Link to={`/apply/${jobToView?._id}`}>Apply</Link>
+              {jobToView?.status === "open" && jobToView?.applyFromWithinApp === "yes" && (
+                <Link 
+                  className='applyLink' 
+                  to={`/dashboard/dashboard/apply/${jobToView?._id}`}
+                >
+                  Apply
+                </Link>
+              )}
           </DialogActions>
 
         </Dialog>
