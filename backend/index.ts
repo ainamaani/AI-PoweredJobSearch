@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import path from "path";
+import { loginUser } from "./controllers/UserController";
+
 import database from "./config/database";
 import apiRoutes from "./routes/api";
 // set up an express application
@@ -29,6 +31,8 @@ database(app);
 app.get('/' , (req, res) => {
     res.json("Successfully deployed");
 })
+
+app.post('/api/user/login', loginUser );
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
