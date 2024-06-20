@@ -35,7 +35,9 @@ app.get('/' , (req, res) => {
     res.json("Successfully deployed");
 })
 
-app.post('/api/user/login', loginUser );
+app.get('/api/user/login', (req, res) => {
+    res.json("Another route")
+} );
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
