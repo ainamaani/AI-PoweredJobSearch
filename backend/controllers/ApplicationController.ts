@@ -10,13 +10,11 @@ import cloudinary from "../config/cloudinary";
 import { v2 as cloudinaryV2 } from "cloudinary";
 import axios from "axios";
 
-interface MulterRequest extends Request {
-    files: {
-        [fieldname: string]: Express.Multer.File[];
-    };
+interface CloudinaryResult {
+    secure_url: string;
 }
 
-const newJobApplication = async (req: MulterRequest, res: Response) => {
+const newJobApplication = async (req: Request, res: Response) => {
     try {
         const { applicant, job, applicantSkills } = req.body;
 
@@ -32,25 +30,26 @@ const newJobApplication = async (req: MulterRequest, res: Response) => {
             return res.status(400).json({ error: "You have already applied for this job" });
         }
 
-        if (!req.files || !req.files['resume'] || !req.files['applicationLetter']) {
-            return res.status(400).json({ error: "Required files not uploaded" });
-        }
 
-        const resumeFile = req.files['resume'][0];
-        const applicationLetterFile = req.files['applicationLetter'][0];
+        // Get the uploaded file paths from the request object
+        const resumePath = (req.files as { [fieldname: string]: Express.Multer.File[] })['resume'][0].path;
+        const applicationLetterPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['applicationLetter'][0].path;
+
+        // const resumeFile = req.files['resume'][0];
+        // const applicationLetterFile = req.files['applicationLetter'][0];
 
         // Generate custom filenames
         const resumeFileName = `${applicantt.firstname}-${applicantt.lastname}-${jobb.title}-${jobb.company}-resume.pdf`;
         const applicationLetterFileName = `${applicantt.firstname}-${applicantt.lastname}-${jobb.title}-${jobb.company}-applicationLetter.pdf`;
 
         // Upload files to Cloudinary
-        const resumeUpload = await cloudinary.uploader.upload(resumeFile.path, {
+        const resumeUpload = await cloudinary.uploader.upload(resumePath, {
             public_id: resumeFileName.replace(/\.[^/.]+$/, ''), // Remove file extension
             resource_type: 'auto',
             type: 'upload'
         });
 
-        const applicationLetterUpload = await cloudinary.uploader.upload(applicationLetterFile.path, {
+        const applicationLetterUpload = await cloudinary.uploader.upload(applicationLetterPath, {
             public_id: applicationLetterFileName.replace(/\.[^/.]+$/, ''), // Remove file extension
             resource_type: 'auto',
             type: 'upload'

@@ -5,13 +5,23 @@ import mongoose from "mongoose";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 
+interface CloudinaryResult {
+    secure_url: string;
+}
+
 const createNewProfile = async (req: Request, res: Response) => {
     try {
         // Get the uploaded file path from the request object
         const profilePicPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['profilePic'][0].path;
 
-        // Upload image to Cloudinary
-        const profilePicUpload = await cloudinary.uploader.upload(profilePicPath) as UploadApiResponse;
+
+        // Upload images to Cloudinary
+        const profilePicUpload = await new Promise<CloudinaryResult>((resolve, reject) => {
+            cloudinary.uploader.upload(profilePicPath, (error : any, result : any) => {
+                if (error) reject(error);
+                resolve(result as CloudinaryResult);
+            });
+        });
 
         // Destructure other data properties from the request object
         const {
