@@ -1,21 +1,24 @@
+import { Request, Response } from "express";
+import path from "path";
 import Application from "../models/Application";
 import Job from "../models/Job";
 import User from "../models/User";
-import { Request, Response } from "express";
-import path from "path";
 import Profile from "../models/Profile";
 import sendEmail from "../functions/SendEmail";
-const mongoose = require('mongoose');
-import { error } from "console";
 import upload from "../middleware/MulterConfig";
 import cloudinary from "../config/cloudinary";
-import { Readable } from "stream";
 import { v2 as cloudinaryV2 } from "cloudinary";
 import axios from "axios";
 
-const newJobApplication = async(req: Request, res: Response) =>{
+interface MulterRequest extends Request {
+    files: {
+        [fieldname: string]: Express.Multer.File[];
+    } | undefined;
+}
+
+const newJobApplication = async (req: MulterRequest, res: Response) => {
     try {
-        // destructure other properties off the request object
+        // Destructure other properties off the request object
         const { applicant, job, applicantSkills } = req.body;
 
         // Fetch applicant and job objects from the database
@@ -26,14 +29,24 @@ const newJobApplication = async(req: Request, res: Response) =>{
             return res.status(404).json({ error: 'Applicant or Job not found' });
         }
 
-        // first check if the user has already applied
-        const existingApplication = await Application.findOne({ applicant:applicant, job:job });
-        if(existingApplication){
-            return res.status(400).json({ error:"You have already applied for this job" });
+        // First check if the user has already applied
+        const existingApplication = await Application.findOne({ applicant, job });
+        if (existingApplication) {
+            return res.status(400).json({ error: "You have already applied for this job" });
         }
+
+        // Check if req.files is defined
+        if (!req.files) {
+            return res.status(400).json({ error: "No files uploaded" });
+        }
+
         // Get uploaded files from the request object
-        const resumeFile = req.files['resume'][0];
-        const applicationLetterFile = req.files['applicationLetter'][0];
+        const resumeFile = req.files['resume']?.[0];
+        const applicationLetterFile = req.files['applicationLetter']?.[0];
+
+        if (!resumeFile || !applicationLetterFile) {
+            return res.status(400).json({ error: "Required files not uploaded" });
+        }
 
         // Generate custom filenames
         const resumeFileName = `${applicantt.firstname}-${applicantt.lastname}-${jobb.title}-${jobb.company}-resume.pdf`;
@@ -53,53 +66,56 @@ const newJobApplication = async(req: Request, res: Response) =>{
             resource_type: 'auto',
             type: 'upload'
         });
-        // create a new Application object and save it in the database
+
+        // Create a new Application object and save it in the database
         const application = await Application.create({
-            applicant, job,resume:resumeUpload.secure_url,
-            applicationLetter:applicationLetterUpload.secure_url,
-            applicantSkills, applicationDate:new Date()
-        })
-        if(application){
+            applicant,
+            job,
+            resume: resumeUpload.secure_url,
+            applicationLetter: applicationLetterUpload.secure_url,
+            applicantSkills,
+            applicationDate: new Date()
+        });
+
+        if (application) {
             const jobAppliedFor = await Job.findOne({ _id: job });
-            if(jobAppliedFor){
-                // update the number of applicants of the job
+            if (jobAppliedFor) {
+                // Update the number of applicants of the job
                 jobAppliedFor.numberOfApplicants += 1;
-                await jobAppliedFor.save({ validateBeforeSave : false });
+                await jobAppliedFor.save({ validateBeforeSave: false });
                 return res.status(200).json(application);
             }
-            
-        }else{
+        } else {
             return res.status(400).json({ error: "Failed to add the new application" });
         }
     } catch (error: any) {
         // Check if the error is a validation error
-      if (error.name === 'ValidationError' || error.code === 11000) {
-        const errors: {[key:string]: string}  = {};
-  
-          // Iterate through the validation errors and build the errors object
-          for (const field in error.errors) {
-            errors[field] = error.errors[field].message;
-          }
-          return res.status(400).json({ errors });
-      }
-      // Handle other types of errors (e.g., database errors) here
-      return res.status(500).json({ error: error.message });
-  }
+        if (error.name === 'ValidationError' || error.code === 11000) {
+            const errors: { [key: string]: string } = {};
 
-}
+            // Iterate through the validation errors and build the errors object
+            for (const field in error.errors) {
+                errors[field] = error.errors[field].message;
+            }
+            return res.status(400).json({ errors });
+        }
+        // Handle other types of errors (e.g., database errors) here
+        return res.status(500).json({ error: error.message });
+    }
+};
 
-const jobApplications = async(req: Request, res: Response) =>{
+const jobApplications = async (req: Request, res: Response) => {
     try {
         const jobapplications = await Application.find({}).populate('job').populate('applicant').sort({ createdAt: -1 });
-        if(jobapplications){
+        if (jobapplications) {
             return res.status(200).json(jobapplications);
-        }else{
-            return res.status(400).json({ error: "Failed to fetch job applications" })
+        } else {
+            return res.status(400).json({ error: "Failed to fetch job applications" });
         }
     } catch (error: any) {
-        return res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message });
     }
-}
+};
 
 // Function to extract the public ID from the Cloudinary URL
 const extractPublicId = (url: string): string => {
@@ -137,35 +153,35 @@ const downloadResume = async (req: Request, res: Response) => {
     }
 };
 
-const downloadApplicationLetter = async(req: Request, res: Response) =>{
-    const {id} = req.params;
+const downloadApplicationLetter = async (req: Request, res: Response) => {
+    const { id } = req.params;
     try {
         const application = await Application.findById(id);
 
-        if( !application || !application.applicationLetter ){
+        if (!application || !application.applicationLetter) {
             return res.status(404).json({ error: "Job application not found" });
         }
 
         const applicationLetterPath = application.applicationLetter;
         res.sendFile(path.resolve(applicationLetterPath));
     } catch (error: any) {
-        return res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message });
     }
-}
+};
 
-const deleteApplication = async(req: Request, res: Response) =>{
+const deleteApplication = async (req: Request, res: Response) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
         const applicationDeleted = await Profile.findByIdAndDelete(id);
-        if(applicationDeleted){
+        if (applicationDeleted) {
             return res.status(200).json(applicationDeleted);
-        }else{
+        } else {
             return res.status(400).json({ error: "Failed to delete the application" });
         }
     } catch (error: any) {
         return res.status(400).json({ error: error.message });
     }
-}
+};
 
 const rejectApplication = async (req: Request, res: Response) => {
     try {
@@ -178,7 +194,8 @@ const rejectApplication = async (req: Request, res: Response) => {
 
             // Send email to the applicant after rejection asynchronously
             try {
-                await sendEmail(applicationToReject.applicant?.email,
+                await sendEmail(
+                    applicationToReject.applicant?.email,
                     `${applicationToReject.job.title} application feedback`,
                     `Dear ${applicationToReject.applicant.firstname} ${applicationToReject.applicant.lastname}
 We appreciate your interest in the ${applicationToReject.job.title} position at ${applicationToReject.job.company}. 
@@ -206,28 +223,25 @@ Elite developers.
     } catch (error: any) {
         return res.status(400).json({ error: error.message });
     }
-}
+};
 
-
-
-
-const fetchUserApplications = async(req: Request, res: Response) =>{
-    const {id} = req.params;
+const fetchUserApplications = async (req: Request, res: Response) => {
+    const { id } = req.params;
 
     try {
-        const userApplications = await Application.find({ applicant:id }).populate('applicant').populate('job');
-        if(userApplications){
+        const userApplications = await Application.find({ applicant: id }).populate('applicant').populate('job');
+        if (userApplications) {
             return res.status(200).json(userApplications);
-        }else{
+        } else {
             return res.status(400).json({ error: "Failed to retrieve the documents" });
         }
     } catch (error: any) {
         return res.status(400).json({ error: error.message });
     }
-}
+};
 
-const fetchCompanyApplications = async(req: Request, res: Response) =>{
-    const {company} = req.params;
+const fetchCompanyApplications = async (req: Request, res: Response) => {
+    const { company } = req.params;
     console.log(company);
     try {
         const applications = await Application.find({})
@@ -245,71 +259,56 @@ const fetchCompanyApplications = async(req: Request, res: Response) =>{
         } else {
             return res.status(404).json({ error: "No applications found for the company" });
         }
-    } catch (error : any) {
+    } catch (error: any) {
         return res.status(400).json({ error: error.message });
     }
-}
+};
 
-
-const selectBestApplicants = async (req :Request, res :Response) => {
-    const {id} = req.params;
+const selectBestApplicants = async (req: Request, res: Response) => {
+    const { id } = req.params;
     try {
         console.log(id);
-       
-      // Get the job details
-      const job = await Job.findById(id);
-  
-      if (!job) {
-        return res.status(400).json({ error: "Couldn't find the job" })
-      }
-  
-      // Get all applications for the job
-      const applications = await Application.find({ job: id }).populate('applicant');
-  
-      // Calculate similarity scores for each applicant's skills
-      const rankedApplicants = applications.map(application => {
-        const applicantSkills = application?.applicantSkills.split(',').map(skill => skill.trim());
-        const jobRequiredSkills = job?.skills.split(',').map(skill => skill.trim());
-  
-        // Calculate Jaccard similarity coefficient
-        const intersection = applicantSkills.filter(skill => jobRequiredSkills.includes(skill));
-        const union = [...new Set([...applicantSkills, ...jobRequiredSkills])];
-        const similarityScore = intersection.length / union.length;
 
-        
-        console.log(application.applicant);
-        
-  
-        return {
-          applicant: application.applicant,
-          applicant_firstname: application.applicant.firstname,
-          applicant_lastname: application.applicant.lastname,
-          appliant_email: application.applicant.email,
-          similarityScore: similarityScore,
-          similarityPercentage: similarityScore * 100
-        };
-      });
-  
-      // Sort applicants by similarity score in descending order
-      const sortedApplicants = rankedApplicants.sort((a, b) => b.similarityScore - a.similarityScore);
-      return res.status(200).json(sortedApplicants);
+        // Get the job details
+        const job = await Job.findById(id);
 
-    } catch (error : any) {
-      return res.status(400).json({ error : error.message });
+        if (!job) {
+            return res.status(400).json({ error: "Couldn't find the job" });
+        }
+
+        // Get all applications for the job
+        const applications = await Application.find({ job: id }).populate('applicant');
+
+        // Calculate similarity scores for each applicant's skills
+        const rankedApplicants = applications.map(application => {
+            const applicantSkills = application?.applicantSkills.split(',').map(skill => skill.trim());
+            const jobRequiredSkills = job?.skills.split(',').map(skill => skill.trim());
+
+            // Calculate Jaccard similarity coefficient
+            const intersection = applicantSkills.filter(skill => jobRequiredSkills.includes(skill));
+            const union = [...new Set([...applicantSkills, ...jobRequiredSkills])];
+            const similarityScore = intersection.length / union.length;
+
+            console.log(application.applicant);
+
+            return {
+                applicant: application.applicant,
+                applicant_firstname: application.applicant.firstname,
+                applicant_lastname: application.applicant.lastname,
+                applicant_email: application.applicant.email,
+                similarityScore: similarityScore,
+                similarityPercentage: similarityScore * 100
+            };
+        });
+
+        // Sort applicants by similarity score in descending order
+        const sortedApplicants = rankedApplicants.sort((a, b) => b.similarityScore - a.similarityScore);
+        return res.status(200).json(sortedApplicants);
+
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
     }
-  };
-  
-  // Example usage:
-  // Replace 'jobId' with the actual ObjectId of the job you want to select applicants for
-    //   const jobId = 'your_job_id_here';
-    //   selectBestApplicants(jobId)
-    //     .then((sortedApplicants) => {
-    //       console.log('Sorted Applicants:', sortedApplicants);
-    //     })
-    //     .catch((error) => {
-    //       console.error('Error:', error.message);
-    //     });
-  
+};
 
 export default {
     newJobApplication,

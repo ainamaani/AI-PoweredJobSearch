@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import path from "path";
 import mongoose from "mongoose";
 import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
 
 const createNewProfile = async(req: Request,res: Response) =>{
     try {
@@ -12,7 +13,7 @@ const createNewProfile = async(req: Request,res: Response) =>{
 
         // Upload images to Cloudinary
         const profilePicUpload = await new Promise((resolve, reject) => {
-            cloudinary.uploader.upload(profilePicPath, (error, result) => {
+            cloudinary.uploader.upload(profilePicPath, (error : any, result : any) => {
                 if (error) reject(error);
                 resolve(result);
             });

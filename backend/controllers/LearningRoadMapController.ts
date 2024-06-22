@@ -4,6 +4,9 @@ import { RoadMapI } from "../models/RoadMap";
 import upload from "../middleware/MulterConfig";
 import cloudinary from "../config/cloudinary";
 
+interface CloudinaryResult {
+    secure_url: string;
+}
 
 const handleAddRoadMap = async (req: Request, res: Response) => {
     try {
@@ -12,17 +15,17 @@ const handleAddRoadMap = async (req: Request, res: Response) => {
         const roleFrontImagePath = (req.files as { [fieldname: string]: Express.Multer.File[] })['roleFrontImage'][0].path;
 
         // Upload images to Cloudinary
-        const backgroundUpload = await new Promise((resolve, reject) => {
-            cloudinary.uploader.upload(roleBackgroundImagePath, (error, result) => {
+        const backgroundUpload = await new Promise<CloudinaryResult>((resolve, reject) => {
+            cloudinary.uploader.upload(roleBackgroundImagePath, (error : any, result : any) => {
                 if (error) reject(error);
-                resolve(result);
+                resolve(result as CloudinaryResult);
             });
         });
 
-        const frontUpload = await new Promise((resolve, reject) => {
-            cloudinary.uploader.upload(roleFrontImagePath, (error, result) => {
+        const frontUpload = await new Promise<CloudinaryResult>((resolve, reject) => {
+            cloudinary.uploader.upload(roleFrontImagePath, (error : any, result : any) => {
                 if (error) reject(error);
-                resolve(result);
+                resolve(result as CloudinaryResult);
             });
         });
 
@@ -44,7 +47,7 @@ const handleAddRoadMap = async (req: Request, res: Response) => {
         } else {
             return res.status(400).json({ error: "Failed to add new roadmap to the db" });
         }
-    } catch (error) {
+    } catch (error: any) {
         return res.status(400).json({ error: error.message });
     }
 };
