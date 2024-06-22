@@ -114,10 +114,7 @@ const LearningRoadmaps = () => {
                                                 />
                                                 <CardContent>
                                                     <Typography variant="body2" color="text.secondary">
-                                                        ChatGPT is one example of a large language model. It is based on 
-                                                        the GPT-3.5 architecture, which is an advanced version of the 
-                                                        GPT-3 model. ChatGPT is designed specifically for conversational 
-                                                        applications, such as chatbots and virtual assistants.
+                                                        {roadmap.description}
                                                     </Typography>
                                                 </CardContent>
                                             </Card>
