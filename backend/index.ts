@@ -11,9 +11,14 @@ const { loginUser } = userControllers;
 // set up an express application
 const app = express()
 
-//middleware
+// Allow CORS for specified origins
+const allowedOrigins = [
+    "https://ai-powered-job-search-frontend.vercel.app",
+    "http://localhost:3000"
+];
+
 app.use(cors({
-    origin: "https://ai-powered-job-search-frontend.vercel.app",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));

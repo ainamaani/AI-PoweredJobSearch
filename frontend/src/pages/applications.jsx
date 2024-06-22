@@ -229,17 +229,18 @@ const JobApplications = () => {
 
     
 
-    const handleResumeDownload = async(applicationId,applicantFirstName,applicantLastName,jobAppliedFor) =>{
+    const handleResumeDownload = async (applicationId, applicantFirstName, applicantLastName, jobAppliedFor) => {
         try {
-            const downloadresume = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/downloadresume/${applicationId}`,{responseType: 'blob'})
-            if(downloadresume.status === 200){
-                const blob = new Blob([downloadresume.data],{type: 'application.pdf'});
-                saveAs(blob, `${applicantFirstName} ${applicantLastName} applicant for ${jobAppliedFor} resume.pdf`)
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/applications/downloadresume/${applicationId}`);
+            
+            if (response.status === 200) {
+                const resumeUrl = response.data.url;
+                window.open(resumeUrl, '_blank');
             }
-        } catch (downloadError) {
-            console.log(downloadError);
+        } catch (error23) {
+            console.log("Error downloading resume:", error23);
         }
-    }
+    };
 
     const handleApplicationLetterDownload = async(applicationId,applicantFirstName,applicantLastName,jobAppliedFor) =>{
         try {
@@ -306,13 +307,13 @@ const JobApplications = () => {
                                             {application.applicationStatus}
                                         </TableCell>
                                             <TableCell>
-                                                <Tooltip title="Download attachments">
+                                                {/* <Tooltip title="Download attachments">
                                                     <IconButton size="large"
                                                         onClick={handleMenuOpen(index)}
                                                     >
                                                         <DownloadForOfflineRounded />
                                                     </IconButton>
-                                                </Tooltip>
+                                                </Tooltip> */}
                                                 {/* Popover */}
                                                 <Popover
                                                     open={Boolean(anchorEl[index])}

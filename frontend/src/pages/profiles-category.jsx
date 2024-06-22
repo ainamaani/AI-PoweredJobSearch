@@ -110,7 +110,7 @@ const ProfilesCategory = () => {
                                 alt={profile.firstname}
                                 height="100"
                                 width="100"
-                                image={`${process.env.REACT_APP_API_BASE_URL}/${profile.profilePic}`}
+                                image={profile.profilePic}
                                 style={{ objectFit: "cover", 
                                 borderRadius: '50%', 
                                 width: '100px', 
@@ -191,20 +191,7 @@ const ProfilesCategory = () => {
                                         <PersonPinCircleRounded />
                                     </div>
                                     </MenuItem>
-                                <MenuItem
-                                    onClick={() =>
-                                        handleDownloadProfileResume(
-                                        profile._id,
-                                        profile.firstname,
-                                        profile.lastname
-                                        )
-                                }
-                                >
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-around' }}>
-                                        <Typography variant="subtitle2" >Download resume</Typography>
-                                        <FileCopy />
-                                    </div>
-                                </MenuItem>
+                                
                             </Popover>
                             {/* Dialog */}
                             <Dialog

@@ -8,7 +8,15 @@ const createNewProfile = async(req: Request,res: Response) =>{
     try {
         // Get the uploaded file path from the request object
         const profilePicPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['profilePic'][0].path;
-        const resumePath = (req.files as { [fieldname: string]: Express.Multer.File[] })['resume'][0].path;
+        
+
+        // Upload images to Cloudinary
+        const profilePicUpload = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload(profilePicPath, (error, result) => {
+                if (error) reject(error);
+                resolve(result);
+            });
+        });
 
 
         // Destructure other data properties from  the request object
@@ -18,7 +26,7 @@ const createNewProfile = async(req: Request,res: Response) =>{
         const profileData : any = {
             user,firstname,lastname,dateOfBirth,email,gender,
             nationality,phoneContact,category,profession,personalDescription,website,
-            github,profilePic:profilePicPath,resume:resumePath,
+            github,profilePic:profilePicUpload.secure_url
             socialmedia:{
                 linkedIn,twitter,facebook,instagram
             }

@@ -1,29 +1,62 @@
 import Application from "../models/Application";
 import Job from "../models/Job";
+import User from "../models/User";
 import { Request, Response } from "express";
 import path from "path";
 import Profile from "../models/Profile";
 import sendEmail from "../functions/SendEmail";
 const mongoose = require('mongoose');
 import { error } from "console";
+import upload from "../middleware/MulterConfig";
+import cloudinary from "../config/cloudinary";
+import { Readable } from "stream";
+import { v2 as cloudinaryV2 } from "cloudinary";
+import axios from "axios";
 
 const newJobApplication = async(req: Request, res: Response) =>{
     try {
         // destructure other properties off the request object
         const { applicant, job, applicantSkills } = req.body;
 
+        // Fetch applicant and job objects from the database
+        const applicantt = await User.findById(applicant);
+        const jobb = await Job.findById(job);
+
+        if (!applicantt || !jobb) {
+            return res.status(404).json({ error: 'Applicant or Job not found' });
+        }
+
         // first check if the user has already applied
         const existingApplication = await Application.findOne({ applicant:applicant, job:job });
         if(existingApplication){
             return res.status(400).json({ error:"You have already applied for this job" });
         }
-        // get uploaded files from the request object
-        const resumePath = (req.files as { [fieldname: string]: Express.Multer.File[] })['resume'][0].path;
-        const applicationLetterPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['applicationLetter'][0].path;
+        // Get uploaded files from the request object
+        const resumeFile = req.files['resume'][0];
+        const applicationLetterFile = req.files['applicationLetter'][0];
 
+        // Generate custom filenames
+        const resumeFileName = `${applicantt.firstname}-${applicantt.lastname}-${jobb.title}-${jobb.company}-resume.pdf`;
+        const applicationLetterFileName = `${applicantt.firstname}-${applicantt.lastname}-${jobb.title}-${jobb.company}-applicationLetter.pdf`;
+
+        console.log(resumeFileName, applicationLetterFileName);
+
+        // Upload files to Cloudinary with custom filenames
+        const resumeUpload = await cloudinary.uploader.upload(resumeFile.path, {
+            public_id: resumeFileName.replace(/\.[^/.]+$/, ''), // Remove file extension
+            resource_type: 'auto',
+            type: 'upload'
+        });
+
+        const applicationLetterUpload = await cloudinary.uploader.upload(applicationLetterFile.path, {
+            public_id: applicationLetterFileName.replace(/\.[^/.]+$/, ''), // Remove file extension
+            resource_type: 'auto',
+            type: 'upload'
+        });
         // create a new Application object and save it in the database
         const application = await Application.create({
-            applicant, job,resume:resumePath,applicationLetter:applicationLetterPath,
+            applicant, job,resume:resumeUpload.secure_url,
+            applicationLetter:applicationLetterUpload.secure_url,
             applicantSkills, applicationDate:new Date()
         })
         if(application){
@@ -68,20 +101,41 @@ const jobApplications = async(req: Request, res: Response) =>{
     }
 }
 
-const downloadResume = async(req: Request, res: Response) =>{
-    const {id} = req.params;
+// Function to extract the public ID from the Cloudinary URL
+const extractPublicId = (url: string): string => {
+    const parts = url.split('/');
+    const uploadIndex = parts.indexOf('upload');
+    const publicIdParts = parts.slice(uploadIndex + 2); // Adjusted index to skip 'upload' and the following segment
+    const publicId = publicIdParts.join('/').replace(/\.[^/.]+$/, "");
+    return publicId;
+};
+
+const downloadResume = async (req: Request, res: Response) => {
+    const { id } = req.params;
     try {
         const application = await Application.findById(id);
-        if( !application || !application.resume ){
+        if (!application || !application.resume) {
             return res.status(404).json({ error: "Applicant resume not found" });
         }
 
-        const resumePath = application.resume;
-        res.sendFile(path.resolve(resumePath));
+        // Extract the public ID from the resume URL
+        const resumeUrl = application.resume;
+        const publicId = extractPublicId(resumeUrl);
+
+        // Generate the signed URL using Cloudinary SDK
+        const signedUrl = cloudinary.url(publicId, {
+            secure: true,
+            type: 'private',
+            sign_url: true,
+        });
+
+        // Send the signed URL to the frontend
+        res.status(200).json({ url: signedUrl });
     } catch (error: any) {
-        return res.status(400).json({ error: error.message })
+        console.error("Error fetching resume URL:", error);
+        return res.status(400).json({ error: error.message });
     }
-}
+};
 
 const downloadApplicationLetter = async(req: Request, res: Response) =>{
     const {id} = req.params;

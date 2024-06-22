@@ -95,7 +95,7 @@ const LearningRoadmaps = () => {
                                                 <CardHeader 
                                                     avatar={
                                                         <Avatar alt="front pic" 
-                                                            src={`${process.env.REACT_APP_API_BASE_URL}/${roadmap.roleFrontImage}`}
+                                                            src={roadmap.roleFrontImage}
                                                         />
                                                     }
                                                     action={
@@ -109,7 +109,7 @@ const LearningRoadmaps = () => {
                                                 <CardMedia 
                                                     component="img"
                                                     height="194"
-                                                    image={`${process.env.REACT_APP_API_BASE_URL}/${roadmap.roleBackgroundImage}`}
+                                                    image={roadmap.roleBackgroundImage}
                                                     alt="background-img"
                                                 />
                                                 <CardContent>

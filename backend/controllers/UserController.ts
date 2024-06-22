@@ -13,6 +13,15 @@ const registerUser = async(req: Request, res: Response) =>{
         let companyLogo = null;
         if(req.files && 'companyLogo' in req.files){
             companyLogo = (req.files as { [fieldname: string]: Express.Multer.File[] })['companyLogo'][0].path;
+
+            // Upload images to Cloudinary
+        const companyLogoUpload = await new Promise((resolve, reject) => {
+            cloudinary.uploader.upload(companyLogoPath, (error, result) => {
+                if (error) reject(error);
+                resolve(result);
+            });
+        });
+        companyLogo = companyLogoUpload.secure_url;
         }
         
         const { firstname, lastname, email, userCategory, sector, company, 

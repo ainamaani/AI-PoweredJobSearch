@@ -145,10 +145,6 @@ const ProfileSchema = new mongoose.Schema<ProfileI>({
             type:String,
             default:"None"
         }
-    },
-    resume:{
-        type:String,
-        required: [true, "Your resume/curriculum vitae is required"]
     }
 },{timestamps:true})
 

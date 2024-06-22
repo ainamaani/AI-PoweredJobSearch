@@ -156,7 +156,7 @@ const Companies = () => {
                                 alt={company.company}
                                 height="100"
                                 width="100"
-                                image={`${process.env.REACT_APP_API_BASE_URL}/${company.companyLogo}`}
+                                image={company.companyLogo}
                                 style={{ objectFit: "cover", 
                                 borderRadius: '50%', 
                                 width: '100px', 

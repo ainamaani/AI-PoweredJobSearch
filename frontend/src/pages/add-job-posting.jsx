@@ -164,7 +164,7 @@ const AddJobPosting = () => {
                             label="Hiring company"
                             variant="outlined"
                             required fullWidth
-                            disabled
+                            disabled={user.userCategory !== 'Admin'}
                             value={user.company}
                             sx={{ width: 700 }}
                             InputProps={{
