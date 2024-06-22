@@ -26,7 +26,7 @@ const createNewProfile = async(req: Request,res: Response) =>{
         const profileData : any = {
             user,firstname,lastname,dateOfBirth,email,gender,
             nationality,phoneContact,category,profession,personalDescription,website,
-            github,profilePic:profilePicUpload.secure_url
+            github,profilePic:profilePicUpload.secure_url,
             socialmedia:{
                 linkedIn,twitter,facebook,instagram
             }
