@@ -13,15 +13,13 @@ import axios from "axios";
 interface MulterRequest extends Request {
     files: {
         [fieldname: string]: Express.Multer.File[];
-    } | undefined;
+    };
 }
 
 const newJobApplication = async (req: MulterRequest, res: Response) => {
     try {
-        // Destructure other properties off the request object
         const { applicant, job, applicantSkills } = req.body;
 
-        // Fetch applicant and job objects from the database
         const applicantt = await User.findById(applicant);
         const jobb = await Job.findById(job);
 
@@ -29,32 +27,23 @@ const newJobApplication = async (req: MulterRequest, res: Response) => {
             return res.status(404).json({ error: 'Applicant or Job not found' });
         }
 
-        // First check if the user has already applied
         const existingApplication = await Application.findOne({ applicant, job });
         if (existingApplication) {
             return res.status(400).json({ error: "You have already applied for this job" });
         }
 
-        // Check if req.files is defined
-        if (!req.files) {
-            return res.status(400).json({ error: "No files uploaded" });
-        }
-
-        // Get uploaded files from the request object
-        const resumeFile = req.files['resume']?.[0];
-        const applicationLetterFile = req.files['applicationLetter']?.[0];
-
-        if (!resumeFile || !applicationLetterFile) {
+        if (!req.files || !req.files['resume'] || !req.files['applicationLetter']) {
             return res.status(400).json({ error: "Required files not uploaded" });
         }
+
+        const resumeFile = req.files['resume'][0];
+        const applicationLetterFile = req.files['applicationLetter'][0];
 
         // Generate custom filenames
         const resumeFileName = `${applicantt.firstname}-${applicantt.lastname}-${jobb.title}-${jobb.company}-resume.pdf`;
         const applicationLetterFileName = `${applicantt.firstname}-${applicantt.lastname}-${jobb.title}-${jobb.company}-applicationLetter.pdf`;
 
-        console.log(resumeFileName, applicationLetterFileName);
-
-        // Upload files to Cloudinary with custom filenames
+        // Upload files to Cloudinary
         const resumeUpload = await cloudinary.uploader.upload(resumeFile.path, {
             public_id: resumeFileName.replace(/\.[^/.]+$/, ''), // Remove file extension
             resource_type: 'auto',
@@ -67,7 +56,7 @@ const newJobApplication = async (req: MulterRequest, res: Response) => {
             type: 'upload'
         });
 
-        // Create a new Application object and save it in the database
+        // Create a new Application object and save it
         const application = await Application.create({
             applicant,
             job,
@@ -78,28 +67,24 @@ const newJobApplication = async (req: MulterRequest, res: Response) => {
         });
 
         if (application) {
-            const jobAppliedFor = await Job.findOne({ _id: job });
-            if (jobAppliedFor) {
-                // Update the number of applicants of the job
-                jobAppliedFor.numberOfApplicants += 1;
-                await jobAppliedFor.save({ validateBeforeSave: false });
-                return res.status(200).json(application);
-            }
+            // Update job's number of applicants
+            jobb.numberOfApplicants += 1;
+            await jobb.save({ validateBeforeSave: false });
+
+            return res.status(200).json(application);
         } else {
             return res.status(400).json({ error: "Failed to add the new application" });
         }
     } catch (error: any) {
-        // Check if the error is a validation error
+        // Handle validation errors
         if (error.name === 'ValidationError' || error.code === 11000) {
             const errors: { [key: string]: string } = {};
-
-            // Iterate through the validation errors and build the errors object
             for (const field in error.errors) {
                 errors[field] = error.errors[field].message;
             }
             return res.status(400).json({ errors });
         }
-        // Handle other types of errors (e.g., database errors) here
+        // Handle other types of errors (e.g., database errors)
         return res.status(500).json({ error: error.message });
     }
 };

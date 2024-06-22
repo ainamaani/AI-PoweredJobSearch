@@ -5,61 +5,55 @@ import mongoose from "mongoose";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 
-const createNewProfile = async(req: Request,res: Response) =>{
+const createNewProfile = async (req: Request, res: Response) => {
     try {
         // Get the uploaded file path from the request object
         const profilePicPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['profilePic'][0].path;
-        
 
-        // Upload images to Cloudinary
-        const profilePicUpload = await new Promise((resolve, reject) => {
-            cloudinary.uploader.upload(profilePicPath, (error : any, result : any) => {
-                if (error) reject(error);
-                resolve(result);
-            });
-        });
+        // Upload image to Cloudinary
+        const profilePicUpload = await cloudinary.uploader.upload(profilePicPath) as UploadApiResponse;
 
+        // Destructure other data properties from the request object
+        const {
+            user, firstname, lastname, dateOfBirth, gender, nationality, email, phoneContact, category, profession,
+            personalDescription, website, github, linkedIn, twitter, facebook, instagram
+        } = req.body;
 
-        // Destructure other data properties from  the request object
-        const { user,firstname,lastname,dateOfBirth,gender,nationality,email,phoneContact,category,profession,
-                personalDescription,website,github,linkedIn,twitter,facebook,instagram } = req.body;
-
-        const profileData : any = {
-            user,firstname,lastname,dateOfBirth,email,gender,
-            nationality,phoneContact,category,profession,personalDescription,website,
-            github,profilePic:profilePicUpload.secure_url,
-            socialmedia:{
-                linkedIn,twitter,facebook,instagram
+        const profileData: any = {
+            user, firstname, lastname, dateOfBirth, email, gender,
+            nationality, phoneContact, category, profession, personalDescription, website,
+            github, profilePic: profilePicUpload.secure_url,
+            socialmedia: {
+                linkedIn, twitter, facebook, instagram
             }
-        }
+        };
 
         // Remove properties with undefined values to prevent overriding default values
         Object.keys(profileData).forEach(key => profileData[key] === undefined && delete profileData[key]);
-        
-        const profile = await Profile.create(profileData);
-                    
 
-        if(profile){
+        const profile = await Profile.create(profileData);
+
+        if (profile) {
             return res.status(200).json(profile);
-        }else{
+        } else {
             return res.status(400).json("Failed to create new job");
         }
 
     } catch (error: any) {
         // Check if the error is a validation error
-      if (error.name === 'ValidationError' || error.code === 11000) {
-        const errors: {[key:string]: string}  = {};
-  
-          // Iterate through the validation errors and build the errors object
-          for (const field in error.errors) {
-            errors[field] = error.errors[field].message;
-          }
-          return res.status(400).json({ errors });
-      }
-      // Handle other types of errors (e.g., database errors) here
-      return res.status(500).json({ error: error.message });
-  }
-}
+        if (error.name === 'ValidationError' || error.code === 11000) {
+            const errors: { [key: string]: string } = {};
+
+            // Iterate through the validation errors and build the errors object
+            for (const field in error.errors) {
+                errors[field] = error.errors[field].message;
+            }
+            return res.status(400).json({ errors });
+        }
+        // Handle other types of errors (e.g., database errors) here
+        return res.status(500).json({ error: error.message });
+    }
+};
 
 const getProfiles = async(req: Request,res: Response) =>{
     try {

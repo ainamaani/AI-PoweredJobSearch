@@ -15,15 +15,16 @@ interface CloudinaryResult {
 
 const registerUser = async (req: Request, res: Response) => {
     try {
-        let companyLogo = null;
-        if (req.files && 'companyLogo' in req.files) {
-            companyLogo = (req.files as { [fieldname: string]: Express.Multer.File[] })['companyLogo'][0].path;
+        let companyLogo: string | null = null;
 
-            // Upload images to Cloudinary
+        if (req.files && 'companyLogo' in req.files) {
+            const companyLogoPath = (req.files as { [fieldname: string]: Express.Multer.File[] })['companyLogo'][0].path;
+
+            // Upload image to Cloudinary
             const companyLogoUpload = await new Promise<CloudinaryResult>((resolve, reject) => {
-                cloudinary.uploader.upload(companyLogo, (error, result) => {
+                cloudinary.uploader.upload(companyLogoPath, (error: any, result: any) => {
                     if (error) reject(error);
-                    resolve(result as CloudinaryResult);
+                    resolve(result as CloudinaryResult); // Type assertion for result
                 });
             });
 
@@ -33,7 +34,7 @@ const registerUser = async (req: Request, res: Response) => {
         const { firstname, lastname, email, userCategory, sector, company,
             companyEmail, companyDescription, industry, location, companyWebsiteUrl, password, passwordConfirm } = req.body;
 
-        // check passwords if they match
+        // Check passwords match
         if (password !== passwordConfirm) {
             return res.status(400).json({ "error": "The passwords do not match" });
         }
@@ -42,19 +43,18 @@ const registerUser = async (req: Request, res: Response) => {
             return res.status(400).json({ "error": "Please enter a strong password" });
         }
 
-        // generate salt to hash the passwords
+        // Generate salt to hash the password
         const salt = await bcrypt.genSalt(10);
-
-        // create a hashed password using the generated salt
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // register the user in the database
+        // Register the user in the database
         const newUser = await User.create({
             firstname, lastname, email, sector, userCategory, password: hashedPassword
         });
 
         if (newUser.userCategory === "Recruiter") {
-            // register the company and details
+            // Register the company details
             const newCompany = await Company.create({
                 company, companyEmail, companyDescription, industry,
                 location, member: email, companyWebsiteUrl, companyLogo
@@ -244,7 +244,7 @@ const handleChangePassword = async (req: Request, res: Response) => {
     }
 };
 
-export {
+export default {
     registerUser,
     loginUser,
     fetchUsers,
