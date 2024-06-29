@@ -21,7 +21,7 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
         const jobPostings = await Job.find({});
 
          // Expand user input with synonyms or related terms
-         const expandedUserInput = expandUserInput(sector);
+         const expandedUserInput = expandUserInput(sector.toLowerCase());
 
          // Filter job postings based on relevance to user input
          const relevantJobPostings = jobPostings.filter(job => {
@@ -86,7 +86,7 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
 // Function to expand user input with synonyms or related terms
 const expandUserInput = (input: string) => {
     const synonymMapping: { [key: string]: string[] } = {
-        "Software Development": ["developer", "software", "programming", "coding"],
+        "Software Development": ["developer", "software", "programmer", "coder", "full stack", "backend", "frontend"],
         "Engineering": ["engineer", "engineered", "technician"],
         "Management": ["manager", "supervisor", "administrator"],
         "Analysis": ["analyst", "analytics", "researcher"],
