@@ -11,24 +11,28 @@ import cosineSim from '../algorithm/cosine_similarity_matrix.json';
 
 const handleJobsRecommendations = async (req: Request, res: Response) => {
     try {
-        const {sector} = req.params;
+        const { sector } = req.params;
 
-        // Check if userInput exists
         if (!sector) {
             return res.status(400).json({ error: 'User input is required' });
         }
 
         const jobPostings = await Job.find({});
 
-         // Expand user input with synonyms or related terms
-         const expandedUserInput = expandUserInput(sector.toLowerCase());
+        const expandedUserInput = expandUserInput(sector.toLowerCase());
+        console.log('Expanded User Input:', expandedUserInput);
 
-         // Filter job postings based on relevance to user input
-         const relevantJobPostings = jobPostings.filter(job => {
-             // Check if the job title contains any keyword from the expanded user input
-             const jobTitleKeywords = job.title.toLowerCase().split(' ');
-             return expandedUserInput.some((keyword : any) => jobTitleKeywords.includes(keyword));
-         });
+        const relevantJobPostings = jobPostings.filter(job => {
+            const jobTitleKeywords = job.title.toLowerCase().split(' ');
+            console.log('Job Title Keywords:', jobTitleKeywords);
+            const hasKeyword = expandedUserInput.some((keyword: any) => jobTitleKeywords.includes(keyword));
+            console.log('Job:', job.title, 'Has Keyword:', hasKeyword);
+            return hasKeyword;
+        });
+
+        if (relevantJobPostings.length === 0) {
+            return res.status(200).json([]);
+        }
 
 
         const tfidfMatrix : any = tfidfMatrixJson;
@@ -86,51 +90,51 @@ const handleJobsRecommendations = async (req: Request, res: Response) => {
 // Function to expand user input with synonyms or related terms
 const expandUserInput = (input: string) => {
     const synonymMapping: { [key: string]: string[] } = {
-        "Software Development": ["developer", "software", "programmer", "coder", "full stack", "backend", "frontend"],
-        "Engineering": ["engineer", "engineered", "technician"],
-        "Management": ["manager", "supervisor", "administrator"],
-        "Analysis": ["analyst", "analytics", "researcher"],
-        "Design": ["designer", "graphic", "creative"],
-        "Marketing": ["advertising","sales", "promotion", "branding"],
-        "Sales": ["selling", "business development", "account executive"],
-        "Consulting": ["consultant", "advisor", "adviser"],
-        "Finance": ["financial", "investment", "banking"],
-        "Healthcare": ["health", "medical", "nursing", "nurse", "doctor", "medicine"],
-        "Education": ["teaching", "instructor", "training"],
-        "Support": ["assistance", "help", "customer service"],
-        "Analytics": ["data", "big data", "database"],
-        "Networking": ["network", "infrastructure", "system"],
-        "Cybersecurity": ["security", "protection", "safety"],
-        "Operations": ["operation", "logistics", "supply chain"],
-        "Law": ["legal", "attorney", "paralegal"],
-        "Human Resource": ["human resources","hr", "recruitment", "talent acquisition"],
-        "Product Management": ["product", "product development", "product marketing"],
-        "Project Management": ["project", "project planning", "project coordination"],
-        "Research": ["researcher", "scientist", "investigator"],
-        "Writing": ["writer", "copywriter", "author"],
-        "Content Creation": ["content", "content development", "content management"],
-        "Journalism": ["multimedia", "broadcasting", "media"],
-        "Administration": ["administrative", "admin", "office management"],
-        "Executive": ["executive officer", "executive director", "chief"],
-        "Quality Assuarance": ["quality", "quality control", "QA"],
-        "Construction Management": ["builder", "contractor", "construction"],
-        "Manufacturing": ["production", "assembly", "fabrication"],
-        "Transportation": ["logistics", "driver", "distribution", "supply chain"],
-        "Strategic Planning": ["strategy", "business strategy", "corporate strategy"],
-        "Art": ["creative", "design", "innovation"],
-        "Public Relations": ["social media", "community management", "social media"],
-        "Training": ["learning", "development", "education"],
-        "Information Technology": ["IT", "tech", "software","network", "infrastructure", "system","networking"],
-        "Innovation": ["creativity", "new ideas", "invention"],
-        "Leadership": ["leading", "guiding", "direction"],
-        "Business": ["enterprise", "corporate", "commercial"],
+        "software": ["developer", "software", "programmer", "coder", "full stack", "backend", "frontend"],
+        "engineering": ["engineer", "engineered", "technician"],
+        "management": ["manager", "supervisor", "administrator"],
+        "analysis": ["analyst", "analytics", "researcher"],
+        "design": ["designer", "graphic", "creative"],
+        "marketing": ["advertising", "sales", "promotion", "branding"],
+        "sales": ["selling", "business development", "account executive"],
+        "consulting": ["consultant", "advisor", "adviser"],
+        "finance": ["financial", "investment", "banking"],
+        "healthcare": ["health", "medical", "nursing", "nurse", "doctor", "medicine"],
+        "education": ["teaching", "instructor", "training"],
+        "support": ["assistance", "help", "customer service"],
+        "analytics": ["data", "big data", "database"],
+        "networking": ["network", "infrastructure", "system"],
+        "cybersecurity": ["security", "protection", "safety"],
+        "operations": ["operation", "logistics", "supply chain"],
+        "law": ["legal", "attorney", "paralegal"],
+        "human resource": ["human resources", "hr", "recruitment", "talent acquisition"],
+        "product management": ["product", "product development", "product marketing"],
+        "project management": ["project", "project planning", "project coordination"],
+        "research": ["researcher", "scientist", "investigator"],
+        "writing": ["writer", "copywriter", "author"],
+        "content creation": ["content", "content development", "content management"],
+        "journalism": ["multimedia", "broadcasting", "media"],
+        "administration": ["administrative", "admin", "office management"],
+        "executive": ["executive officer", "executive director", "chief"],
+        "quality assurance": ["quality", "quality control", "QA"],
+        "construction management": ["builder", "contractor", "construction"],
+        "manufacturing": ["production", "assembly", "fabrication"],
+        "transportation": ["logistics", "driver", "distribution", "supply chain"],
+        "strategic planning": ["strategy", "business strategy", "corporate strategy"],
+        "art": ["creative", "design", "innovation"],
+        "public relations": ["social media", "community management", "social media"],
+        "training": ["learning", "development", "education"],
+        "information technology": ["IT", "tech", "software", "network", "infrastructure", "system", "networking"],
+        "innovation": ["creativity", "new ideas", "invention"],
+        "leadership": ["leading", "guiding", "direction"],
+        "business": ["enterprise", "corporate", "commercial"],
         "NGO": ["charity", "non-profit", "non-governmental organization"],
-        "Tourism": ["travel", "hospitality", "tour guide", "tour operator", "tourist", "vacation", "leisure", "recreation"],
-        "Accounting": ["accountant", "bookkeeping", "auditor", "finance", "financial reporting", "taxation", "CPA"],
-        "Monitoring and Evaluation": ["M&E officer","monitoring and evaluation officer", "evaluation", "impact assessment", "program evaluation", "project monitoring"],
-        "Statistics": ["statistical analyst", "data analyst", "quantitative analyst", "biostatistician", "econometrician", "statistician"],
-        "Machine Learning": ["ML engineer","machine learning engineer", "ML" ,"machine intelligence", "supervised learning", "unsupervised learning", "reinforcement learning", "deep learning", "neural networks"],
-        "Artificial Intelligence": [ "AI", "intelligent systems", "machine intelligence", "deep learning", "neural networks", "robotics", "natural language processing"]
+        "tourism": ["travel", "hospitality", "tour guide", "tour operator", "tourist", "vacation", "leisure", "recreation"],
+        "accounting": ["accountant", "bookkeeping", "auditor", "finance", "financial reporting", "taxation", "CPA"],
+        "monitoring and evaluation": ["M&E officer", "monitoring and evaluation officer", "evaluation", "impact assessment", "program evaluation", "project monitoring"],
+        "statistics": ["statistical analyst", "data analyst", "quantitative analyst", "biostatistician", "econometrician", "statistician"],
+        "machine learning": ["ML engineer", "machine learning engineer", "ML", "machine intelligence", "supervised learning", "unsupervised learning", "reinforcement learning", "deep learning", "neural networks"],
+        "artificial intelligence": ["AI", "intelligent systems", "machine intelligence", "deep learning", "neural networks", "robotics", "natural language processing"]
     };
 
     const expandedTerms = input.split(' ').flatMap(term => {
